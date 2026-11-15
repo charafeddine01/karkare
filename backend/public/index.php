@@ -254,8 +254,10 @@ $router->get('/api/health', function (Request $req) {
     try {
         \CarLog\Config\Database::getConnection();
         $dbStatus = 'connected (' . \CarLog\Config\Database::getDriver() . ')';
+        $note = \CarLog\Config\Database::getLastError();
     } catch (\Throwable $e) {
         $dbStatus = 'error: ' . $e->getMessage();
+        $note = null;
     }
 
     Response::success([
@@ -263,6 +265,7 @@ $router->get('/api/health', function (Request $req) {
         'service' => 'CarLog API',
         'version' => '1.0.0',
         'database' => $dbStatus,
+        'mysql_note' => $note,
         'timestamp' => date('c'),
     ]);
 });

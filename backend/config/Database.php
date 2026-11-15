@@ -14,9 +14,14 @@ use RuntimeException;
 class Database {
     private static ?PDO $instance = null;
     private static string $driver = 'mysql';
+    private static ?string $lastError = null;
 
     private function __construct() {}
     private function __clone() {}
+
+    public static function getLastError(): ?string {
+        return self::$lastError;
+    }
 
     public static function getConnection(): PDO {
         if (self::$instance === null) {
@@ -59,6 +64,7 @@ class Database {
                         $mysqlError = $e->getMessage();
                     }
                 }
+                self::$lastError = $mysqlError;
             }
 
             // 2. Fallback to self-contained SQLite database
