@@ -26,11 +26,14 @@ class Request {
             $path = rtrim($path, '/') ?: '/';
         }
 
-        $scriptDir = dirname($_SERVER['SCRIPT_NAME'] ?? '');
-        $baseDir = preg_replace('#/public$#', '', $scriptDir);
-        if (!empty($baseDir) && $baseDir !== '/' && str_starts_with($path, $baseDir)) {
-            $path = substr($path, strlen($baseDir));
-            $path = rtrim($path, '/') ?: '/';
+        $rawScript = $_SERVER['SCRIPT_NAME'] ?? '';
+        if (str_ends_with($rawScript, '.php')) {
+            $scriptDir = dirname($rawScript);
+            $baseDir = preg_replace('#/public$#', '', $scriptDir);
+            if (!empty($baseDir) && $baseDir !== '/' && str_starts_with($path, $baseDir)) {
+                $path = substr($path, strlen($baseDir));
+                $path = rtrim($path, '/') ?: '/';
+            }
         }
 
         $this->path = $path;

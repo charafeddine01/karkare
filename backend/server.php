@@ -23,6 +23,13 @@ if (preg_match('#^/v/([a-zA-Z0-9_\-]+)/?$#', $uri, $matches)) {
     return true;
 }
 
-// Route API and everything else through public/index.php
-require __DIR__ . '/public/index.php';
+// Route API through public/index.php
+if (str_starts_with($uri, '/api')) {
+    require __DIR__ . '/public/index.php';
+    return true;
+}
+
+// Serve Web Application UI
+header('Content-Type: text/html; charset=UTF-8');
+readfile(__DIR__ . '/public/app.html');
 return true;

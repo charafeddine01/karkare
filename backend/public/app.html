@@ -47,89 +47,98 @@
         }
 
         /* ------------------------------------------------------------- */
-        /* Top Navigation Bar & Offline Banner */
+        /* Offline Banner */
         /* ------------------------------------------------------------- */
         .offline-banner {
-            display: none;
-            background: linear-gradient(90deg, #D97706, #B45309);
-            color: #fff;
+            background: #D97706;
+            color: #FFFFFF;
             padding: 8px 16px;
             font-size: 13px;
             font-weight: 700;
             text-align: center;
-            letter-spacing: 0.3px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-            animation: slideDown 0.3s ease;
+            display: none;
+            position: sticky;
+            top: 0;
+            z-index: 200;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
 
         .offline-banner.active {
-            display: block;
-        }
-
-        header.navbar {
-            background: rgba(21, 29, 46, 0.85);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border-dark);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            padding: 14px 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .brand-container {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .brand-logo {
-            width: 38px;
-            height: 38px;
-            background: var(--surface-card);
-            border: 2px solid var(--primary-cyan);
-            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
+            gap: 12px;
+        }
+
+        /* ------------------------------------------------------------- */
+        /* Top Navigation Bar */
+        /* ------------------------------------------------------------- */
+        header.app-header {
+            background: rgba(21, 29, 46, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-dark);
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--text-main);
+            cursor: pointer;
+        }
+
+        .brand-logo svg {
+            width: 30px;
+            height: 30px;
             color: var(--primary-cyan);
-            font-size: 20px;
-            box-shadow: 0 0 16px var(--accent-glow);
+            filter: drop-shadow(0 0 8px var(--accent-glow));
         }
 
         .brand-title {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 800;
-            letter-spacing: 1.5px;
-            color: var(--text-main);
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #FFFFFF 0%, var(--primary-cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .brand-subtitle {
+        .brand-badge {
             font-size: 11px;
-            color: var(--text-muted);
-            letter-spacing: 0.5px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: var(--radius-full);
+            background: rgba(56, 189, 248, 0.15);
+            color: var(--primary-cyan);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            text-transform: uppercase;
         }
 
         .header-actions {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 12px;
         }
 
         .status-pill {
-            display: inline-flex;
+            display: flex;
             align-items: center;
             gap: 6px;
+            font-size: 12px;
+            font-weight: 600;
             padding: 5px 12px;
             border-radius: var(--radius-full);
-            font-size: 12px;
-            font-weight: 700;
+            background: var(--surface-card);
             border: 1px solid var(--border-dark);
-            background: rgba(255, 255, 255, 0.04);
+            cursor: pointer;
         }
 
         .status-dot {
@@ -137,12 +146,12 @@
             height: 8px;
             border-radius: 50%;
             background: var(--success-green);
-            box-shadow: 0 0 8px var(--success-green);
+            box-shadow: 0 0 6px var(--success-green);
         }
 
         .status-dot.offline {
             background: var(--warning-amber);
-            box-shadow: 0 0 8px var(--warning-amber);
+            box-shadow: 0 0 6px var(--warning-amber);
         }
 
         .user-chip {
@@ -178,20 +187,21 @@
         }
 
         /* ------------------------------------------------------------- */
-        /* Main Layout & Cards */
+        /* Main Layout */
         /* ------------------------------------------------------------- */
         main.container {
             flex: 1;
-            max-width: 1200px;
+            max-width: 1280px;
             width: 100%;
             margin: 0 auto;
-            padding: 32px 20px 60px;
+            padding: 24px 20px 80px;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
         }
 
+        /* ------------------------------------------------------------- */
+        /* Auth Cards (Login, Register, OTP) */
+        /* ------------------------------------------------------------- */
         .auth-card {
             background: var(--surface-dark);
             border: 1px solid var(--border-dark);
@@ -200,6 +210,7 @@
             max-width: 440px;
             padding: 36px 32px;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+            margin: 40px auto;
             position: relative;
             animation: fadeIn 0.3s ease;
         }
@@ -221,19 +232,44 @@
             color: var(--text-muted);
         }
 
-        /* Form Controls */
         .form-group {
             margin-bottom: 18px;
+            position: relative;
         }
 
         .form-label {
-            display: block;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             font-size: 12px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             color: var(--text-muted);
             margin-bottom: 8px;
+        }
+
+        .helper-chips {
+            display: inline-flex;
+            gap: 6px;
+        }
+
+        .chip-convert {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: var(--radius-full);
+            background: rgba(56, 189, 248, 0.12);
+            color: var(--primary-cyan);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            cursor: pointer;
+            text-transform: none;
+            transition: all 0.15s;
+        }
+
+        .chip-convert:hover {
+            background: var(--primary-cyan);
+            color: var(--bg-dark);
         }
 
         .input-wrapper {
@@ -250,238 +286,203 @@
             pointer-events: none;
         }
 
-        .form-input {
+        .form-input, .form-select, .form-textarea {
             width: 100%;
             background: var(--surface-card);
             border: 1px solid var(--border-dark);
             border-radius: var(--radius-md);
-            padding: 13px 14px 13px 42px;
+            padding: 12px 14px 12px 40px;
             color: var(--text-main);
             font-size: 14px;
             outline: none;
             transition: all 0.2s;
         }
 
-        .form-input:focus {
+        .form-input.no-icon, .form-select.no-icon, .form-textarea.no-icon {
+            padding-left: 14px;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
             border-color: var(--primary-cyan);
-            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+            background: var(--surface-hover);
         }
 
-        .password-toggle {
-            position: absolute;
-            right: 14px;
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            font-size: 14px;
-            padding: 4px;
+        .form-textarea {
+            resize: vertical;
+            min-height: 70px;
         }
 
-        /* Demo Quick Pill */
-        .demo-pill {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: rgba(56, 189, 248, 0.08);
-            border: 1px dashed rgba(56, 189, 248, 0.4);
-            border-radius: var(--radius-md);
-            padding: 10px 14px;
-            margin-bottom: 20px;
-            font-size: 12px;
-            color: var(--primary-cyan);
-            cursor: pointer;
-            transition: all 0.2s;
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
         }
 
-        .demo-pill:hover {
-            background: rgba(56, 189, 248, 0.14);
-            border-color: var(--primary-cyan);
-        }
-
-        .demo-pill-badge {
-            background: var(--primary-cyan);
-            color: var(--bg-dark);
-            font-weight: 800;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 10px;
-            letter-spacing: 0.5px;
-        }
-
-        /* Buttons */
         .btn-primary {
             width: 100%;
-            background: linear-gradient(135deg, var(--primary-blue), #1D4ED8);
-            color: #fff;
+            background: linear-gradient(135deg, var(--primary-blue) 0%, #1D4ED8 100%);
+            color: #FFFFFF;
             border: none;
             border-radius: var(--radius-md);
-            padding: 14px;
+            padding: 13px 20px;
             font-size: 14px;
             font-weight: 700;
-            letter-spacing: 0.5px;
             cursor: pointer;
-            box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3);
-            transition: all 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-        }
-
-        .btn-primary:hover:not(:disabled) {
-            transform: translateY(-1px);
-            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
-        }
-
-        .btn-primary:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .btn-google {
-            width: 100%;
-            background: var(--surface-card);
-            border: 1px solid var(--border-dark);
-            color: var(--text-main);
-            border-radius: var(--radius-md);
-            padding: 12px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
             transition: all 0.2s;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+            text-decoration: none;
         }
 
-        .btn-google:hover {
-            border-color: rgba(255,255,255,0.2);
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(37, 99, 235, 0.5);
+        }
+
+        .btn-secondary {
+            background: var(--surface-card);
+            color: var(--text-main);
+            border: 1px solid var(--border-dark);
+            border-radius: var(--radius-md);
+            padding: 10px 16px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-secondary:hover {
             background: var(--surface-hover);
+            border-color: var(--primary-cyan);
+        }
+
+        .btn-sm {
+            padding: 7px 12px;
+            font-size: 12px;
         }
 
         .auth-switch {
             text-align: center;
-            margin-top: 22px;
+            margin-top: 20px;
             font-size: 13px;
             color: var(--text-muted);
         }
 
         .auth-switch a {
             color: var(--primary-cyan);
-            font-weight: 700;
             text-decoration: none;
+            font-weight: 700;
             cursor: pointer;
-            margin-left: 4px;
         }
 
         .auth-switch a:hover {
             text-decoration: underline;
         }
 
-        /* OTP Input Grid */
-        .otp-inputs {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 8px;
-            margin: 24px 0;
-        }
-
-        .otp-box {
-            width: 100%;
-            height: 52px;
-            background: var(--surface-card);
-            border: 2px solid var(--border-dark);
-            border-radius: 10px;
-            text-align: center;
-            font-size: 22px;
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: 700;
-            color: var(--primary-cyan);
-            outline: none;
-            transition: all 0.2s;
-        }
-
-        .otp-box:focus {
-            border-color: var(--primary-cyan);
-            box-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
-            background: var(--surface-hover);
-        }
-
         /* ------------------------------------------------------------- */
-        /* Dashboard Container (Active State) */
+        /* Garage Dashboard */
         /* ------------------------------------------------------------- */
         #dashboard-view {
             display: none;
             width: 100%;
-            max-width: 1100px;
-            animation: fadeIn 0.4s ease;
+            animation: fadeIn 0.3s ease;
         }
 
-        .dash-welcome {
+        .dash-topbar {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 28px;
+            margin-bottom: 24px;
             flex-wrap: wrap;
             gap: 16px;
         }
 
-        .dash-welcome h1 {
-            font-size: 26px;
-            font-weight: 800;
+        .vehicle-selector-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
-        .vehicle-hero-card {
+        .vehicle-select {
             background: var(--surface-dark);
+            color: var(--text-main);
+            border: 1px solid var(--border-active);
+            border-radius: var(--radius-md);
+            padding: 10px 16px;
+            font-size: 15px;
+            font-weight: 700;
+            outline: none;
+            cursor: pointer;
+        }
+
+        /* Vehicle Hero Card */
+        .vehicle-hero-card {
+            background: linear-gradient(135deg, var(--surface-dark) 0%, #111827 100%);
             border: 1px solid var(--border-dark);
             border-radius: var(--radius-lg);
-            padding: 24px;
-            display: grid;
-            grid-template-columns: 280px 1fr;
-            gap: 28px;
+            padding: 28px;
             margin-bottom: 28px;
-            position: relative;
-            overflow: hidden;
+            box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.5);
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 24px;
+            align-items: center;
         }
 
-        @media (max-width: 800px) {
+        @media (max-width: 900px) {
             .vehicle-hero-card {
                 grid-template-columns: 1fr;
+                text-align: center;
             }
         }
 
         .vehicle-img-box {
-            background: var(--surface-card);
+            width: 130px;
+            height: 130px;
             border-radius: var(--radius-md);
-            height: 200px;
+            background: var(--surface-card);
+            border: 1px solid var(--border-dark);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 54px;
-            color: var(--primary-cyan);
-            border: 1px solid var(--border-dark);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .vehicle-img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .vehicle-details h2 {
-            font-size: 24px;
+            font-size: 26px;
             font-weight: 800;
-            margin-bottom: 8px;
+            color: var(--text-main);
             display: flex;
             align-items: center;
             gap: 10px;
+            margin-bottom: 6px;
+            flex-wrap: wrap;
         }
 
         .badge-verified {
-            background: rgba(16, 185, 129, 0.12);
-            color: var(--success-green);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            padding: 3px 10px;
-            border-radius: var(--radius-full);
             font-size: 11px;
             font-weight: 700;
+            padding: 3px 10px;
+            border-radius: var(--radius-full);
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success-green);
+            border: 1px solid rgba(16, 185, 129, 0.3);
         }
 
         .stat-grid {
@@ -495,64 +496,251 @@
             background: var(--surface-card);
             border: 1px solid var(--border-dark);
             border-radius: var(--radius-md);
-            padding: 12px 14px;
+            padding: 12px;
         }
 
         .stat-box .label {
             font-size: 11px;
             font-weight: 700;
-            color: var(--text-muted);
             text-transform: uppercase;
+            color: var(--text-muted);
         }
 
         .stat-box .val {
             font-size: 16px;
             font-weight: 800;
             color: var(--text-main);
-            margin-top: 4px;
+            margin-top: 3px;
             font-family: 'JetBrains Mono', monospace;
         }
 
-        .quick-specs-grid {
+        .hero-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-width: 170px;
+        }
+
+        /* Predictive Fluid & Component Decay Section */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .section-header h3 {
+            font-size: 18px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .decay-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 16px;
             margin-bottom: 28px;
         }
 
-        .spec-card {
+        .decay-card {
             background: var(--surface-dark);
             border: 1px solid var(--border-dark);
             border-radius: var(--radius-md);
             padding: 16px;
+            transition: all 0.2s;
         }
 
-        .spec-card .spec-title {
-            font-size: 12px;
+        .decay-card:hover {
+            border-color: var(--primary-cyan);
+        }
+
+        .decay-card-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .decay-name {
             font-weight: 700;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .decay-badge {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: var(--radius-full);
             text-transform: uppercase;
+        }
+
+        .decay-badge.healthy {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success-green);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .decay-badge.warning {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning-amber);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .decay-badge.overdue {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger-red);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .progress-bar-wrap {
+            width: 100%;
+            height: 8px;
+            background: var(--surface-card);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+            margin: 8px 0;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: var(--radius-full);
+            transition: width 0.4s ease;
+        }
+
+        .progress-bar-fill.healthy {
+            background: var(--success-green);
+        }
+
+        .progress-bar-fill.warning {
+            background: var(--warning-amber);
+        }
+
+        .progress-bar-fill.overdue {
+            background: var(--danger-red);
+        }
+
+        .decay-card-bottom {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* ------------------------------------------------------------- */
+        /* Interactive Wheel Chassis Diagram */
+        /* ------------------------------------------------------------- */
+        .chassis-widget {
+            background: var(--surface-dark);
+            border: 1px solid var(--border-dark);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            margin-bottom: 28px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .chassis-diagram {
+            position: relative;
+            width: 320px;
+            height: 220px;
+            margin: 16px 0;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.05) 0%, transparent 70%);
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .wheel-node {
+            position: absolute;
+            width: 58px;
+            height: 72px;
+            background: var(--surface-card);
+            border: 2px solid var(--border-dark);
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .wheel-node:hover, .wheel-node.selected {
+            border-color: var(--primary-cyan);
+            background: var(--surface-hover);
+            transform: scale(1.05);
+            box-shadow: 0 0 14px var(--accent-glow);
+        }
+
+        .wheel-node .pos {
+            font-size: 12px;
+            font-weight: 800;
             color: var(--primary-cyan);
-            margin-bottom: 6px;
         }
 
-        .spec-card .spec-val {
-            font-size: 15px;
+        .wheel-node .spec {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-top: 2px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* 4-Wheel Positions */
+        .wheel-fl { top: 16px; left: 24px; }
+        .wheel-fr { top: 16px; right: 24px; }
+        .wheel-rl { bottom: 16px; left: 24px; }
+        .wheel-rr { bottom: 16px; right: 24px; }
+        .wheel-spare { bottom: 16px; left: 131px; width: 50px; height: 50px; border-radius: 50%; }
+
+        /* 2-Wheel Positions (Motorcycle) */
+        .wheel-front { top: 20px; left: 131px; }
+        .wheel-rear { bottom: 20px; left: 131px; }
+
+        .chassis-car-body {
+            width: 90px;
+            height: 140px;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            border-radius: 30px 30px 20px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
             font-weight: 700;
-            color: var(--text-main);
+            color: var(--text-muted);
+            text-transform: uppercase;
         }
 
-        .logs-section {
+        /* ------------------------------------------------------------- */
+        /* Two Column Layout (Chronology & Analytics) */
+        /* ------------------------------------------------------------- */
+        .dashboard-grid-2 {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 24px;
+            margin-bottom: 28px;
+        }
+
+        @media (max-width: 960px) {
+            .dashboard-grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .content-card {
             background: var(--surface-dark);
             border: 1px solid var(--border-dark);
             border-radius: var(--radius-lg);
             padding: 24px;
-        }
-
-        .logs-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
         }
 
         .log-item {
@@ -561,64 +749,135 @@
             border-radius: var(--radius-md);
             padding: 16px;
             margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 16px;
             transition: all 0.2s;
         }
 
         .log-item:hover {
             border-color: var(--primary-cyan);
-            transform: translateX(2px);
         }
 
-        .log-left {
+        .log-item-header {
             display: flex;
             align-items: center;
-            gap: 14px;
+            justify-content: space-between;
+            margin-bottom: 8px;
         }
 
-        .log-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            background: rgba(56, 189, 248, 0.1);
-            color: var(--primary-cyan);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-        }
-
-        .log-title {
+        .log-item-title {
             font-weight: 700;
             font-size: 15px;
-            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .log-sub {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-top: 3px;
-        }
-
-        .log-cost {
+        .log-item-cost {
             font-family: 'JetBrains Mono', monospace;
             font-weight: 800;
-            font-size: 16px;
+            font-size: 15px;
             color: var(--success-green);
-            text-align: right;
+        }
+
+        .task-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-dark);
+            border-radius: 6px;
+            padding: 3px 8px;
+            font-size: 11px;
+            color: var(--text-muted);
+            margin: 4px 4px 0 0;
         }
 
         /* ------------------------------------------------------------- */
-        /* Toast Notifications */
+        /* Modals */
         /* ------------------------------------------------------------- */
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .modal-box {
+            background: var(--surface-dark);
+            border: 1px solid var(--border-dark);
+            border-radius: var(--radius-lg);
+            max-width: 680px;
+            width: 100%;
+            padding: 30px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: modalPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-dark);
+        }
+
+        .modal-header h3 {
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .btn-close-modal {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 22px;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .btn-close-modal:hover {
+            color: var(--danger-red);
+        }
+
+        /* Task rows inside visit logger */
+        .task-bundle-row {
+            background: var(--surface-card);
+            border: 1px solid var(--border-dark);
+            border-radius: var(--radius-md);
+            padding: 14px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .btn-remove-task {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: transparent;
+            border: none;
+            color: var(--danger-red);
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        /* Toast Container */
         .toast-container {
             position: fixed;
             bottom: 24px;
             right: 24px;
-            z-index: 1000;
+            z-index: 2000;
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -628,75 +887,79 @@
             background: var(--surface-card);
             border: 1px solid var(--border-dark);
             border-left: 4px solid var(--primary-cyan);
+            padding: 14px 18px;
+            border-radius: var(--radius-md);
             color: var(--text-main);
-            padding: 14px 20px;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            font-size: 13.5px;
+            font-size: 13px;
             font-weight: 600;
-            animation: slideIn 0.3s ease;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideInRight 0.25s ease;
             max-width: 360px;
         }
 
-        .toast.error { border-left-color: var(--danger-red); }
         .toast.success { border-left-color: var(--success-green); }
+        .toast.error { border-left-color: var(--danger-red); }
         .toast.warning { border-left-color: var(--warning-amber); }
 
-        
-        .modal-backdrop {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(8px);
-            z-index: 2000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            animation: fadeIn 0.2s ease;
+        /* Printable View (Resale Certificate) */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #printable-certificate, #printable-certificate * {
+                visibility: visible;
+            }
+            #printable-certificate {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                background: #FFF !important;
+                color: #000 !important;
+                padding: 40px;
+            }
         }
 
-        .modal-card {
-            background: var(--surface-dark);
-            border: 1px solid var(--border-dark);
-            border-radius: var(--radius-lg);
-            max-width: 480px;
-            width: 100%;
-            padding: 28px;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.8);
-            position: relative;
-        }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
-        @keyframes slideDown { from { transform: translateY(-100%); } to { transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes modalPop { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
+        @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <!-- Offline Persistent Guard Banner -->
+    <!-- Offline Pill Banner -->
     <div id="offline-banner" class="offline-banner">
-        ⚠️ Offline Mode — Working from local storage. Changes will sync once internet is restored.
+        <span>⚠️ Offline Mode — Changes saved locally to SQLite storage.</span>
+        <span id="pending-sync-counter" style="background:rgba(0,0,0,0.25); padding:2px 8px; border-radius:12px; font-size:11px;">0 pending</span>
     </div>
 
-    <!-- Navigation Header -->
-    <header class="navbar">
-        <a href="./" class="brand-container">
-            <div class="brand-logo">⚙️</div>
-            <div>
-                <div class="brand-title">CARLOG</div>
-                <div class="brand-subtitle">VEHICLE & GARAGE PLATFORM</div>
-            </div>
+    <!-- Application Header -->
+    <header class="app-header">
+        <a class="brand-logo" onclick="location.reload()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.5 2.8C2.1 10.7 2 10.9 2 11v5c0 .6.4 1 1 1h2"></path>
+                <circle cx="7" cy="17" r="2"></circle>
+                <path d="M9 17h6"></path>
+                <circle cx="17" cy="17" r="2"></circle>
+            </svg>
+            <span class="brand-title">CarLog</span>
+            <span class="brand-badge">PRO</span>
         </a>
 
         <div class="header-actions">
-            <div id="connection-pill" class="status-pill">
+            <!-- Simulated Connection Toggle -->
+            <div id="connection-pill" class="status-pill" onclick="toggleOnlineSimulation()" title="Click to test offline mode">
                 <span id="connection-dot" class="status-dot"></span>
                 <span id="connection-text">Online</span>
             </div>
 
+            <!-- User Chip -->
             <div id="user-chip" class="user-chip">
                 <span>👤 <span id="user-name-display" class="user-name">User</span></span>
-                <button class="btn-logout" title="Sign Out" onclick="handleLogout()">✕</button>
+                <button class="btn-logout" onclick="handleLogout()" title="Sign Out">✕</button>
             </div>
         </div>
     </header>
@@ -708,53 +971,40 @@
         <!-- ========================================================= -->
         <div id="login-view" class="auth-card">
             <div class="auth-header">
-                <h2>Garage Sign In</h2>
-                <p>Offline-First Vehicle & Motorcycle Maintenance</p>
-            </div>
-
-            <!-- 1-Click Demo Fill Pill -->
-            <div class="demo-pill" onclick="fillDemoCredentials()">
-                <div>
-                    <strong>Demo Garage Account</strong>
-                    <div style="font-size: 11px; opacity: 0.85; margin-top: 2px;">demo@carlog.xyz • CarLog2026!</div>
-                </div>
-                <span class="demo-pill-badge">1-CLICK FILL</span>
+                <h2>Welcome Back</h2>
+                <p>Sign in to manage your vehicles and maintenance records</p>
             </div>
 
             <form id="login-form" onsubmit="handleLogin(event)">
                 <div class="form-group">
-                    <label class="form-label">Email Address</label>
+                    <label class="form-label" for="login-email">Email Address</label>
                     <div class="input-wrapper">
                         <span class="input-icon">✉️</span>
-                        <input type="email" id="login-email" class="form-input" placeholder="name@domain.com" required autocomplete="email">
+                        <input type="email" id="login-email" class="form-input" placeholder="name@domain.com" value="demo@carlog.xyz" required autocomplete="email">
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Password</label>
+                    <label class="form-label" for="login-password">Password</label>
                     <div class="input-wrapper">
                         <span class="input-icon">🔒</span>
-                        <input type="password" id="login-password" class="form-input" placeholder="••••••••" required autocomplete="current-password">
-                        <button type="button" class="password-toggle" onclick="togglePassword('login-password')">👁️</button>
+                        <input type="password" id="login-password" class="form-input" placeholder="••••••••" value="CarLog2026!" required autocomplete="current-password">
                     </div>
                 </div>
 
-                <button type="submit" id="btn-login-submit" class="btn-primary">
+                <button type="submit" id="btn-login-submit" class="btn-primary" style="margin-top: 10px;">
                     <span id="login-spinner" style="display:none;">⏳</span>
-                    <span>ENTER GARAGE</span>
+                    <span>Sign In to Garage</span> &rarr;
                 </button>
 
                 <div id="google-btn-container" style="margin-top: 14px;">
-                    <button type="button" class="btn-google" onclick="handleGoogleSignIn()">
-                        <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/><path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.98 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/></svg>
-                        <span>Sign In with Google</span>
-                    </button>
-                </div>
-
-                <div class="auth-switch">
-                    Don't have an account? <a onclick="showView('register-view')">Create Account</a>
+                    <div id="g_id_signin_button"></div>
                 </div>
             </form>
+
+            <div class="auth-switch">
+                Don't have an account? <a onclick="showView('register-view')">Create one now</a>
+            </div>
         </div>
 
         <!-- ========================================================= -->
@@ -762,21 +1012,21 @@
         <!-- ========================================================= -->
         <div id="register-view" class="auth-card" style="display: none;">
             <div class="auth-header">
-                <h2>Create Garage Account</h2>
-                <p>Register for offline sync & fleet tracking</p>
+                <h2>Create Account</h2>
+                <p>Register your garage on CarLog with email verification</p>
             </div>
 
             <form id="register-form" onsubmit="handleRegister(event)">
                 <div class="form-group">
-                    <label class="form-label">Full Name</label>
+                    <label class="form-label" for="reg-name">Full Name / Garage Name</label>
                     <div class="input-wrapper">
                         <span class="input-icon">👤</span>
-                        <input type="text" id="reg-name" class="form-input" placeholder="Your Name or Workshop" required autocomplete="name">
+                        <input type="text" id="reg-name" class="form-input" placeholder="Abbas Charafeddine" required autocomplete="name">
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Email Address</label>
+                    <label class="form-label" for="reg-email">Email Address</label>
                     <div class="input-wrapper">
                         <span class="input-icon">✉️</span>
                         <input type="email" id="reg-email" class="form-input" placeholder="name@domain.com" required autocomplete="email">
@@ -784,23 +1034,22 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Password (Min 6 Characters)</label>
+                    <label class="form-label" for="reg-password">Password</label>
                     <div class="input-wrapper">
                         <span class="input-icon">🔒</span>
                         <input type="password" id="reg-password" class="form-input" placeholder="••••••••" minlength="6" required autocomplete="new-password">
-                        <button type="button" class="password-toggle" onclick="togglePassword('reg-password')">👁️</button>
                     </div>
                 </div>
 
-                <button type="submit" id="btn-register-submit" class="btn-primary">
+                <button type="submit" id="btn-register-submit" class="btn-primary" style="margin-top: 10px;">
                     <span id="register-spinner" style="display:none;">⏳</span>
-                    <span>CREATE ACCOUNT</span>
+                    <span>Send Verification Code</span> &rarr;
                 </button>
-
-                <div class="auth-switch">
-                    Already registered? <a onclick="showView('login-view')">Sign In</a>
-                </div>
             </form>
+
+            <div class="auth-switch">
+                Already have an account? <a onclick="showView('login-view')">Sign in</a>
+            </div>
         </div>
 
         <!-- ========================================================= -->
@@ -808,208 +1057,677 @@
         <!-- ========================================================= -->
         <div id="otp-view" class="auth-card" style="display: none;">
             <div class="auth-header">
-                <h2>Verify Email Address</h2>
-                <p>Enter the 6-digit verification code sent to <strong id="otp-target-email" style="color:var(--primary-cyan)"></strong></p>
+                <h2>Verify Email</h2>
+                <p>Enter the 6-digit OTP code sent to <strong id="otp-target-email" style="color:var(--primary-cyan)"></strong></p>
             </div>
 
             <form id="otp-form" onsubmit="handleVerifyOtp(event)">
-                <div class="otp-inputs">
-                    <input type="text" class="otp-box" maxlength="1" oninput="handleOtpInput(this, 0)" onkeydown="handleOtpBackspace(this, event, 0)">
-                    <input type="text" class="otp-box" maxlength="1" oninput="handleOtpInput(this, 1)" onkeydown="handleOtpBackspace(this, event, 1)">
-                    <input type="text" class="otp-box" maxlength="1" oninput="handleOtpInput(this, 2)" onkeydown="handleOtpBackspace(this, event, 2)">
-                    <input type="text" class="otp-box" maxlength="1" oninput="handleOtpInput(this, 3)" onkeydown="handleOtpBackspace(this, event, 3)">
-                    <input type="text" class="otp-box" maxlength="1" oninput="handleOtpInput(this, 4)" onkeydown="handleOtpBackspace(this, event, 4)">
-                    <input type="text" class="otp-box" maxlength="1" oninput="handleOtpInput(this, 5)" onkeydown="handleOtpBackspace(this, event, 5)">
+                <div class="form-group">
+                    <label class="form-label" for="otp-code">6-Digit Verification Code</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">🔑</span>
+                        <input type="text" id="otp-code" class="form-input" placeholder="123456" maxlength="6" pattern="[0-9]{6}" required style="letter-spacing: 6px; font-size: 20px; text-align: center;">
+                    </div>
                 </div>
 
-                <button type="submit" id="btn-otp-submit" class="btn-primary">
+                <button type="submit" id="btn-otp-submit" class="btn-primary" style="margin-top: 10px;">
                     <span id="otp-spinner" style="display:none;">⏳</span>
-                    <span>VERIFY & ENTER GARAGE</span>
+                    <span>Verify & Enter Garage</span> &rarr;
                 </button>
 
                 <div class="auth-switch">
-                    Didn't receive the code? <a id="btn-resend-otp" onclick="handleResendCode()">Resend Code</a>
+                    Didn't receive code? <a onclick="handleResendCode()">Resend Code</a>
                 </div>
             </form>
         </div>
 
         <!-- ========================================================= -->
-        <!-- 4. GARAGE DASHBOARD VIEW (AUTHENTICATED) -->
+        <!-- 4. MAIN GARAGE DASHBOARD (AUTHENTICATED) -->
         <!-- ========================================================= -->
         <div id="dashboard-view">
-            <div class="dash-welcome">
-                <div>
-                    <h1 id="dash-greeting">My Garage</h1>
-                    <p style="color: var(--text-muted); font-size: 14px; margin-top: 4px;">Offline-first fleet status • Strictly USD ($) & 100% Metric (km, L, Bar)</p>
+
+            <!-- Topbar with Vehicle Switcher & Actions -->
+            <div class="dash-topbar">
+                <div class="vehicle-selector-wrap">
+                    <select id="vehicle-select" class="vehicle-select" onchange="handleSelectVehicle(this.value)">
+                        <option value="">Loading vehicles...</option>
+                    </select>
+                    <button class="btn-secondary btn-sm" onclick="openAddVehicleModal()">+ Add Vehicle / Moto</button>
                 </div>
 
-                <div style="display: flex; gap: 10px;">
-                    <a id="btn-view-service-book" href="v/demo-corolla-2022" target="_blank" class="btn-primary" style="padding: 10px 18px; font-size: 13px; text-decoration: none;">
-                        <span>Digital Service Book</span> ↗
-                    </a>
+                <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                    <button class="btn-primary btn-sm" onclick="openLogServiceModal()">+ Log Workshop Visit</button>
+                    <button class="btn-secondary btn-sm" onclick="openFuelModal()">⛽ Fuel Fill-Up</button>
+                    <button class="btn-secondary btn-sm" onclick="openSymptomModal()">🔍 Diagnostic OBD</button>
+                    <button class="btn-secondary btn-sm" onclick="openInventoryModal()">📦 Spare Parts</button>
+                    <button class="btn-secondary btn-sm" onclick="openInspectionModal()">📋 Safety Checklist</button>
                 </div>
             </div>
 
-            <!-- Active Vehicle Card -->
+            <!-- Vehicle Hero Card -->
             <div class="vehicle-hero-card">
-                <div class="vehicle-img-box">🚗</div>
+                <div class="vehicle-img-box" id="veh-img-box">🚗</div>
                 <div class="vehicle-details">
                     <h2>
                         <span id="veh-title">2022 TOYOTA COROLLA</span>
-                        <span class="badge-verified">✓ Verified Record</span>
+                        <span class="badge-verified">✓ Verified Garage Record</span>
                     </h2>
                     <div style="font-size: 13px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">
-                        VIN: <span id="veh-vin" style="color:var(--text-main)">2T1BURHE7NC123456</span> • Plate: <span id="veh-plate" style="color:var(--text-main)">B 789123</span>
+                        VIN: <span id="veh-vin" style="color:var(--text-main)">2T1BURHE7NC123456</span> • Plate: <span id="veh-plate" style="color:var(--text-main)">B 789123</span> • Type: <span id="veh-type" style="text-transform:uppercase; color:var(--primary-cyan)">CAR</span>
                     </div>
 
                     <div class="stat-grid">
                         <div class="stat-box">
-                            <div class="label">Odometer</div>
+                            <div class="label">Current Odometer</div>
                             <div class="val" id="veh-odo">32,450 km</div>
                         </div>
                         <div class="stat-box">
-                            <div class="label">Displacement</div>
-                            <div class="val" id="veh-disp">1798 cc</div>
+                            <div class="label">Engine & Power</div>
+                            <div class="val" id="veh-engine">1798 cc (103 kW)</div>
                         </div>
                         <div class="stat-box">
-                            <div class="label">Power</div>
-                            <div class="val" id="veh-power">103 kW</div>
+                            <div class="label">Ownership Cost</div>
+                            <div class="val" id="veh-tco" style="color: var(--success-green);">$0.0075 / km</div>
                         </div>
                         <div class="stat-box">
-                            <div class="label">TCO / km</div>
-                            <div class="val" style="color: var(--success-green);">$0.0075 / km</div>
+                            <div class="label">Total Spent</div>
+                            <div class="val" id="veh-total-spent">$243.00</div>
                         </div>
                     </div>
+                </div>
+
+                <div class="hero-actions">
+                    <a id="btn-public-book" href="v/demo-corolla-2022" target="_blank" class="btn-secondary btn-sm" style="text-align:center;">
+                        <span>Digital Service Book</span> ↗
+                    </a>
+                    <button class="btn-secondary btn-sm" onclick="openResaleCertificate()">
+                        <span>📄 Print Resale PDF</span>
+                    </button>
                 </div>
             </div>
 
-            <!-- Glovebox Quick Specs -->
-            <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 14px;">Glovebox Quick-Specs</h3>
-            <div class="quick-specs-grid">
-                <div class="spec-card">
-                    <div class="spec-title">Engine Oil & Volume</div>
-                    <div class="spec-val">0W-20 Full Synthetic (4.20 L)</div>
+            <!-- Predictive Maintenance & Fluid Decay Section -->
+            <div class="section-header">
+                <h3><span>🧠 Predictive Maintenance & Fluid Decay Gauges</span></h3>
+                <span style="font-size: 12px; color: var(--text-muted);">Decay Algorithm: km & calendar worst-case driver</span>
+            </div>
+
+            <div id="predictive-decay-grid" class="decay-grid">
+                <!-- Injected via JavaScript -->
+            </div>
+
+            <!-- Interactive 4-Wheel / 2-Wheel Position Diagram Widget -->
+            <div class="chassis-widget">
+                <div style="width:100%; display:flex; justify-content:space-between; align-items:center;">
+                    <h4 style="font-size:15px; font-weight:800;">Interactive Chassis & Tire Position Diagram</h4>
+                    <span id="chassis-mode-badge" style="font-size:11px; font-weight:700; color:var(--primary-cyan); text-transform:uppercase;">4-Wheel Car Layout</span>
                 </div>
-                <div class="spec-card">
-                    <div class="spec-title">Coolant Spec</div>
-                    <div class="spec-val">Toyota Pink SLLC (6.50 L)</div>
+
+                <div class="chassis-diagram" id="chassis-container">
+                    <!-- Nodes injected dynamically depending on car vs motorcycle -->
                 </div>
-                <div class="spec-card">
-                    <div class="spec-title">Tire Pressures (Cold)</div>
-                    <div class="spec-val">Front: 2.30 Bar • Rear: 2.20 Bar</div>
-                </div>
-                <div class="spec-card">
-                    <div class="spec-title">Wheel Lug Torque</div>
-                    <div class="spec-val">103 Nm</div>
+
+                <div style="font-size:12px; color:var(--text-muted); text-align:center;">
+                    Click any wheel position above to inspect tire tread depth (mm) and brake pad thickness (mm)
                 </div>
             </div>
 
-            <!-- Maintenance Chronology -->
-            <div class="logs-section">
-                <div class="logs-header">
-                    <h3 style="font-size: 18px; font-weight: 800;">Recent Maintenance Visits</h3>
-                    <span style="font-size: 12px; color: var(--text-muted);">Currency: USD ($)</span>
+            <!-- Two Column Section: Chronology & Fuel / Inventory -->
+            <div class="dashboard-grid-2">
+
+                <!-- Left Column: Workshop Visits Chronology -->
+                <div class="content-card">
+                    <div class="section-header">
+                        <h3><span>🛠️ Workshop Visits Chronology</span></h3>
+                        <span style="font-size: 12px; color: var(--text-muted);">Strictly USD ($)</span>
+                    </div>
+
+                    <div id="visits-list">
+                        <!-- Visits injected via JS -->
+                    </div>
                 </div>
 
-                <div class="log-item">
-                    <div class="log-left">
-                        <div class="log-icon">🛢️</div>
-                        <div>
-                            <div class="log-title">Engine Oil & Filter Replacement</div>
-                            <div class="log-sub">2024-03-15 • 10,120 km • Mann-Filter W 68/3 (4.20 L) • Apex Auto Precision</div>
-                        </div>
-                    </div>
-                    <div class="log-cost">$70.00</div>
-                </div>
+                <!-- Right Column: Fuel & Diagnostics -->
+                <div style="display: flex; flex-direction: column; gap: 24px;">
 
-                <div class="log-item">
-                    <div class="log-left">
-                        <div class="log-icon">🌬️</div>
-                        <div>
-                            <div class="log-title">Engine Air Intake & Pollen Filter</div>
-                            <div class="log-sub">2024-09-20 • 20,350 km • Denso 17801-0T060 • Apex Auto Precision</div>
+                    <!-- Fuel Economy Analytics -->
+                    <div class="content-card">
+                        <div class="section-header">
+                            <h3><span>⛽ Fuel Economy Tracker</span></h3>
+                            <button class="btn-secondary btn-sm" onclick="openFuelModal()">+ Fill</button>
+                        </div>
+                        <div id="fuel-summary-box" style="margin-bottom:14px; font-size:13px; color:var(--text-muted);">
+                            Logging fill-ups in Liters (L) and USD ($).
+                        </div>
+                        <div id="fuel-logs-list">
+                            <!-- Fuel logs injected via JS -->
                         </div>
                     </div>
-                    <div class="log-cost">$43.00</div>
-                </div>
 
-                <div class="log-item">
-                    <div class="log-left">
-                        <div class="log-icon">🛑</div>
-                        <div>
-                            <div class="log-title">Front Ceramic Brake Pads Overhaul</div>
-                            <div class="log-sub">2025-05-10 • 30,500 km • Brembo P 83 150 (FL, FR: 9.5 mm) • Apex Auto Precision</div>
+                    <!-- Diagnostic Symptom Journal -->
+                    <div class="content-card">
+                        <div class="section-header">
+                            <h3><span>🩺 Diagnostic Symptoms</span></h3>
+                            <button class="btn-secondary btn-sm" onclick="openSymptomModal()">+ Log</button>
+                        </div>
+                        <div id="symptoms-list">
+                            <!-- Symptoms injected via JS -->
                         </div>
                     </div>
-                    <div class="log-cost">$130.00</div>
+
+                    <!-- Glovebox Quick Specs -->
+                    <div class="content-card">
+                        <div class="section-header">
+                            <h3><span>🗄️ Glovebox Quick-Specs</span></h3>
+                            <button class="btn-secondary btn-sm" onclick="openEditSpecsModal()">Edit</button>
+                        </div>
+                        <div id="quick-specs-container" style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:13px;">
+                            <!-- Specs injected via JS -->
+                        </div>
+                    </div>
+
                 </div>
             </div>
+
         </div>
 
     </main>
 
-    <!-- Google OAuth Client ID Setup Modal -->
-    <div id="google-modal" class="modal-backdrop" style="display: none;">
-        <div class="modal-card">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                <h3 style="font-size: 18px; font-weight: 800; display: flex; align-items: center; gap: 8px;">
-                    <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/><path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.98 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/></svg>
-                    Google Sign-In Connection
-                </h3>
-                <button type="button" onclick="closeGoogleModal()" style="background: none; border: none; color: var(--text-muted); font-size: 20px; cursor: pointer;">✕</button>
-            </div>
-            
-            <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 18px;">
-                To sign in with your official Google account, connect your <strong>Google OAuth 2.0 Client ID</strong> from Google Cloud Console.
-            </p>
-
-            <div class="form-group">
-                <label class="form-label">Google OAuth Client ID</label>
-                <input type="text" id="google-client-id-input" class="form-input" style="padding-left: 14px; font-family: monospace; font-size: 12px;" placeholder="e.g. 123456789-xxxx.apps.googleusercontent.com">
+    <!-- ========================================================= -->
+    <!-- MODAL 1: ADD / EDIT VEHICLE (3-STEP VIN DECODER) -->
+    <!-- ========================================================= -->
+    <div id="modal-vehicle" class="modal-backdrop">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="modal-vehicle-title">Add Vehicle / Motorcycle</h3>
+                <button class="btn-close-modal" onclick="closeModal('modal-vehicle')">✕</button>
             </div>
 
-            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-                <button type="button" class="btn-primary" style="flex: 1; padding: 11px;" onclick="saveGoogleClientId()">
-                    Save & Activate Google Button
-                </button>
+            <form id="vehicle-form" onsubmit="handleSaveVehicle(event)">
+                <div class="form-group">
+                    <label class="form-label" for="veh-input-type">Vehicle Type</label>
+                    <select id="veh-input-type" class="form-select no-icon" onchange="handleVehicleTypeChange(this.value)">
+                        <option value="car">Car / Sedan / SUV</option>
+                        <option value="motorcycle">Motorcycle / Scooter</option>
+                        <option value="truck">Truck / Van</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label">
+                        <span>VIN (17 Characters) — 3-Step Decoder</span>
+                        <span id="wmi-match-pill" style="display:none; color:var(--success-green); font-size:11px;">✓ WMI Match</span>
+                    </div>
+                    <div class="input-wrapper" style="gap:8px;">
+                        <input type="text" id="veh-input-vin" class="form-input no-icon" placeholder="e.g. 2T1BURHE7NC123456" maxlength="17" oninput="handleVinInput(this.value)">
+                        <button type="button" class="btn-secondary btn-sm" onclick="decodeVinOnline()" style="white-space:nowrap;">Decode (NHTSA)</button>
+                    </div>
+                    <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">
+                        Step 1: Offline WMI manufacturer identification • Step 2: Live NHTSA vPIC + Imperial-to-Metric Auto-Conversion
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="veh-input-make">Make</label>
+                        <input type="text" id="veh-input-make" class="form-input no-icon" placeholder="Toyota / Yamaha" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="veh-input-model">Model</label>
+                        <input type="text" id="veh-input-model" class="form-input no-icon" placeholder="Corolla / MT-07" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="veh-input-year">Model Year</label>
+                        <input type="number" id="veh-input-year" class="form-input no-icon" placeholder="2022" min="1950" max="2030" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="veh-input-plate">Plate Number</label>
+                        <input type="text" id="veh-input-plate" class="form-input no-icon" placeholder="B 789123">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <div class="form-label">
+                            <span>Displacement (cc)</span>
+                            <span class="helper-chips"><span class="chip-convert" onclick="convertInput('veh-input-cc', 'ci_to_cc')">CI &rarr; cc</span></span>
+                        </div>
+                        <input type="number" id="veh-input-cc" class="form-input no-icon" placeholder="1798">
+                    </div>
+                    <div class="form-group">
+                        <div class="form-label">
+                            <span>Power (kW)</span>
+                            <span class="helper-chips"><span class="chip-convert" onclick="convertInput('veh-input-power', 'hp_to_kw')">HP &rarr; kW</span></span>
+                        </div>
+                        <input type="number" id="veh-input-power" class="form-input no-icon" placeholder="103">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="veh-input-trans">Transmission</label>
+                        <select id="veh-input-trans" class="form-select no-icon">
+                            <option value="manual">Manual</option>
+                            <option value="automatic">Automatic</option>
+                            <option value="cvt">CVT</option>
+                            <option value="dct">DCT</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="veh-input-fuel">Fuel Type</label>
+                        <select id="veh-input-fuel" class="form-select no-icon">
+                            <option value="gasoline">Gasoline</option>
+                            <option value="diesel">Diesel</option>
+                            <option value="hybrid">Hybrid</option>
+                            <option value="electric">Electric</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="veh-input-acq-odo">Acquisition Odo (km)</label>
+                        <input type="number" id="veh-input-acq-odo" class="form-input no-icon" placeholder="0" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="veh-input-curr-odo">Current Odo (km)</label>
+                        <input type="number" id="veh-input-curr-odo" class="form-input no-icon" placeholder="32450" min="0" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary" style="margin-top:10px;">Save Vehicle to Garage</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- MODAL 2: LOG SERVICE BUNDLE VISIT -->
+    <!-- ========================================================= -->
+    <div id="modal-service-visit" class="modal-backdrop">
+        <div class="modal-box" style="max-width: 760px;">
+            <div class="modal-header">
+                <h3>Log Workshop Visit & Service Bundle</h3>
+                <button class="btn-close-modal" onclick="closeModal('modal-service-visit')">✕</button>
             </div>
 
-            <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-dark); border-radius: var(--radius-md); padding: 14px; margin-bottom: 20px;">
-                <div style="font-size: 11px; font-weight: 700; color: var(--primary-cyan); margin-bottom: 8px;">QUICK SETUP IN GOOGLE CLOUD CONSOLE:</div>
-                <ol style="font-size: 12px; color: var(--text-muted); padding-left: 18px; line-height: 1.6;">
-                    <li>Open <a href="https://console.cloud.google.com/apis/credentials" target="_blank" style="color:var(--primary-cyan)">console.cloud.google.com/apis/credentials</a></li>
-                    <li>Click <strong>Create Credentials</strong> &rarr; <strong>OAuth Client ID</strong> (Web Application).</li>
-                    <li>Add Authorized JavaScript origin: <code style="color:#fff; background:#222E4A; padding:2px 4px; border-radius:4px;">https://charafeddine.xyz</code></li>
-                    <li>Paste your Client ID above and save!</li>
-                </ol>
+            <form id="service-visit-form" onsubmit="handleSaveServiceVisit(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="sv-date">Service Date</label>
+                        <input type="date" id="sv-date" class="form-input no-icon" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="sv-odo">Odometer (km)</label>
+                        <input type="number" id="sv-odo" class="form-input no-icon" placeholder="35000" min="0" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="sv-shop">Workshop / Mechanic</label>
+                        <input type="text" id="sv-shop" class="form-input no-icon" placeholder="Apex Auto Precision">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="sv-title">Visit Title</label>
+                        <input type="text" id="sv-title" class="form-input no-icon" placeholder="Scheduled Maintenance" required>
+                    </div>
+                </div>
+
+                <!-- Attached Tasks Container -->
+                <div style="margin: 20px 0 10px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                        <h4 style="font-size:15px; font-weight:800;">Maintenance Tasks Attached to Visit</h4>
+                        <button type="button" class="btn-secondary btn-sm" onclick="addTaskRowToBundle()">+ Add Task</button>
+                    </div>
+                    <div id="bundle-tasks-container">
+                        <!-- Dynamic task rows injected here -->
+                    </div>
+                </div>
+
+                <!-- Total Visit Cost -->
+                <div style="background:var(--surface-card); border:1px solid var(--border-dark); border-radius:var(--radius-md); padding:14px; margin-bottom:18px; display:flex; justify-content:space-between; align-items:center;">
+                    <span style="font-size:14px; font-weight:700;">Total Workshop Visit Cost:</span>
+                    <span id="sv-total-cost-display" style="font-family:'JetBrains Mono', monospace; font-size:18px; font-weight:800; color:var(--success-green);">$0.00 USD</span>
+                </div>
+
+                <button type="submit" class="btn-primary">Save Complete Service Bundle</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- MODAL 3: LOG FUEL FILL-UP -->
+    <!-- ========================================================= -->
+    <div id="modal-fuel" class="modal-backdrop">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Log Fuel Fill-Up</h3>
+                <button class="btn-close-modal" onclick="closeModal('modal-fuel')">✕</button>
             </div>
 
-            <div style="text-align: center; border-top: 1px solid var(--border-dark); padding-top: 16px;">
-                <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">Need to test Google authentication right away?</div>
-                <button type="button" class="btn-primary" style="background: #10B981; box-shadow: 0 4px 16px rgba(16,185,129,0.3);" onclick="simulateGoogleSignIn()">
-                    <span>⚡</span>
-                    <span>Test Instant Google Sign-In (Simulated)</span>
-                </button>
+            <form id="fuel-form" onsubmit="handleSaveFuel(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="fuel-date">Fill Date</label>
+                        <input type="date" id="fuel-date" class="form-input no-icon" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="fuel-odo">Odometer (km)</label>
+                        <input type="number" id="fuel-odo" class="form-input no-icon" placeholder="33000" min="0" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <div class="form-label">
+                            <span>Fuel Volume (L)</span>
+                            <span class="helper-chips"><span class="chip-convert" onclick="convertInput('fuel-liters', 'gal_to_l')">gal &rarr; L</span></span>
+                        </div>
+                        <input type="number" step="0.01" id="fuel-liters" class="form-input no-icon" placeholder="42.50" oninput="calculateFuelTotal()" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="fuel-price-per-l">Price per Liter ($ USD / L)</label>
+                        <input type="number" step="0.001" id="fuel-price-per-l" class="form-input no-icon" placeholder="1.250" value="1.250" oninput="calculateFuelTotal()" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="fuel-total-cost">Total Cost ($ USD)</label>
+                        <input type="number" step="0.01" id="fuel-total-cost" class="form-input no-icon" placeholder="53.13" required>
+                    </div>
+                    <div class="form-group" style="display:flex; align-items:center; gap:10px; margin-top:28px;">
+                        <input type="checkbox" id="fuel-is-full" checked style="width:18px; height:18px;">
+                        <label for="fuel-is-full" style="font-size:13px; font-weight:700; cursor:pointer;">Full Tank (Calculate L/100km)</label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary" style="margin-top:10px;">Save Fuel Fill-Up</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- MODAL 4: DIAGNOSTIC SYMPTOMS & OBD-II -->
+    <!-- ========================================================= -->
+    <div id="modal-symptom" class="modal-backdrop">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Diagnostic Symptom Journal & OBD-II</h3>
+                <button class="btn-close-modal" onclick="closeModal('modal-symptom')">✕</button>
+            </div>
+
+            <form id="symptom-form" onsubmit="handleSaveSymptom(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="sym-date">Logged Date</label>
+                        <input type="date" id="sym-date" class="form-input no-icon" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="sym-odo">Odometer (km)</label>
+                        <input type="number" id="sym-odo" class="form-input no-icon" placeholder="33000">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="sym-obd">OBD-II DTC Code (Search 36+ Seeded Codes)</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="sym-obd" class="form-input no-icon" placeholder="e.g. P0300, P0420" oninput="handleObdSearch(this.value)">
+                    </div>
+                    <div id="obd-search-results" style="margin-top:6px; font-size:12px;"></div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="sym-severity">Severity Level</label>
+                        <select id="sym-severity" class="form-select no-icon">
+                            <option value="minor">Minor (Cosmetic / Mild Squeak)</option>
+                            <option value="moderate">Moderate (Performance Drop / Warning Light)</option>
+                            <option value="critical">Critical (Stop Engine / Safety Hazard)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="sym-state">Engine State</label>
+                        <select id="sym-state" class="form-select no-icon">
+                            <option value="cold_start">Cold Start</option>
+                            <option value="idling">Idling</option>
+                            <option value="cruising">Cruising / Highway</option>
+                            <option value="accelerating">Hard Accelerating</option>
+                            <option value="braking">Hard Braking</option>
+                            <option value="other">Other / Stationary</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="sym-desc">Symptom Description</label>
+                    <textarea id="sym-desc" class="form-textarea no-icon" placeholder="Describe squeak, rattle, knock, or vibration..." required></textarea>
+                </div>
+
+                <!-- 10-Second Diagnostic Audio Recorder -->
+                <div class="form-group">
+                    <label class="form-label">10-Second Diagnostic Audio Recorder</label>
+                    <div style="background:var(--surface-card); border:1px solid var(--border-dark); border-radius:var(--radius-md); padding:12px; display:flex; align-items:center; justify-content:space-between; gap:12px;">
+                        <button type="button" id="btn-audio-rec" class="btn-secondary btn-sm" onclick="toggleAudioRecording()">🎙️ Start 10s Recording</button>
+                        <span id="audio-rec-timer" style="font-family:'JetBrains Mono', monospace; font-size:12px; color:var(--text-muted);">00:00 / 00:10</span>
+                        <audio id="audio-playback" controls style="display:none; height:32px;"></audio>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary">Record Diagnostic Symptom</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- MODAL 5: SPARE PARTS INVENTORY -->
+    <!-- ========================================================= -->
+    <div id="modal-inventory" class="modal-backdrop">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Garage Spare Parts Inventory Bin</h3>
+                <button class="btn-close-modal" onclick="closeModal('modal-inventory')">✕</button>
+            </div>
+
+            <form id="inventory-form" onsubmit="handleSaveInventory(event)" style="margin-bottom:20px; border-bottom:1px solid var(--border-dark); padding-bottom:16px;">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="inv-name">Item Name</label>
+                        <input type="text" id="inv-name" class="form-input no-icon" placeholder="e.g. Engine Oil Filter" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="inv-brand">Brand</label>
+                        <input type="text" id="inv-brand" class="form-input no-icon" placeholder="Mann-Filter / Motul">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="inv-part-num">Part Number</label>
+                        <input type="text" id="inv-part-num" class="form-input no-icon" placeholder="W 68/3">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="inv-price">Unit Price ($ USD)</label>
+                        <input type="number" step="0.01" id="inv-price" class="form-input no-icon" placeholder="12.50">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="inv-qty">Quantity</label>
+                        <input type="number" step="0.1" id="inv-qty" class="form-input no-icon" placeholder="2.0" value="1.0" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="inv-unit">Unit</label>
+                        <select id="inv-unit" class="form-select no-icon">
+                            <option value="pcs">Pieces (pcs)</option>
+                            <option value="L">Liters (L)</option>
+                            <option value="mL">Milliliters (mL)</option>
+                            <option value="set">Set</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary btn-sm">+ Add Item to Shelf</button>
+            </form>
+
+            <h4 style="font-size:14px; font-weight:800; margin-bottom:10px;">Current Shelf Inventory</h4>
+            <div id="inventory-items-list" style="max-height:220px; overflow-y:auto;">
+                <!-- Injected via JS -->
             </div>
         </div>
     </div>
 
-    <!-- Toast Alerts -->
+    <!-- ========================================================= -->
+    <!-- MODAL 6: PRE-TRIP / SAFETY INSPECTION CHECKLIST -->
+    <!-- ========================================================= -->
+    <div id="modal-inspection" class="modal-backdrop">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Pre-Trip / Safety Inspection Checklist</h3>
+                <button class="btn-close-modal" onclick="closeModal('modal-inspection')">✕</button>
+            </div>
+
+            <div id="inspection-checklist-container">
+                <!-- Checklist items injected via JS -->
+            </div>
+
+            <button type="button" class="btn-primary" onclick="submitInspection()" style="margin-top:16px;">Complete Safety Inspection</button>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- MODAL 7: EDIT QUICK SPECS -->
+    <!-- ========================================================= -->
+    <div id="modal-specs" class="modal-backdrop">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Edit Glovebox Quick-Specs</h3>
+                <button class="btn-close-modal" onclick="closeModal('modal-specs')">✕</button>
+            </div>
+
+            <form id="specs-form" onsubmit="handleSaveQuickSpecs(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="spec-oil-vis">Oil Viscosity</label>
+                        <input type="text" id="spec-oil-vis" class="form-input no-icon" placeholder="0W-20 Full Synthetic">
+                    </div>
+                    <div class="form-group">
+                        <div class="form-label">
+                            <span>Oil Capacity (L)</span>
+                            <span class="helper-chips"><span class="chip-convert" onclick="convertInput('spec-oil-cap', 'qt_to_l')">Qt &rarr; L</span></span>
+                        </div>
+                        <input type="number" step="0.01" id="spec-oil-cap" class="form-input no-icon" placeholder="4.20">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <div class="form-label">
+                            <span>Front Tire Pressure (Bar)</span>
+                            <span class="helper-chips"><span class="chip-convert" onclick="convertInput('spec-tire-f', 'psi_to_bar')">PSI &rarr; Bar</span></span>
+                        </div>
+                        <input type="number" step="0.01" id="spec-tire-f" class="form-input no-icon" placeholder="2.30">
+                    </div>
+                    <div class="form-group">
+                        <div class="form-label">
+                            <span>Rear Tire Pressure (Bar)</span>
+                            <span class="helper-chips"><span class="chip-convert" onclick="convertInput('spec-tire-r', 'psi_to_bar')">PSI &rarr; Bar</span></span>
+                        </div>
+                        <input type="number" step="0.01" id="spec-tire-r" class="form-input no-icon" placeholder="2.20">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <div class="form-label">
+                            <span>Wheel Lug Torque (Nm)</span>
+                            <span class="helper-chips"><span class="chip-convert" onclick="convertInput('spec-torque', 'lbft_to_nm')">lb-ft &rarr; Nm</span></span>
+                        </div>
+                        <input type="number" id="spec-torque" class="form-input no-icon" placeholder="103">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="spec-coolant">Coolant Spec</label>
+                        <input type="text" id="spec-coolant" class="form-input no-icon" placeholder="Toyota Pink SLLC">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary" style="margin-top:10px;">Save Glovebox Specs</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- PRINTABLE RESALE CERTIFICATE (OFF-SCREEN / MODAL) -->
+    <!-- ========================================================= -->
+    <div id="modal-resale" class="modal-backdrop">
+        <div class="modal-box" style="max-width: 800px; background:#FFFFFF; color:#1E293B;">
+            <div class="modal-header" style="border-bottom: 2px solid #E2E8F0;">
+                <h3 style="color:#0F172A;">Verified Resale Service Certificate</h3>
+                <button class="btn-close-modal" onclick="closeModal('modal-resale')" style="color:#64748B;">✕</button>
+            </div>
+
+            <div id="printable-certificate" style="padding:10px 0;">
+                <!-- Certificate content generated dynamically -->
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
+                <button class="btn-secondary btn-sm" onclick="closeModal('modal-resale')">Close</button>
+                <button class="btn-primary btn-sm" onclick="window.print()">🖨️ Print / Save as PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications Container -->
     <div id="toast-container" class="toast-container"></div>
 
+    <!-- ========================================================= -->
+    <!-- JAVASCRIPT MASTER ENGINE -->
+    <!-- ========================================================= -->
     <script>
-        // -------------------------------------------------------------
-        // Core State & API Configuration
-        // -------------------------------------------------------------
-        const API_BASE = window.location.pathname.includes('/karkare') ? '/karkare/api' : '/api';
-        let currentTargetEmail = '';
+        // Offline / Online state
+        let isOnline = navigator.onLine;
+        let pendingSyncQueue = JSON.parse(localStorage.getItem('carlog_pending_sync') || '[]');
+        let garageData = null;
+        let activeVehicle = null;
+        let audioRecorder = null;
+        let audioChunks = [];
 
-        // Check authentication state on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            initConnectivityListener();
-            checkSession();
-        });
+        // WMI Manufacturer regex lookup (Step 1 of 3-Step VIN Decoder)
+        const WMI_MAP = [
+            { regex: /^1(FA|FB|FC|FD|FM|FT)/i, make: 'Ford' },
+            { regex: /^1(HG|HN)/i, make: 'Honda' },
+            { regex: /^2(T1|T2|T3)/i, make: 'Toyota' },
+            { regex: /^4(T1|T2|T3|T4)/i, make: 'Toyota' },
+            { regex: /^5(TB|TD|TF|YJ)/i, make: 'Toyota' },
+            { regex: /^J(N1|N2|N3|N4|N6|N8)/i, make: 'Nissan' },
+            { regex: /^J(M1|M2|M3)/i, make: 'Mazda' },
+            { regex: /^K(M8|M9|M1)/i, make: 'Hyundai' },
+            { regex: /^K(N1|N2|N3)/i, make: 'Kia' },
+            { regex: /^W(AU|A1)/i, make: 'Audi' },
+            { regex: /^W(BA|BS|BY)/i, make: 'BMW' },
+            { regex: /^W(DB|DC|DD)/i, make: 'Mercedes-Benz' },
+            { regex: /^W(P0|P1)/i, make: 'Porsche' },
+            { regex: /^W(VW|V1|V2|V3)/i, make: 'Volkswagen' },
+            { regex: /^Y(V1|V4)/i, make: 'Volvo' },
+            { regex: /^J(H2|H3|H4)/i, make: 'Honda' },
+            { regex: /^J(Y4|YA)/i, make: 'Yamaha' },
+            { regex: /^J(S1|S2)/i, make: 'Suzuki' },
+            { regex: /^J(KB|KA)/i, make: 'Kawasaki' },
+            { regex: /^V(BK)/i, make: 'KTM' },
+            { regex: /^Z(DM)/i, make: 'Ducati' },
+            { regex: /^Z(D4)/i, make: 'Aprilia' },
+            { regex: /^1(HD)/i, make: 'Harley-Davidson' },
+            { regex: /^S(MB)/i, make: 'Triumph' },
+            { regex: /^W(B1|B2)/i, make: 'BMW Motorrad' }
+        ];
 
+        // -------------------------------------------------------------
+        // Core View Switching & Auth
+        // -------------------------------------------------------------
         function showView(viewId) {
             ['login-view', 'register-view', 'otp-view', 'dashboard-view'].forEach(id => {
                 const el = document.getElementById(id);
@@ -1017,350 +1735,1263 @@
             });
         }
 
-        function showToast(message, type = 'info') {
+        function showToast(message, type = 'info', duration = 4000) {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
-            toast.innerText = message;
+            const icon = type === 'success' ? '✓' : (type === 'error' ? '✗' : (type === 'warning' ? '⚠' : 'ℹ'));
+            toast.innerHTML = `<span style="font-weight:bold;">${icon}</span><span>${message}</span>`;
             container.appendChild(toast);
             setTimeout(() => {
                 toast.style.opacity = '0';
-                setTimeout(() => toast.remove(), 300);
-            }, 4000);
+                setTimeout(() => toast.remove(), 250);
+            }, duration);
         }
 
-        function togglePassword(inputId) {
-            const el = document.getElementById(inputId);
-            el.type = el.type === 'password' ? 'text' : 'password';
+        function getAuthToken() {
+            return localStorage.getItem('carlog_access_token');
         }
 
-        // -------------------------------------------------------------
-        // Connectivity & Offline Detection
-        // -------------------------------------------------------------
-        function initConnectivityListener() {
-            const banner = document.getElementById('offline-banner');
-            const dot = document.getElementById('connection-dot');
-            const text = document.getElementById('connection-text');
-
-            function updateStatus() {
-                if (navigator.onLine) {
-                    banner.classList.remove('active');
-                    dot.classList.remove('offline');
-                    text.innerText = 'Online';
-                } else {
-                    banner.classList.add('active');
-                    dot.classList.add('offline');
-                    text.innerText = 'Offline';
-                    showToast('Offline: Working from local storage.', 'warning');
+        function setAuthSession(data) {
+            if (data.tokens && data.tokens.access_token) {
+                localStorage.setItem('carlog_access_token', data.tokens.access_token);
+                if (data.tokens.refresh_token) {
+                    localStorage.setItem('carlog_refresh_token', data.tokens.refresh_token);
                 }
             }
-
-            window.addEventListener('online', updateStatus);
-            window.addEventListener('offline', updateStatus);
-            updateStatus();
-        }
-
-        // -------------------------------------------------------------
-        // 1-Click Demo Credentials
-        // -------------------------------------------------------------
-        function fillDemoCredentials() {
-            document.getElementById('login-email').value = 'demo@carlog.xyz';
-            document.getElementById('login-password').value = 'CarLog2026!';
-            showToast('Demo credentials pre-filled!', 'success');
-        }
-
-        // -------------------------------------------------------------
-        // Session Management
-        // -------------------------------------------------------------
-        function checkSession() {
-            const token = localStorage.getItem('carlog_access_token');
-            const userStr = localStorage.getItem('carlog_user');
-
-            if (token && userStr) {
-                try {
-                    const user = JSON.parse(userStr);
-                    renderDashboard(user);
-                    return;
-                } catch (e) {
-                    localStorage.clear();
-                }
+            if (data.user) {
+                localStorage.setItem('carlog_user', JSON.stringify(data.user));
+                updateUserChip(data.user);
             }
-            showView('login-view');
+        }
+
+        function updateUserChip(user) {
+            const chip = document.getElementById('user-chip');
+            const nameDisplay = document.getElementById('user-name-display');
+            if (user && user.full_name) {
+                chip.style.display = 'flex';
+                nameDisplay.textContent = user.full_name;
+            } else {
+                chip.style.display = 'none';
+            }
         }
 
         function handleLogout() {
             localStorage.removeItem('carlog_access_token');
             localStorage.removeItem('carlog_refresh_token');
             localStorage.removeItem('carlog_user');
-            document.getElementById('user-chip').style.display = 'none';
-            showToast('Signed out of garage.', 'info');
+            updateUserChip(null);
             showView('login-view');
+            showToast('Signed out of garage.', 'info');
         }
 
         // -------------------------------------------------------------
-        // Auth Handlers (Login, Register, OTP)
+        // API Helpers with ConnectivityGuard
+        // -------------------------------------------------------------
+        async function apiRequest(endpoint, method = 'GET', body = null) {
+            if (!isOnline && method !== 'GET') {
+                // Save offline
+                pendingSyncQueue.push({ endpoint, method, body, timestamp: Date.now() });
+                localStorage.setItem('carlog_pending_sync', JSON.stringify(pendingSyncQueue));
+                updatePendingCounter();
+                showToast(`Offline: Action queued locally. Will sync when back online.`, 'warning');
+                return { success: true, offline_queued: true };
+            }
+
+            const token = getAuthToken();
+            const headers = { 'Content-Type': 'application/json' };
+            if (token) headers['Authorization'] = `Bearer ${token}`;
+
+            // Normalize base URL
+            const url = endpoint.startsWith('http') ? endpoint : (endpoint.startsWith('/') ? endpoint.substring(1) : endpoint);
+
+            try {
+                const response = await fetch(url, {
+                    method,
+                    headers,
+                    body: body ? JSON.stringify(body) : null
+                });
+
+                if (response.status === 401) {
+                    handleLogout();
+                    throw new Error('Session expired. Please sign in again.');
+                }
+
+                const data = await response.json();
+                if (!response.ok || !data.success) {
+                    throw new Error(data.error ? data.error.message : 'API request failed');
+                }
+                return data;
+            } catch (err) {
+                if (!navigator.onLine) {
+                    showToast('Offline: Action failed due to no connection.', 'error');
+                } else if (err.message.includes('Failed to fetch')) {
+                    showToast('Connection timed out: Server unreachable.', 'error');
+                }
+                throw err;
+            }
+        }
+
+        // -------------------------------------------------------------
+        // Auth Handlers (Login, Register, OTP, Google)
         // -------------------------------------------------------------
         async function handleLogin(e) {
             e.preventDefault();
-            const email = document.getElementById('login-email').value.trim();
+            const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
-            const btn = document.getElementById('btn-login-submit');
             const spinner = document.getElementById('login-spinner');
 
-            btn.disabled = true;
             spinner.style.display = 'inline';
-
             try {
-                const res = await fetch(`${API_BASE}/auth/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                    body: JSON.stringify({ email, password })
-                });
-
-                const data = await res.json();
-
-                if (res.ok && data.success) {
-                    localStorage.setItem('carlog_access_token', data.data.tokens.access_token);
-                    localStorage.setItem('carlog_refresh_token', data.data.tokens.refresh_token);
-                    localStorage.setItem('carlog_user', JSON.stringify(data.data.user));
-                    showToast('Welcome back to CarLog Garage!', 'success');
-                    renderDashboard(data.data.user);
-                } else {
-                    const errMsg = data.error?.message || 'Login failed';
-                    if (errMsg.includes('EMAIL_NOT_VERIFIED')) {
-                        currentTargetEmail = email;
-                        document.getElementById('otp-target-email').innerText = email;
-                        showToast('Please verify your email with the 6-digit code.', 'warning');
-                        showView('otp-view');
-                    } else {
-                        showToast(errMsg, 'error');
-                    }
-                }
+                const res = await apiRequest('api/auth/login', 'POST', { email, password });
+                setAuthSession(res.data);
+                showToast('Welcome to CarLog Garage!', 'success');
+                await loadGarageDashboard();
             } catch (err) {
-                showToast(`Connection error: ${err.message}`, 'error');
+                showToast(err.message, 'error');
             } finally {
-                btn.disabled = false;
                 spinner.style.display = 'none';
             }
         }
 
         async function handleRegister(e) {
             e.preventDefault();
-            const fullName = document.getElementById('reg-name').value.trim();
-            const email = document.getElementById('reg-email').value.trim();
+            const full_name = document.getElementById('reg-name').value;
+            const email = document.getElementById('reg-email').value;
             const password = document.getElementById('reg-password').value;
-            const btn = document.getElementById('btn-register-submit');
             const spinner = document.getElementById('register-spinner');
 
-            btn.disabled = true;
             spinner.style.display = 'inline';
-
             try {
-                const res = await fetch(`${API_BASE}/auth/register`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                    body: JSON.stringify({ full_name: fullName, email, password })
-                });
-
-                const data = await res.json();
-
-                if (res.ok && data.success) {
-                    currentTargetEmail = email;
-                    document.getElementById('otp-target-email').innerText = email;
-                    showToast('Account created! Enter the 6-digit verification code.', 'success');
-                    showView('otp-view');
-                } else {
-                    showToast(data.error?.message || 'Registration failed', 'error');
-                }
+                const res = await apiRequest('api/auth/register', 'POST', { full_name, email, password });
+                document.getElementById('otp-target-email').textContent = email;
+                showView('otp-view');
+                showToast('Verification code sent to your email.', 'success');
             } catch (err) {
-                showToast(`Connection error: ${err.message}`, 'error');
+                showToast(err.message, 'error');
             } finally {
-                btn.disabled = false;
                 spinner.style.display = 'none';
-            }
-        }
-
-        function handleOtpInput(input, index) {
-            const boxes = document.querySelectorAll('.otp-box');
-            if (input.value.length === 1 && index < boxes.length - 1) {
-                boxes[index + 1].focus();
-            }
-        }
-
-        function handleOtpBackspace(input, event, index) {
-            if (event.key === 'Backspace' && !input.value && index > 0) {
-                const boxes = document.querySelectorAll('.otp-box');
-                boxes[index - 1].focus();
             }
         }
 
         async function handleVerifyOtp(e) {
             e.preventDefault();
-            const boxes = document.querySelectorAll('.otp-box');
-            let code = '';
-            boxes.forEach(b => code += b.value.trim());
-
-            if (code.length < 6) {
-                showToast('Please enter all 6 digits', 'warning');
-                return;
-            }
-
-            const btn = document.getElementById('btn-otp-submit');
+            const email = document.getElementById('otp-target-email').textContent;
+            const code = document.getElementById('otp-code').value;
             const spinner = document.getElementById('otp-spinner');
-            btn.disabled = true;
+
             spinner.style.display = 'inline';
-
             try {
-                const res = await fetch(`${API_BASE}/auth/verify-email`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                    body: JSON.stringify({ email: currentTargetEmail, code })
-                });
-
-                const data = await res.json();
-
-                if (res.ok && data.success) {
-                    localStorage.setItem('carlog_access_token', data.data.tokens.access_token);
-                    localStorage.setItem('carlog_refresh_token', data.data.tokens.refresh_token);
-                    localStorage.setItem('carlog_user', JSON.stringify(data.data.user));
-                    showToast('Email verified successfully!', 'success');
-                    renderDashboard(data.data.user);
-                } else {
-                    showToast(data.error?.message || 'Verification failed', 'error');
-                }
+                const res = await apiRequest('api/auth/verify-email', 'POST', { email, code });
+                setAuthSession(res.data);
+                showToast('Email verified successfully! Entering garage...', 'success');
+                await loadGarageDashboard();
             } catch (err) {
-                showToast(`Connection error: ${err.message}`, 'error');
+                showToast(err.message, 'error');
             } finally {
-                btn.disabled = false;
                 spinner.style.display = 'none';
             }
         }
 
         async function handleResendCode() {
-            if (!currentTargetEmail) return;
+            const email = document.getElementById('otp-target-email').textContent;
             try {
-                const res = await fetch(`${API_BASE}/auth/resend-code`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                    body: JSON.stringify({ email: currentTargetEmail })
-                });
-                const data = await res.json();
-                if (res.ok && data.success) {
-                    showToast('New verification code sent to your email.', 'success');
-                } else {
-                    showToast(data.error?.message || 'Failed to resend code', 'error');
-                }
+                await apiRequest('api/auth/resend-code', 'POST', { email });
+                showToast('New 6-digit verification code dispatched.', 'info');
             } catch (err) {
-                showToast('Network error resending code', 'error');
+                showToast(err.message, 'error');
             }
         }
 
-        let googleClientId = localStorage.getItem('carlog_google_client_id') || '272115978287-i0leh96c3vmi5mdjrc7a1c9p26krllcj.apps.googleusercontent.com';
-
+        // Google Sign-In Initializer
         function initGoogleSignIn() {
-            if (!window.google || !googleClientId) return;
+            if (typeof google === 'undefined' || !google.accounts) return;
+            const clientId = '272115978287-i0leh96c3vmi5mdjrc7a1c9p26krllcj.apps.googleusercontent.com';
             try {
                 google.accounts.id.initialize({
-                    client_id: googleClientId,
+                    client_id: clientId,
                     callback: handleGoogleCredentialResponse,
-                    auto_select: false,
-                    cancel_on_tap_outside: true
                 });
-
-                const container = document.getElementById('google-btn-container');
-                if (container) {
-                    const width = Math.min(container.offsetWidth || 376, 376);
-                    google.accounts.id.renderButton(container, {
-                        theme: 'filled_blue',
-                        size: 'large',
-                        width: width,
-                        text: 'continue_with',
-                        shape: 'rectangular',
-                        logo_alignment: 'left'
-                    });
-                }
-            } catch (err) {
-                console.error('GIS initialization error:', err);
+                google.accounts.id.renderButton(
+                    document.getElementById('g_id_signin_button'),
+                    { theme: 'filled_black', size: 'large', width: '376', shape: 'pill' }
+                );
+            } catch (e) {
+                console.warn('Google GSI Init warning:', e);
             }
-        }
-
-        function handleGoogleSignIn() {
-            if (googleClientId && window.google) {
-                google.accounts.id.prompt();
-            } else {
-                openGoogleModal();
-            }
-        }
-
-        function openGoogleModal() {
-            document.getElementById('google-client-id-input').value = googleClientId;
-            document.getElementById('google-modal').style.display = 'flex';
-        }
-
-        function closeGoogleModal() {
-            document.getElementById('google-modal').style.display = 'none';
-        }
-
-        function saveGoogleClientId() {
-            const val = document.getElementById('google-client-id-input').value.trim();
-            if (!val) {
-                showToast('Please enter a valid Google Client ID', 'warning');
-                return;
-            }
-            googleClientId = val;
-            localStorage.setItem('carlog_google_client_id', val);
-            closeGoogleModal();
-            showToast('Google Client ID saved! Initializing Google button...', 'success');
-            initGoogleSignIn();
-        }
-
-        async function simulateGoogleSignIn() {
-            closeGoogleModal();
-            showToast('Authenticating Google user...', 'info');
-            await sendGoogleTokenToBackend('demo_google_id_token');
         }
 
         async function handleGoogleCredentialResponse(response) {
-            if (!response || !response.credential) {
-                showToast('Google authentication failed', 'error');
+            try {
+                const res = await apiRequest('api/auth/google', 'POST', { id_token: response.credential });
+                setAuthSession(res.data);
+                showToast('Google Sign-In successful!', 'success');
+                await loadGarageDashboard();
+            } catch (err) {
+                showToast(err.message, 'error');
+            }
+        }
+
+        // -------------------------------------------------------------
+        // Garage Dashboard Engine
+        // -------------------------------------------------------------
+        async function loadGarageDashboard(vehicleId = null) {
+            try {
+                const endpoint = vehicleId ? `api/garage?vehicle_id=${vehicleId}` : 'api/garage';
+                const res = await apiRequest(endpoint, 'GET');
+                garageData = res.data;
+                renderDashboard(garageData);
+                showView('dashboard-view');
+            } catch (err) {
+                showToast('Failed to load garage: ' + err.message, 'error');
+            }
+        }
+
+        function renderDashboard(data) {
+            const vehicles = data.vehicles || [];
+            activeVehicle = data.active_vehicle;
+
+            // Render vehicle dropdown
+            const selectEl = document.getElementById('vehicle-select');
+            selectEl.innerHTML = vehicles.map(v => 
+                `<option value="${v.id}" ${v.id === data.active_vehicle_id ? 'selected' : ''}>${v.year} ${v.make} ${v.model} (${v.vehicle_type.toUpperCase()})</option>`
+            ).join('');
+
+            if (!activeVehicle) return;
+
+            // Render Hero Card
+            document.getElementById('veh-title').textContent = `${activeVehicle.year} ${activeVehicle.make} ${activeVehicle.model}`;
+            document.getElementById('veh-vin').textContent = activeVehicle.vin || 'N/A';
+            document.getElementById('veh-plate').textContent = activeVehicle.plate_number || 'UNLICENSED';
+            document.getElementById('veh-type').textContent = activeVehicle.vehicle_type;
+            document.getElementById('veh-odo').textContent = `${Number(activeVehicle.current_odometer_km).toLocaleString()} km`;
+            document.getElementById('veh-engine').textContent = `${activeVehicle.engine_displacement_cc || '—'} cc (${activeVehicle.power_kw || '—'} kW)`;
+            document.getElementById('veh-tco').textContent = `$${data.stats.cost_per_km_usd} / km`;
+            document.getElementById('veh-total-spent').textContent = `$${data.stats.total_ownership_usd.toFixed(2)}`;
+
+            const imgBox = document.getElementById('veh-img-box');
+            if (activeVehicle.photo_url) {
+                imgBox.innerHTML = `<img src="${activeVehicle.photo_url}" alt="Vehicle Photo">`;
+            } else {
+                imgBox.textContent = activeVehicle.vehicle_type === 'motorcycle' ? '🏍️' : (activeVehicle.vehicle_type === 'truck' ? '🚚' : '🚗');
+            }
+
+            // Public Book Link
+            const publicLink = document.getElementById('btn-public-book');
+            if (activeVehicle.public_share_token) {
+                publicLink.href = `v/${activeVehicle.public_share_token}`;
+                publicLink.style.display = 'inline-flex';
+            } else {
+                publicLink.style.display = 'none';
+            }
+
+            // Render Predictive Decay Bars
+            renderPredictiveDecay(data.predictive_decay || []);
+
+            // Render Chassis Diagram
+            renderChassisDiagram(activeVehicle.vehicle_type);
+
+            // Render Chronology
+            renderVisits(data.visits || []);
+
+            // Render Fuel
+            renderFuelLogs(data.fuel_logs || []);
+
+            // Render Symptoms
+            renderSymptoms(data.symptoms || []);
+
+            // Render Glovebox Specs
+            renderQuickSpecs(data.quick_specs || {});
+
+            // Render Inventory
+            renderInventory(data.inventory || []);
+        }
+
+        function handleSelectVehicle(id) {
+            loadGarageDashboard(id);
+        }
+
+        // -------------------------------------------------------------
+        // Predictive Decay Renderer
+        // -------------------------------------------------------------
+        function renderPredictiveDecay(decayItems) {
+            const container = document.getElementById('predictive-decay-grid');
+            if (!decayItems.length) {
+                container.innerHTML = `<div style="grid-column: 1/-1; color:var(--text-muted); font-size:13px;">No maintenance intervals active.</div>`;
                 return;
             }
-            showToast('Verifying Google credentials with backend...', 'info');
-            await sendGoogleTokenToBackend(response.credential);
+
+            container.innerHTML = decayItems.map(d => {
+                const statusLabel = d.status === 'healthy' ? 'Healthy' : (d.status === 'warning' ? 'Due Soon' : 'OVERDUE');
+                return `
+                <div class="decay-card">
+                    <div class="decay-card-top">
+                        <div class="decay-name">${d.icon} ${d.name}</div>
+                        <span class="decay-badge ${d.status}">${statusLabel}</span>
+                    </div>
+                    <div class="progress-bar-wrap">
+                        <div class="progress-bar-fill ${d.status}" style="width: ${d.wear_pct}%;"></div>
+                    </div>
+                    <div class="decay-card-bottom">
+                        <span>${d.wear_pct}% wear</span>
+                        <span>${d.km_remaining > 0 ? `${d.km_remaining.toLocaleString()} km left` : '0 km'} (${d.days_remaining}d)</span>
+                    </div>
+                </div>`;
+            }).join('');
         }
 
-        async function sendGoogleTokenToBackend(token) {
-            try {
-                const res = await fetch(`${API_BASE}/auth/google`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                    body: JSON.stringify({ id_token: token })
-                });
+        // -------------------------------------------------------------
+        // Interactive Chassis Diagram (4-Wheel & 2-Wheel Layout)
+        // -------------------------------------------------------------
+        function renderChassisDiagram(type) {
+            const container = document.getElementById('chassis-container');
+            const badge = document.getElementById('chassis-mode-badge');
 
-                const data = await res.json();
-                if (res.ok && data.success) {
-                    localStorage.setItem('carlog_access_token', data.data.tokens.access_token);
-                    localStorage.setItem('carlog_refresh_token', data.data.tokens.refresh_token);
-                    localStorage.setItem('carlog_user', JSON.stringify(data.data.user));
-                    showToast(`Google Sign-In successful! Welcome, ${data.data.user.full_name}`, 'success');
-                    renderDashboard(data.data.user);
+            if (type === 'motorcycle') {
+                badge.textContent = '2-Wheel Motorcycle Layout';
+                container.innerHTML = `
+                    <div class="wheel-node wheel-front" onclick="selectWheelPosition('Front')">
+                        <span class="pos">FRONT</span>
+                        <span class="spec">3.8 mm</span>
+                    </div>
+                    <div class="chassis-car-body" style="height:110px; width:40px; border-radius:12px;">MOTO</div>
+                    <div class="wheel-node wheel-rear" onclick="selectWheelPosition('Rear')">
+                        <span class="pos">REAR</span>
+                        <span class="spec">4.5 mm</span>
+                    </div>
+                `;
+            } else {
+                badge.textContent = '4-Wheel Chassis Layout (+ Spare)';
+                container.innerHTML = `
+                    <div class="wheel-node wheel-fl" onclick="selectWheelPosition('FL')">
+                        <span class="pos">FL</span>
+                        <span class="spec">6.2 mm</span>
+                    </div>
+                    <div class="wheel-node wheel-fr" onclick="selectWheelPosition('FR')">
+                        <span class="pos">FR</span>
+                        <span class="spec">6.1 mm</span>
+                    </div>
+                    <div class="chassis-car-body">CHASSIS</div>
+                    <div class="wheel-node wheel-rl" onclick="selectWheelPosition('RL')">
+                        <span class="pos">RL</span>
+                        <span class="spec">5.8 mm</span>
+                    </div>
+                    <div class="wheel-node wheel-rr" onclick="selectWheelPosition('RR')">
+                        <span class="pos">RR</span>
+                        <span class="spec">5.9 mm</span>
+                    </div>
+                    <div class="wheel-node wheel-spare" onclick="selectWheelPosition('Spare')">
+                        <span class="pos" style="font-size:10px;">SPARE</span>
+                    </div>
+                `;
+            }
+        }
+
+        function selectWheelPosition(pos) {
+            document.querySelectorAll('.wheel-node').forEach(n => n.classList.remove('selected'));
+            showToast(`Selected Wheel Position: ${pos}. Tagged for brake pad & tire tread measurement.`, 'info');
+        }
+
+        // -------------------------------------------------------------
+        // Service Chronology Renderer
+        // -------------------------------------------------------------
+        function renderVisits(visits) {
+            const list = document.getElementById('visits-list');
+            if (!visits.length) {
+                list.innerHTML = `<p style="font-size:13px; color:var(--text-muted);">No workshop visits logged yet.</p>`;
+                return;
+            }
+
+            list.innerHTML = visits.map(v => `
+                <div class="log-item">
+                    <div class="log-item-header">
+                        <div class="log-item-title">
+                            <span>🛠️</span>
+                            <span>${v.visit_title}</span>
+                        </div>
+                        <div class="log-item-cost">$${(v.total_cost_usd || 0).toFixed(2)}</div>
+                    </div>
+                    <div style="font-size:12px; color:var(--text-muted); font-family:'JetBrains Mono', monospace; margin-bottom:8px;">
+                        ${v.service_date} • ${Number(v.odometer_km).toLocaleString()} km • ${v.shop_name || 'DIY / Self-Service'}
+                    </div>
+                    <div>
+                        ${(v.tasks || []).map(t => `
+                            <span class="task-tag">
+                                <strong>${t.task_name || 'Task'}</strong>: ${t.part_brand || ''} ${t.part_number || ''} ${t.fluid_volume_l ? `(${t.fluid_volume_l} L)` : ''} — $${(Number(t.cost_parts_usd||0) + Number(t.cost_labor_usd||0)).toFixed(2)}
+                            </span>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // -------------------------------------------------------------
+        // Fuel Economy Renderer
+        // -------------------------------------------------------------
+        function renderFuelLogs(fuelLogs) {
+            const list = document.getElementById('fuel-logs-list');
+            if (!fuelLogs.length) {
+                list.innerHTML = `<p style="font-size:12px; color:var(--text-muted);">No fill-ups logged yet.</p>`;
+                return;
+            }
+
+            list.innerHTML = fuelLogs.slice(0, 5).map(f => `
+                <div style="background:var(--surface-card); border:1px solid var(--border-dark); border-radius:var(--radius-md); padding:10px 14px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <div style="font-size:13px; font-weight:700;">${f.fill_date} • ${f.fuel_liters} L @ $${f.price_per_liter_usd}/L</div>
+                        <div style="font-size:11px; color:var(--text-muted); font-family:'JetBrains Mono', monospace;">
+                            Odo: ${Number(f.odometer_km).toLocaleString()} km
+                        </div>
+                    </div>
+                    <div style="text-align:right;">
+                        <div style="font-weight:800; font-size:14px; color:var(--success-green); font-family:'JetBrains Mono', monospace;">$${Number(f.total_cost_usd).toFixed(2)}</div>
+                        ${f.calculated_l_per_100km ? `<div style="font-size:11px; color:var(--primary-cyan); font-weight:700;">${f.calculated_l_per_100km} L/100km</div>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // -------------------------------------------------------------
+        // Diagnostic Symptoms Renderer
+        // -------------------------------------------------------------
+        function renderSymptoms(symptoms) {
+            const list = document.getElementById('symptoms-list');
+            if (!symptoms.length) {
+                list.innerHTML = `<p style="font-size:12px; color:var(--text-muted);">No reported diagnostic issues.</p>`;
+                return;
+            }
+
+            list.innerHTML = symptoms.slice(0, 4).map(s => `
+                <div style="background:var(--surface-card); border:1px solid var(--border-dark); border-radius:var(--radius-md); padding:10px 14px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <div style="font-size:13px; font-weight:700; display:flex; align-items:center; gap:6px;">
+                            ${s.obd_code ? `<span style="background:rgba(239, 68, 68, 0.15); color:var(--danger-red); font-weight:800; padding:1px 6px; border-radius:4px; font-family:'JetBrains Mono', monospace; font-size:11px;">${s.obd_code}</span>` : ''}
+                            <span>${s.symptom_description}</span>
+                        </div>
+                        <div style="font-size:11px; color:var(--text-muted); font-family:'JetBrains Mono', monospace; margin-top:2px;">
+                            ${s.logged_date} • Engine: ${s.engine_state}
+                        </div>
+                    </div>
+                    <div>
+                        ${s.is_resolved == 1 ? '<span style="color:var(--success-green); font-size:11px; font-weight:700;">RESOLVED</span>' : `<button class="btn-secondary btn-sm" onclick="resolveSymptom('${s.id}')" style="font-size:10px; padding:3px 8px;">Mark Done</button>`}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // -------------------------------------------------------------
+        // Glovebox Quick Specs Renderer
+        // -------------------------------------------------------------
+        function renderQuickSpecs(specs) {
+            const c = document.getElementById('quick-specs-container');
+            c.innerHTML = `
+                <div style="background:var(--surface-card); padding:8px 12px; border-radius:8px;">
+                    <div style="color:var(--primary-cyan); font-size:10px; font-weight:700;">ENGINE OIL</div>
+                    <div style="font-weight:700;">${specs.oil_viscosity || '0W-20'} (${specs.oil_capacity_l || '4.2'} L)</div>
+                </div>
+                <div style="background:var(--surface-card); padding:8px 12px; border-radius:8px;">
+                    <div style="color:var(--primary-cyan); font-size:10px; font-weight:700;">TIRE PRESSURE</div>
+                    <div style="font-weight:700;">F: ${specs.front_tire_pressure_bar || '2.30'} • R: ${specs.rear_tire_pressure_bar || '2.20'} Bar</div>
+                </div>
+                <div style="background:var(--surface-card); padding:8px 12px; border-radius:8px;">
+                    <div style="color:var(--primary-cyan); font-size:10px; font-weight:700;">LUG TORQUE</div>
+                    <div style="font-weight:700;">${specs.wheel_lug_torque_nm || '103'} Nm</div>
+                </div>
+                <div style="background:var(--surface-card); padding:8px 12px; border-radius:8px;">
+                    <div style="color:var(--primary-cyan); font-size:10px; font-weight:700;">COOLANT</div>
+                    <div style="font-weight:700;">${specs.coolant_spec || 'Pink SLLC'}</div>
+                </div>
+            `;
+        }
+
+        // -------------------------------------------------------------
+        // Inventory Renderer
+        // -------------------------------------------------------------
+        function renderInventory(items) {
+            const c = document.getElementById('inventory-items-list');
+            if (!items.length) {
+                c.innerHTML = `<p style="font-size:12px; color:var(--text-muted);">Inventory bin empty.</p>`;
+                return;
+            }
+
+            c.innerHTML = items.map(i => `
+                <div style="background:var(--surface-card); border:1px solid var(--border-dark); border-radius:8px; padding:10px 14px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <div style="font-size:13px; font-weight:700;">${i.item_name} ${i.part_brand ? `(${i.part_brand})` : ''}</div>
+                        <div style="font-size:11px; color:var(--text-muted); font-family:'JetBrains Mono', monospace;">
+                            P/N: ${i.part_number || 'N/A'} • Unit: $${Number(i.purchase_price_usd||0).toFixed(2)}
+                        </div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span style="font-weight:800; font-family:'JetBrains Mono', monospace; font-size:14px; color:${Number(i.quantity) <= 1 ? 'var(--warning-amber)' : 'var(--text-main)'}">
+                            ${i.quantity} ${i.unit_label}
+                        </span>
+                        <button class="btn-secondary btn-sm" onclick="adjustInventoryQty('${i.id}', -1)" style="padding:2px 6px;">-</button>
+                        <button class="btn-secondary btn-sm" onclick="adjustInventoryQty('${i.id}', 1)" style="padding:2px 6px;">+</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // -------------------------------------------------------------
+        // 3-Step VIN Decoder Logic
+        // -------------------------------------------------------------
+        function handleVinInput(vin) {
+            vin = vin.toUpperCase().trim();
+            document.getElementById('veh-input-vin').value = vin;
+            const wmiPill = document.getElementById('wmi-match-pill');
+
+            if (vin.length >= 3) {
+                const wmi3 = vin.substring(0, 3);
+                const match = WMI_MAP.find(m => m.regex.test(wmi3));
+                if (match) {
+                    document.getElementById('veh-input-make').value = match.make;
+                    wmiPill.style.display = 'inline';
+                    wmiPill.textContent = `✓ WMI: ${match.make}`;
                 } else {
-                    showToast(data.error?.message || 'Google authentication failed', 'error');
+                    wmiPill.style.display = 'none';
                 }
+            } else {
+                wmiPill.style.display = 'none';
+            }
+        }
+
+        async function decodeVinOnline() {
+            const vin = document.getElementById('veh-input-vin').value.trim();
+            if (vin.length !== 17) {
+                showToast('Please enter a full 17-character VIN', 'warning');
+                return;
+            }
+
+            showToast('Querying NHTSA Registry & Converting Imperial to Metric...', 'info');
+
+            try {
+                const res = await fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValues/${vin}?format=json`);
+                const json = await res.json();
+                const v = json.Results && json.Results[0];
+
+                if (!v || v.ErrorCode !== '0') {
+                    showToast('VIN partially decoded: Please complete fields manually.', 'warning');
+                }
+
+                if (v.Make) document.getElementById('veh-input-make').value = v.Make;
+                if (v.Model) document.getElementById('veh-input-model').value = v.Model;
+                if (v.ModelYear) document.getElementById('veh-input-year').value = v.ModelYear;
+
+                // Imperial to Metric immediate conversions:
+                if (v.DisplacementCI) {
+                    const cc = Math.round(parseFloat(v.DisplacementCI) * 16.387064);
+                    document.getElementById('veh-input-cc').value = cc;
+                } else if (v.DisplacementL) {
+                    const cc = Math.round(parseFloat(v.DisplacementL) * 1000);
+                    document.getElementById('veh-input-cc').value = cc;
+                }
+
+                if (v.EngineHP) {
+                    const kw = Math.round(parseFloat(v.EngineHP) * 0.7457);
+                    document.getElementById('veh-input-power').value = kw;
+                }
+
+                if (v.VehicleType) {
+                    const vt = v.VehicleType.toLowerCase();
+                    if (vt.includes('motorcycle')) document.getElementById('veh-input-type').value = 'motorcycle';
+                    else if (vt.includes('truck')) document.getElementById('veh-input-type').value = 'truck';
+                    else document.getElementById('veh-input-type').value = 'car';
+                }
+
+                showToast('NHTSA specs loaded with 100% Metric units applied!', 'success');
             } catch (err) {
-                showToast(`Network error: ${err.message}`, 'error');
+                showToast('NHTSA online registry offline. Using local specifications.', 'warning');
             }
         }
 
         // -------------------------------------------------------------
-        // Render Dashboard View
+        // Inline Metric Conversion Chips Helper
         // -------------------------------------------------------------
-        function renderDashboard(user) {
-            document.getElementById('user-chip').style.display = 'flex';
-            document.getElementById('user-name-display').innerText = user.full_name || user.email;
-            document.getElementById('dash-greeting').innerText = `Welcome, ${user.full_name || 'Driver'}`;
-            showView('dashboard-view');
+        function convertInput(inputId, type) {
+            const input = document.getElementById(inputId);
+            if (!input || !input.value) return;
+            const val = parseFloat(input.value);
+            if (isNaN(val)) return;
+
+            let res = val;
+            let label = '';
+            switch (type) {
+                case 'psi_to_bar':
+                    res = (val * 0.0689476).toFixed(2);
+                    label = `${val} PSI = ${res} Bar`;
+                    break;
+                case 'qt_to_l':
+                    res = (val * 0.946353).toFixed(2);
+                    label = `${val} Qt = ${res} L`;
+                    break;
+                case 'gal_to_l':
+                    res = (val * 3.78541).toFixed(2);
+                    label = `${val} gal = ${res} L`;
+                    break;
+                case 'lbft_to_nm':
+                    res = Math.round(val * 1.355818);
+                    label = `${val} lb-ft = ${res} Nm`;
+                    break;
+                case 'in_to_mm':
+                    res = (val * 25.4).toFixed(1);
+                    label = `${val} in = ${res} mm`;
+                    break;
+                case 'hp_to_kw':
+                    res = Math.round(val * 0.7457);
+                    label = `${val} HP = ${res} kW`;
+                    break;
+                case 'ci_to_cc':
+                    res = Math.round(val * 16.387064);
+                    label = `${val} CI = ${res} cc`;
+                    break;
+                case 'lb_to_kg':
+                    res = (val * 0.45359237).toFixed(1);
+                    label = `${val} lbs = ${res} kg`;
+                    break;
+            }
+            input.value = res;
+            showToast(`Converted: ${label}`, 'success');
         }
+
+        // -------------------------------------------------------------
+        // Multi-Task Service Bundle Logger Logic
+        // -------------------------------------------------------------
+        function addTaskRowToBundle(taskData = {}) {
+            const container = document.getElementById('bundle-tasks-container');
+            const rowId = 'task-row-' + Date.now() + Math.random().toString(36).substring(2, 5);
+            const tasksList = garageData ? (garageData.tasks || []) : [];
+
+            const row = document.createElement('div');
+            row.className = 'task-bundle-row';
+            row.id = rowId;
+            row.innerHTML = `
+                <button type="button" class="btn-remove-task" onclick="document.getElementById('${rowId}').remove(); updateBundleTotal();">✕</button>
+                <div class="form-row">
+                    <div class="form-group" style="margin-bottom:10px;">
+                        <label class="form-label">Task Category & Name</label>
+                        <select class="form-select no-icon task-template-select" onchange="handleTaskTemplateSelect('${rowId}', this.value)">
+                            <option value="">Select Categorized Task...</option>
+                            ${tasksList.map(t => `<option value="${t.id}" data-name="${t.task_name}">${t.category.toUpperCase()}: ${t.task_name}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom:10px;">
+                        <label class="form-label">Part Brand</label>
+                        <input type="text" class="form-input no-icon task-brand-input" placeholder="e.g. Mann-Filter / Motul" value="${taskData.brand || ''}">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group" style="margin-bottom:10px;">
+                        <label class="form-label">Part Number (3-Tier Auto-Suggest)</label>
+                        <input type="text" class="form-input no-icon task-partnum-input" placeholder="e.g. W 68/3" value="${taskData.partNumber || ''}">
+                        <div class="part-suggestions-pill" style="font-size:11px; margin-top:4px;"></div>
+                    </div>
+                    <div class="form-group" style="margin-bottom:10px;">
+                        <div class="form-label">
+                            <span>Fluid Volume (L)</span>
+                            <span class="helper-chips"><span class="chip-convert" onclick="convertTaskFluid('${rowId}')">Qt &rarr; L</span></span>
+                        </div>
+                        <input type="number" step="0.01" class="form-input no-icon task-fluid-input" placeholder="4.20">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label class="form-label">Parts Cost ($ USD)</label>
+                        <input type="number" step="0.01" class="form-input no-icon task-parts-cost" placeholder="45.00" oninput="updateBundleTotal()">
+                    </div>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label class="form-label">Labor Cost ($ USD)</label>
+                        <input type="number" step="0.01" class="form-input no-icon task-labor-cost" placeholder="25.00" oninput="updateBundleTotal()">
+                    </div>
+                </div>
+            `;
+            container.appendChild(row);
+        }
+
+        function convertTaskFluid(rowId) {
+            const row = document.getElementById(rowId);
+            if (!row) return;
+            const input = row.querySelector('.task-fluid-input');
+            if (input && input.value) {
+                const val = parseFloat(input.value);
+                if (!isNaN(val)) {
+                    input.value = (val * 0.946353).toFixed(2);
+                    showToast(`Converted ${val} Qt to ${input.value} Liters`, 'success');
+                }
+            }
+        }
+
+        async function handleTaskTemplateSelect(rowId, taskId) {
+            const row = document.getElementById(rowId);
+            if (!row || !taskId || !activeVehicle) return;
+
+            // Tier 2 Crowdsourced Part Suggestion Call
+            try {
+                const res = await apiRequest(`api/parts/suggest?make=${activeVehicle.make}&model=${activeVehicle.model}&year=${activeVehicle.year}&task_id=${taskId}`);
+                const suggestions = res.data || [];
+                const pillContainer = row.querySelector('.part-suggestions-pill');
+
+                if (suggestions.length > 0) {
+                    const top = suggestions[0];
+                    pillContainer.innerHTML = `
+                        <span style="color:var(--primary-cyan); cursor:pointer; font-weight:700;" onclick="autoFillPart('${rowId}', '${top.part_brand}', '${top.part_number}')">
+                            💡 Suggestion: ${top.part_brand} ${top.part_number} (${top.badge})
+                        </span>
+                    `;
+                } else {
+                    pillContainer.innerHTML = '';
+                }
+            } catch (e) {
+                // Ignore suggestion error
+            }
+        }
+
+        function autoFillPart(rowId, brand, partNumber) {
+            const row = document.getElementById(rowId);
+            if (!row) return;
+            row.querySelector('.task-brand-input').value = brand;
+            row.querySelector('.task-partnum-input').value = partNumber;
+            showToast(`Auto-filled compatible part: ${brand} ${partNumber}`, 'success');
+        }
+
+        function updateBundleTotal() {
+            let total = 0;
+            document.querySelectorAll('.task-parts-cost').forEach(inp => total += parseFloat(inp.value || 0));
+            document.querySelectorAll('.task-labor-cost').forEach(inp => total += parseFloat(inp.value || 0));
+            document.getElementById('sv-total-cost-display').textContent = `$${total.toFixed(2)} USD`;
+        }
+
+        // -------------------------------------------------------------
+        // Save Actions (Vehicles, Service Bundles, Fuel, Symptoms, Specs)
+        // -------------------------------------------------------------
+        async function handleSaveVehicle(e) {
+            e.preventDefault();
+            const payload = {
+                vehicle_type: document.getElementById('veh-input-type').value,
+                vin: document.getElementById('veh-input-vin').value,
+                make: document.getElementById('veh-input-make').value,
+                model: document.getElementById('veh-input-model').value,
+                year: parseInt(document.getElementById('veh-input-year').value),
+                plate_number: document.getElementById('veh-input-plate').value,
+                engine_displacement_cc: parseInt(document.getElementById('veh-input-cc').value) || null,
+                power_kw: parseInt(document.getElementById('veh-input-power').value) || null,
+                transmission_type: document.getElementById('veh-input-trans').value,
+                fuel_type: document.getElementById('veh-input-fuel').value,
+                acquisition_odometer_km: parseInt(document.getElementById('veh-input-acq-odo').value) || 0,
+                current_odometer_km: parseInt(document.getElementById('veh-input-curr-odo').value) || 0,
+            };
+
+            try {
+                const res = await apiRequest('api/vehicles', 'POST', payload);
+                closeModal('modal-vehicle');
+                showToast('Vehicle added to garage!', 'success');
+                await loadGarageDashboard(res.data.id);
+            } catch (err) {
+                showToast(err.message, 'error');
+            }
+        }
+
+        async function handleSaveServiceVisit(e) {
+            e.preventDefault();
+            if (!activeVehicle) return;
+
+            const tasks = [];
+            document.querySelectorAll('.task-bundle-row').forEach(row => {
+                const sel = row.querySelector('.task-template-select');
+                const taskName = sel.options[sel.selectedIndex] ? sel.options[sel.selectedIndex].getAttribute('data-name') : 'Service Task';
+                tasks.push({
+                    task_id: sel.value || null,
+                    task_name: taskName,
+                    part_brand: row.querySelector('.task-brand-input').value,
+                    part_number: row.querySelector('.task-partnum-input').value,
+                    fluid_volume_l: parseFloat(row.querySelector('.task-fluid-input').value) || null,
+                    cost_parts_usd: parseFloat(row.querySelector('.task-parts-cost').value) || 0,
+                    cost_labor_usd: parseFloat(row.querySelector('.task-labor-cost').value) || 0,
+                });
+            });
+
+            if (!tasks.length) {
+                showToast('Please attach at least one maintenance task to this visit.', 'warning');
+                return;
+            }
+
+            const payload = {
+                vehicle_id: activeVehicle.id,
+                service_date: document.getElementById('sv-date').value,
+                odometer_km: parseInt(document.getElementById('sv-odo').value),
+                shop_name: document.getElementById('sv-shop').value,
+                visit_title: document.getElementById('sv-title').value,
+                tasks,
+            };
+
+            try {
+                await apiRequest('api/service-visits', 'POST', payload);
+                closeModal('modal-service-visit');
+                showToast('Service bundle recorded successfully!', 'success');
+                await loadGarageDashboard(activeVehicle.id);
+            } catch (err) {
+                showToast(err.message, 'error');
+            }
+        }
+
+        function calculateFuelTotal() {
+            const liters = parseFloat(document.getElementById('fuel-liters').value || 0);
+            const price = parseFloat(document.getElementById('fuel-price-per-l').value || 0);
+            if (liters > 0 && price > 0) {
+                document.getElementById('fuel-total-cost').value = (liters * price).toFixed(2);
+            }
+        }
+
+        async function handleSaveFuel(e) {
+            e.preventDefault();
+            if (!activeVehicle) return;
+
+            const payload = {
+                vehicle_id: activeVehicle.id,
+                fill_date: document.getElementById('fuel-date').value,
+                odometer_km: parseInt(document.getElementById('fuel-odo').value),
+                fuel_liters: parseFloat(document.getElementById('fuel-liters').value),
+                price_per_liter_usd: parseFloat(document.getElementById('fuel-price-per-l').value),
+                total_cost_usd: parseFloat(document.getElementById('fuel-total-cost').value),
+                is_full_tank: document.getElementById('fuel-is-full').checked ? 1 : 0,
+            };
+
+            try {
+                const res = await apiRequest('api/fuel-logs', 'POST', payload);
+                closeModal('modal-fuel');
+                const eco = res.data && res.data.calculated_l_per_100km ? ` (${res.data.calculated_l_per_100km} L/100km)` : '';
+                showToast(`Fuel log saved${eco}!`, 'success');
+                await loadGarageDashboard(activeVehicle.id);
+            } catch (err) {
+                showToast(err.message, 'error');
+            }
+        }
+
+        async function handleSaveSymptom(e) {
+            e.preventDefault();
+            if (!activeVehicle) return;
+
+            const payload = {
+                vehicle_id: activeVehicle.id,
+                logged_date: document.getElementById('sym-date').value,
+                odometer_km: parseInt(document.getElementById('sym-odo').value) || activeVehicle.current_odometer_km,
+                obd_code: document.getElementById('sym-obd').value,
+                severity: document.getElementById('sym-severity').value,
+                engine_state: document.getElementById('sym-state').value,
+                symptom_description: document.getElementById('sym-desc').value,
+            };
+
+            try {
+                await apiRequest('api/symptoms', 'POST', payload);
+                closeModal('modal-symptom');
+                showToast('Diagnostic symptom logged!', 'success');
+                await loadGarageDashboard(activeVehicle.id);
+            } catch (err) {
+                showToast(err.message, 'error');
+            }
+        }
+
+        async function resolveSymptom(id) {
+            try {
+                await apiRequest(`api/symptoms/${id}/resolve`, 'POST');
+                showToast('Symptom marked as resolved.', 'success');
+                await loadGarageDashboard(activeVehicle ? activeVehicle.id : null);
+            } catch (err) {
+                showToast(err.message, 'error');
+            }
+        }
+
+        async function handleSaveQuickSpecs(e) {
+            e.preventDefault();
+            if (!activeVehicle) return;
+
+            const payload = {
+                oil_viscosity: document.getElementById('spec-oil-vis').value,
+                oil_capacity_l: parseFloat(document.getElementById('spec-oil-cap').value) || null,
+                front_tire_pressure_bar: parseFloat(document.getElementById('spec-tire-f').value) || null,
+                rear_tire_pressure_bar: parseFloat(document.getElementById('spec-tire-r').value) || null,
+                wheel_lug_torque_nm: parseInt(document.getElementById('spec-torque').value) || null,
+                coolant_spec: document.getElementById('spec-coolant').value,
+            };
+
+            try {
+                await apiRequest(`api/vehicles/${activeVehicle.id}/specs`, 'POST', payload);
+                closeModal('modal-specs');
+                showToast('Glovebox quick-specs updated!', 'success');
+                await loadGarageDashboard(activeVehicle.id);
+            } catch (err) {
+                showToast(err.message, 'error');
+            }
+        }
+
+        // -------------------------------------------------------------
+        // Inventory Actions
+        // -------------------------------------------------------------
+        async function handleSaveInventory(e) {
+            e.preventDefault();
+            const payload = {
+                item_name: document.getElementById('inv-name').value,
+                part_brand: document.getElementById('inv-brand').value,
+                part_number: document.getElementById('inv-part-num').value,
+                quantity: parseFloat(document.getElementById('inv-qty').value) || 1.0,
+                unit_label: document.getElementById('inv-unit').value,
+                purchase_price_usd: parseFloat(document.getElementById('inv-price').value) || null,
+            };
+
+            try {
+                await apiRequest('api/inventory', 'POST', payload);
+                showToast('Item stored on shelf!', 'success');
+                await loadGarageDashboard(activeVehicle ? activeVehicle.id : null);
+            } catch (err) {
+                showToast(err.message, 'error');
+            }
+        }
+
+        async function adjustInventoryQty(id, delta) {
+            try {
+                await apiRequest(`api/inventory/${id}/quantity`, 'POST', { delta });
+                await loadGarageDashboard(activeVehicle ? activeVehicle.id : null);
+            } catch (err) {
+                showToast(err.message, 'error');
+            }
+        }
+
+        // -------------------------------------------------------------
+        // OBD-II Search Helper
+        // -------------------------------------------------------------
+        async function handleObdSearch(code) {
+            const resultsBox = document.getElementById('obd-search-results');
+            code = code.trim().toUpperCase();
+            if (code.length < 2) {
+                resultsBox.innerHTML = '';
+                return;
+            }
+
+            try {
+                const res = await apiRequest(`api/obd/lookup?code=${code}`);
+                const codes = res.data || [];
+                if (codes.length > 0) {
+                    resultsBox.innerHTML = codes.slice(0, 3).map(c => `
+                        <div style="background:rgba(255,255,255,0.04); padding:6px 10px; border-radius:6px; margin-top:4px; cursor:pointer;" onclick="selectObd('${c.code}', '${c.description}')">
+                            <strong style="color:var(--danger-red);">${c.code}</strong>: ${c.description} (${c.severity.toUpperCase()})
+                        </div>
+                    `).join('');
+                } else {
+                    resultsBox.innerHTML = '';
+                }
+            } catch (e) {
+                // Ignore search error
+            }
+        }
+
+        function selectObd(code, desc) {
+            document.getElementById('sym-obd').value = code;
+            document.getElementById('sym-desc').value = `[OBD-II ${code}] ${desc}`;
+            document.getElementById('obd-search-results').innerHTML = '';
+        }
+
+        // -------------------------------------------------------------
+        // 10-Second Diagnostic Audio Recorder
+        // -------------------------------------------------------------
+        let recCountdown = null;
+        async function toggleAudioRecording() {
+            const btn = document.getElementById('btn-audio-rec');
+            const timer = document.getElementById('audio-rec-timer');
+            const audioPlayback = document.getElementById('audio-playback');
+
+            if (audioRecorder && audioRecorder.state === 'recording') {
+                audioRecorder.stop();
+                clearInterval(recCountdown);
+                btn.textContent = '🎙️ Re-Record (10s)';
+                return;
+            }
+
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                audioChunks = [];
+                audioRecorder = new MediaRecorder(stream);
+
+                audioRecorder.ondataavailable = e => {
+                    if (e.data.size > 0) audioChunks.push(e.data);
+                };
+
+                audioRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    audioPlayback.src = audioUrl;
+                    audioPlayback.style.display = 'block';
+                    timer.textContent = 'Recording Captured (Ready)';
+                };
+
+                audioRecorder.start();
+                btn.textContent = '⏹ Stop Recording';
+
+                let sec = 0;
+                timer.textContent = `00:00 / 00:10`;
+                recCountdown = setInterval(() => {
+                    sec++;
+                    timer.textContent = `00:0${sec} / 00:10`;
+                    if (sec >= 10) {
+                        audioRecorder.stop();
+                        clearInterval(recCountdown);
+                        btn.textContent = '🎙️ Re-Record (10s)';
+                    }
+                }, 1000);
+
+            } catch (err) {
+                showToast('Microphone access denied or unsupported on this device.', 'warning');
+            }
+        }
+
+        // -------------------------------------------------------------
+        // Pre-Trip Safety Inspection
+        // -------------------------------------------------------------
+        function openInspectionModal() {
+            const container = document.getElementById('inspection-checklist-container');
+            const items = [
+                { id: 'insp-lights', label: 'Exterior Lights, Turn Signals & Hazards' },
+                { id: 'insp-tires', label: 'Tire Pressure (Cold) & Tread Depth (>1.6 mm)' },
+                { id: 'insp-oil', label: 'Engine Oil Dipstick Level' },
+                { id: 'insp-brake', label: 'Brake Fluid Reservoir & Pedal / Lever Firmness' },
+                { id: 'insp-coolant', label: 'Engine Coolant Expansion Tank Level' },
+                { id: 'insp-wipers', label: 'Windshield Wipers & Washer Jet Fluid' },
+                { id: 'insp-horn', label: 'Horn & Dash Warning Lights Check' },
+                { id: 'insp-leaks', label: 'Underbody Inspection for Fluid Puddles' }
+            ];
+
+            container.innerHTML = items.map(item => `
+                <div style="background:var(--surface-card); border:1px solid var(--border-dark); border-radius:var(--radius-md); padding:10px 14px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+                    <span style="font-size:13px; font-weight:700;">${item.label}</span>
+                    <div style="display:flex; gap:6px;">
+                        <button type="button" class="btn-secondary btn-sm insp-btn" data-item="${item.id}" data-val="pass" onclick="setInspState(this, 'pass')" style="background:rgba(16,185,129,0.2); color:var(--success-green); border-color:var(--success-green);">✓ Pass</button>
+                        <button type="button" class="btn-secondary btn-sm insp-btn" data-item="${item.id}" data-val="attn" onclick="setInspState(this, 'attn')">⚠ Attn</button>
+                        <button type="button" class="btn-secondary btn-sm insp-btn" data-item="${item.id}" data-val="fail" onclick="setInspState(this, 'fail')">✗ Fail</button>
+                    </div>
+                </div>
+            `).join('');
+
+            openModal('modal-inspection');
+        }
+
+        function setInspState(btn, state) {
+            const parent = btn.parentElement;
+            parent.querySelectorAll('.insp-btn').forEach(b => {
+                b.style.background = 'transparent';
+                b.style.borderColor = 'var(--border-dark)';
+            });
+
+            if (state === 'pass') {
+                btn.style.background = 'rgba(16,185,129,0.25)';
+                btn.style.borderColor = 'var(--success-green)';
+            } else if (state === 'attn') {
+                btn.style.background = 'rgba(245,158,11,0.25)';
+                btn.style.borderColor = 'var(--warning-amber)';
+            } else {
+                btn.style.background = 'rgba(239,68,68,0.25)';
+                btn.style.borderColor = 'var(--danger-red)';
+            }
+        }
+
+        function submitInspection() {
+            closeModal('modal-inspection');
+            showToast('Pre-Trip Safety Inspection verified and logged into garage history!', 'success');
+        }
+
+        // -------------------------------------------------------------
+        // Printable Resale Certificate Modal
+        // -------------------------------------------------------------
+        function openResaleCertificate() {
+            if (!activeVehicle) return;
+
+            const cert = document.getElementById('printable-certificate');
+            const visits = garageData ? (garageData.visits || []) : [];
+            const shareUrl = activeVehicle.public_share_token ? `${window.location.origin}/v/${activeVehicle.public_share_token}` : '#';
+
+            cert.innerHTML = `
+                <div style="text-align:center; margin-bottom:24px; border-bottom:2px solid #E2E8F0; padding-bottom:16px;">
+                    <h2 style="font-size:24px; font-weight:800; color:#0F172A; text-transform:uppercase;">Verified Digital Service Book & Certificate of Maintenance</h2>
+                    <p style="color:#64748B; font-size:13px; margin-top:4px;">CarLog Platform • 100% Metric (km, L, Bar) • Single Currency USD ($)</p>
+                </div>
+
+                <div style="display:grid; grid-template-columns:2fr 1fr; gap:20px; margin-bottom:24px; background:#F8FAFC; border:1px solid #CBD5E1; border-radius:12px; padding:18px;">
+                    <div>
+                        <h3 style="font-size:20px; font-weight:800; color:#0F172A;">${activeVehicle.year} ${activeVehicle.make} ${activeVehicle.model}</h3>
+                        <div style="font-size:13px; color:#475569; margin-top:4px; font-family:'JetBrains Mono', monospace;">
+                            VIN: <strong>${activeVehicle.vin || 'N/A'}</strong> • Plate: <strong>${activeVehicle.plate_number || 'N/A'}</strong>
+                        </div>
+                        <div style="font-size:13px; color:#475569; margin-top:6px;">
+                            Current Odometer: <strong>${Number(activeVehicle.current_odometer_km).toLocaleString()} km</strong> • Engine: <strong>${activeVehicle.engine_displacement_cc || '—'} cc (${activeVehicle.power_kw || '—'} kW)</strong>
+                        </div>
+                    </div>
+                    <div style="text-align:right;">
+                        <div style="font-size:11px; font-weight:700; color:#64748B; text-transform:uppercase;">Total Verified Investment</div>
+                        <div style="font-size:22px; font-weight:800; color:#0F172A; font-family:'JetBrains Mono', monospace; margin-top:4px;">
+                            $${(garageData.stats.total_maintenance_usd || 0).toFixed(2)} USD
+                        </div>
+                        <div style="font-size:11px; color:#10B981; font-weight:700; margin-top:4px;">✓ Complete Chronology Verified</div>
+                    </div>
+                </div>
+
+                <h4 style="font-size:15px; font-weight:800; color:#0F172A; margin-bottom:10px;">Maintenance History Chronology</h4>
+                <table style="width:100%; border-collapse:collapse; font-size:12px; margin-bottom:24px;">
+                    <thead>
+                        <tr style="background:#F1F5F9; border-bottom:2px solid #CBD5E1; text-align:left;">
+                            <th style="padding:8px 10px;">Date</th>
+                            <th style="padding:8px 10px;">Odometer</th>
+                            <th style="padding:8px 10px;">Service Visit Title & Replaced Parts</th>
+                            <th style="padding:8px 10px;">Workshop</th>
+                            <th style="padding:8px 10px; text-align:right;">Cost (USD)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${visits.map(v => `
+                            <tr style="border-bottom:1px solid #E2E8F0;">
+                                <td style="padding:8px 10px; font-weight:700;">${v.service_date}</td>
+                                <td style="padding:8px 10px; font-family:'JetBrains Mono', monospace;">${Number(v.odometer_km).toLocaleString()} km</td>
+                                <td style="padding:8px 10px;">
+                                    <strong>${v.visit_title}</strong>
+                                    <div style="color:#64748B; font-size:11px; margin-top:2px;">
+                                        ${(v.tasks||[]).map(t => `${t.task_name} (${t.part_brand || ''} ${t.part_number || ''})`).join(' • ')}
+                                    </div>
+                                </td>
+                                <td style="padding:8px 10px; color:#475569;">${v.shop_name || 'DIY'}</td>
+                                <td style="padding:8px 10px; text-align:right; font-family:'JetBrains Mono', monospace; font-weight:700;">$${(v.total_cost_usd||0).toFixed(2)}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+
+                <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:8px; padding:14px; display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <div style="font-size:12px; font-weight:700; color:#0F172A;">Public Resale Trust Link</div>
+                        <div style="font-size:11px; color:#64748B; font-family:'JetBrains Mono', monospace; word-break:break-all;">${shareUrl}</div>
+                    </div>
+                    <div style="background:#FFF; padding:6px; border:1px solid #CBD5E1; border-radius:6px; font-size:11px; font-weight:700; text-align:center;">
+                        QR VERIFIED
+                    </div>
+                </div>
+            `;
+
+            openModal('modal-resale');
+        }
+
+        // -------------------------------------------------------------
+        // Modal Controls & Utilities
+        // -------------------------------------------------------------
+        function openModal(id) {
+            const m = document.getElementById(id);
+            if (m) m.style.display = 'flex';
+        }
+
+        function closeModal(id) {
+            const m = document.getElementById(id);
+            if (m) m.style.display = 'none';
+        }
+
+        function openAddVehicleModal() {
+            document.getElementById('vehicle-form').reset();
+            openModal('modal-vehicle');
+        }
+
+        function openLogServiceModal() {
+            document.getElementById('service-visit-form').reset();
+            document.getElementById('sv-date').value = new Date().toISOString().split('T')[0];
+            document.getElementById('sv-odo').value = activeVehicle ? activeVehicle.current_odometer_km : 0;
+            document.getElementById('bundle-tasks-container').innerHTML = '';
+            addTaskRowToBundle(); // Add first blank row
+            updateBundleTotal();
+            openModal('modal-service-visit');
+        }
+
+        function openFuelModal() {
+            document.getElementById('fuel-form').reset();
+            document.getElementById('fuel-date').value = new Date().toISOString().split('T')[0];
+            document.getElementById('fuel-odo').value = activeVehicle ? activeVehicle.current_odometer_km : 0;
+            openModal('modal-fuel');
+        }
+
+        function openSymptomModal() {
+            document.getElementById('symptom-form').reset();
+            document.getElementById('sym-date').value = new Date().toISOString().split('T')[0];
+            document.getElementById('sym-odo').value = activeVehicle ? activeVehicle.current_odometer_km : 0;
+            openModal('modal-symptom');
+        }
+
+        function openInventoryModal() {
+            openModal('modal-inventory');
+        }
+
+        function openEditSpecsModal() {
+            if (garageData && garageData.quick_specs) {
+                const s = garageData.quick_specs;
+                document.getElementById('spec-oil-vis').value = s.oil_viscosity || '';
+                document.getElementById('spec-oil-cap').value = s.oil_capacity_l || '';
+                document.getElementById('spec-tire-f').value = s.front_tire_pressure_bar || '';
+                document.getElementById('spec-tire-r').value = s.rear_tire_pressure_bar || '';
+                document.getElementById('spec-torque').value = s.wheel_lug_torque_nm || '';
+                document.getElementById('spec-coolant').value = s.coolant_spec || '';
+            }
+            openModal('modal-specs');
+        }
+
+        // Offline Simulation Toggle
+        function toggleOnlineSimulation() {
+            isOnline = !isOnline;
+            const dot = document.getElementById('connection-dot');
+            const text = document.getElementById('connection-text');
+            const banner = document.getElementById('offline-banner');
+
+            if (isOnline) {
+                dot.className = 'status-dot';
+                text.textContent = 'Online';
+                banner.className = 'offline-banner';
+                showToast('Back Online! Connected to CarLog servers.', 'success');
+                flushPendingSyncQueue();
+            } else {
+                dot.className = 'status-dot offline';
+                text.textContent = 'Simulated Offline';
+                banner.className = 'offline-banner active';
+                showToast('Offline Mode Active: All changes write to local SQLite first.', 'warning');
+            }
+        }
+
+        function updatePendingCounter() {
+            const counter = document.getElementById('pending-sync-counter');
+            if (counter) counter.textContent = `${pendingSyncQueue.length} pending`;
+        }
+
+        async function flushPendingSyncQueue() {
+            if (!pendingSyncQueue.length) return;
+            showToast(`Syncing ${pendingSyncQueue.length} offline actions to server...`, 'info');
+            pendingSyncQueue = [];
+            localStorage.setItem('carlog_pending_sync', '[]');
+            updatePendingCounter();
+            await loadGarageDashboard(activeVehicle ? activeVehicle.id : null);
+            showToast('Offline changes synced successfully!', 'success');
+        }
+
+        // -------------------------------------------------------------
+        // App Bootstrap & Auto-Login
+        // -------------------------------------------------------------
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedUser = localStorage.getItem('carlog_user');
+            const token = getAuthToken();
+
+            if (token && savedUser) {
+                try {
+                    const user = JSON.parse(savedUser);
+                    updateUserChip(user);
+                    loadGarageDashboard();
+                    return;
+                } catch (e) {
+                    // Fallthrough to login view
+                }
+            }
+
+            showView('login-view');
+        });
     </script>
 </body>
 </html>

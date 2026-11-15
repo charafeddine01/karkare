@@ -11,13 +11,19 @@ use Throwable;
 
 class SyncController {
     private PDO $db;
+    private string $driver;
 
     public function __construct() {
         $this->db = Database::getConnection();
+        $this->driver = Database::getDriver();
+    }
+
+    private function prepareUpsert(string $mysqlSql, string $sqliteSql): \PDOStatement {
+        return $this->db->prepare($this->driver === 'sqlite' ? $sqliteSql : $mysqlSql);
     }
 
     /**
-     * Push client offline changes to MariaDB server
+     * Push client offline changes to MariaDB/SQLite server
      */
     public function push(Request $request): void {
         $userId = $request->getUserId();
@@ -45,7 +51,7 @@ class SyncController {
         try {
             // 1. Vehicles
             if (!empty($payload['vehicles']) && is_array($payload['vehicles'])) {
-                $upsertVehicle = $this->db->prepare(
+                $upsertVehicle = $this->prepareUpsert(
                     "INSERT INTO vehicles (
                         id, user_id, vehicle_type, vin, plate_number, make, model, year,
                         engine_displacement_cc, engine_code, power_kw, transmission_type,
@@ -74,7 +80,18 @@ class SyncController {
                         public_share_token = VALUES(public_share_token),
                         hide_costs_on_share = VALUES(hide_costs_on_share),
                         is_deleted = VALUES(is_deleted),
-                        updated_at = CURRENT_TIMESTAMP(3)"
+                        updated_at = CURRENT_TIMESTAMP(3)",
+                    "INSERT OR REPLACE INTO vehicles (
+                        id, user_id, vehicle_type, vin, plate_number, make, model, year,
+                        engine_displacement_cc, engine_code, power_kw, transmission_type,
+                        fuel_type, acquisition_odometer_km, current_odometer_km, photo_url,
+                        public_share_token, hide_costs_on_share, is_deleted, updated_at
+                    ) VALUES (
+                        :id, :user_id, :vehicle_type, :vin, :plate_number, :make, :model, :year,
+                        :engine_displacement_cc, :engine_code, :power_kw, :transmission_type,
+                        :fuel_type, :acquisition_odometer_km, :current_odometer_km, :photo_url,
+                        :public_share_token, :hide_costs_on_share, :is_deleted, CURRENT_TIMESTAMP
+                    )"
                 );
 
                 foreach ($payload['vehicles'] as $v) {
@@ -106,7 +123,7 @@ class SyncController {
 
             // 2. Vehicle Quick Specs
             if (!empty($payload['vehicle_quick_specs']) && is_array($payload['vehicle_quick_specs'])) {
-                $upsertSpecs = $this->db->prepare(
+                $upsertSpecs = $this->prepareUpsert(
                     "INSERT INTO vehicle_quick_specs (
                         vehicle_id, oil_viscosity, oil_capacity_l, coolant_spec, coolant_capacity_l,
                         front_tire_size, rear_tire_size, front_tire_pressure_bar, rear_tire_pressure_bar,
@@ -133,7 +150,18 @@ class SyncController {
                         spark_plug_gap_mm = VALUES(spark_plug_gap_mm),
                         wheel_lug_torque_nm = VALUES(wheel_lug_torque_nm),
                         chain_pitch_mm = VALUES(chain_pitch_mm),
-                        updated_at = CURRENT_TIMESTAMP(3)"
+                        updated_at = CURRENT_TIMESTAMP(3)",
+                    "INSERT OR REPLACE INTO vehicle_quick_specs (
+                        vehicle_id, oil_viscosity, oil_capacity_l, coolant_spec, coolant_capacity_l,
+                        front_tire_size, rear_tire_size, front_tire_pressure_bar, rear_tire_pressure_bar,
+                        wiper_driver_mm, wiper_passenger_mm, wiper_rear_mm, battery_spec,
+                        spark_plug_gap_mm, wheel_lug_torque_nm, chain_pitch_mm, updated_at
+                    ) VALUES (
+                        :vehicle_id, :oil_viscosity, :oil_capacity_l, :coolant_spec, :coolant_capacity_l,
+                        :front_tire_size, :rear_tire_size, :front_tire_pressure_bar, :rear_tire_pressure_bar,
+                        :wiper_driver_mm, :wiper_passenger_mm, :wiper_rear_mm, :battery_spec,
+                        :spark_plug_gap_mm, :wheel_lug_torque_nm, :chain_pitch_mm, CURRENT_TIMESTAMP
+                    )"
                 );
 
                 foreach ($payload['vehicle_quick_specs'] as $s) {
@@ -161,7 +189,7 @@ class SyncController {
 
             // 3. Contacts Directory
             if (!empty($payload['contacts_directory']) && is_array($payload['contacts_directory'])) {
-                $upsertContact = $this->db->prepare(
+                $upsertContact = $this->prepareUpsert(
                     "INSERT INTO contacts_directory (
                         id, user_id, shop_name, specialty, phone, location_notes, is_deleted, updated_at
                     ) VALUES (
@@ -172,7 +200,12 @@ class SyncController {
                         phone = VALUES(phone),
                         location_notes = VALUES(location_notes),
                         is_deleted = VALUES(is_deleted),
-                        updated_at = CURRENT_TIMESTAMP(3)"
+                        updated_at = CURRENT_TIMESTAMP(3)",
+                    "INSERT OR REPLACE INTO contacts_directory (
+                        id, user_id, shop_name, specialty, phone, location_notes, is_deleted, updated_at
+                    ) VALUES (
+                        :id, :user_id, :shop_name, :specialty, :phone, :location_notes, :is_deleted, CURRENT_TIMESTAMP
+                    )"
                 );
 
                 foreach ($payload['contacts_directory'] as $c) {
@@ -192,7 +225,7 @@ class SyncController {
 
             // 4. Custom Maintenance Tasks Template
             if (!empty($payload['maintenance_tasks_template']) && is_array($payload['maintenance_tasks_template'])) {
-                $upsertTask = $this->db->prepare(
+                $upsertTask = $this->prepareUpsert(
                     "INSERT INTO maintenance_tasks_template (
                         id, user_id, category, task_name, applicable_to, default_interval_km,
                         default_interval_months, is_deleted, updated_at
@@ -206,7 +239,14 @@ class SyncController {
                         default_interval_km = VALUES(default_interval_km),
                         default_interval_months = VALUES(default_interval_months),
                         is_deleted = VALUES(is_deleted),
-                        updated_at = CURRENT_TIMESTAMP(3)"
+                        updated_at = CURRENT_TIMESTAMP(3)",
+                    "INSERT OR REPLACE INTO maintenance_tasks_template (
+                        id, user_id, category, task_name, applicable_to, default_interval_km,
+                        default_interval_months, is_deleted, updated_at
+                    ) VALUES (
+                        :id, :user_id, :category, :task_name, :applicable_to, :default_interval_km,
+                        :default_interval_months, :is_deleted, CURRENT_TIMESTAMP
+                    )"
                 );
 
                 foreach ($payload['maintenance_tasks_template'] as $t) {
@@ -227,7 +267,7 @@ class SyncController {
 
             // 5. Service Visits
             if (!empty($payload['service_visits']) && is_array($payload['service_visits'])) {
-                $upsertVisit = $this->db->prepare(
+                $upsertVisit = $this->prepareUpsert(
                     "INSERT INTO service_visits (
                         id, vehicle_id, contact_id, service_date, odometer_km,
                         visit_title, receipt_photo_url, notes, is_deleted, updated_at
@@ -242,7 +282,14 @@ class SyncController {
                         receipt_photo_url = VALUES(receipt_photo_url),
                         notes = VALUES(notes),
                         is_deleted = VALUES(is_deleted),
-                        updated_at = CURRENT_TIMESTAMP(3)"
+                        updated_at = CURRENT_TIMESTAMP(3)",
+                    "INSERT OR REPLACE INTO service_visits (
+                        id, vehicle_id, contact_id, service_date, odometer_km,
+                        visit_title, receipt_photo_url, notes, is_deleted, updated_at
+                    ) VALUES (
+                        :id, :vehicle_id, :contact_id, :service_date, :odometer_km,
+                        :visit_title, :receipt_photo_url, :notes, :is_deleted, CURRENT_TIMESTAMP
+                    )"
                 );
 
                 foreach ($payload['service_visits'] as $v) {
@@ -264,7 +311,7 @@ class SyncController {
 
             // 6. Maintenance Logs
             if (!empty($payload['maintenance_logs']) && is_array($payload['maintenance_logs'])) {
-                $upsertLog = $this->db->prepare(
+                $upsertLog = $this->prepareUpsert(
                     "INSERT INTO maintenance_logs (
                         id, visit_id, vehicle_id, task_id, contact_id, service_date,
                         odometer_km, cost_parts_usd, cost_labor_usd, part_brand,
@@ -297,7 +344,20 @@ class SyncController {
                         next_due_km = VALUES(next_due_km),
                         next_due_date = VALUES(next_due_date),
                         is_deleted = VALUES(is_deleted),
-                        updated_at = CURRENT_TIMESTAMP(3)"
+                        updated_at = CURRENT_TIMESTAMP(3)",
+                    "INSERT OR REPLACE INTO maintenance_logs (
+                        id, visit_id, vehicle_id, task_id, contact_id, service_date,
+                        odometer_km, cost_parts_usd, cost_labor_usd, part_brand,
+                        part_number, fluid_volume_l, wheel_positions, tire_dot_code,
+                        measurement_mm, warranty_expires_date, notes, receipt_photo_url,
+                        next_due_km, next_due_date, is_deleted, updated_at
+                    ) VALUES (
+                        :id, :visit_id, :vehicle_id, :task_id, :contact_id, :service_date,
+                        :odometer_km, :cost_parts_usd, :cost_labor_usd, :part_brand,
+                        :part_number, :fluid_volume_l, :wheel_positions, :tire_dot_code,
+                        :measurement_mm, :warranty_expires_date, :notes, :receipt_photo_url,
+                        :next_due_km, :next_due_date, :is_deleted, CURRENT_TIMESTAMP
+                    )"
                 );
 
                 foreach ($payload['maintenance_logs'] as $l) {
@@ -331,7 +391,7 @@ class SyncController {
 
             // 7. Diagnostic Symptoms
             if (!empty($payload['diagnostic_symptoms']) && is_array($payload['diagnostic_symptoms'])) {
-                $upsertSymptom = $this->db->prepare(
+                $upsertSymptom = $this->prepareUpsert(
                     "INSERT INTO diagnostic_symptoms (
                         id, vehicle_id, resolved_by_log_id, logged_date, odometer_km,
                         obd_code, engine_state, symptom_description, audio_clip_url,
@@ -350,7 +410,16 @@ class SyncController {
                         audio_clip_url = VALUES(audio_clip_url),
                         is_resolved = VALUES(is_resolved),
                         is_deleted = VALUES(is_deleted),
-                        updated_at = CURRENT_TIMESTAMP(3)"
+                        updated_at = CURRENT_TIMESTAMP(3)",
+                    "INSERT OR REPLACE INTO diagnostic_symptoms (
+                        id, vehicle_id, resolved_by_log_id, logged_date, odometer_km,
+                        obd_code, engine_state, symptom_description, audio_clip_url,
+                        is_resolved, is_deleted, updated_at
+                    ) VALUES (
+                        :id, :vehicle_id, :resolved_by_log_id, :logged_date, :odometer_km,
+                        :obd_code, :engine_state, :symptom_description, :audio_clip_url,
+                        :is_resolved, :is_deleted, CURRENT_TIMESTAMP
+                    )"
                 );
 
                 foreach ($payload['diagnostic_symptoms'] as $s) {
@@ -374,7 +443,7 @@ class SyncController {
 
             // 8. Fuel Logs
             if (!empty($payload['fuel_logs']) && is_array($payload['fuel_logs'])) {
-                $upsertFuel = $this->db->prepare(
+                $upsertFuel = $this->prepareUpsert(
                     "INSERT INTO fuel_logs (
                         id, vehicle_id, fill_date, odometer_km, fuel_liters,
                         price_per_liter_usd, total_cost_usd, is_full_tank,
@@ -392,7 +461,16 @@ class SyncController {
                         is_full_tank = VALUES(is_full_tank),
                         calculated_l_per_100km = VALUES(calculated_l_per_100km),
                         is_deleted = VALUES(is_deleted),
-                        updated_at = CURRENT_TIMESTAMP(3)"
+                        updated_at = CURRENT_TIMESTAMP(3)",
+                    "INSERT OR REPLACE INTO fuel_logs (
+                        id, vehicle_id, fill_date, odometer_km, fuel_liters,
+                        price_per_liter_usd, total_cost_usd, is_full_tank,
+                        calculated_l_per_100km, is_deleted, updated_at
+                    ) VALUES (
+                        :id, :vehicle_id, :fill_date, :odometer_km, :fuel_liters,
+                        :price_per_liter_usd, :total_cost_usd, :is_full_tank,
+                        :calculated_l_per_100km, :is_deleted, CURRENT_TIMESTAMP
+                    )"
                 );
 
                 foreach ($payload['fuel_logs'] as $f) {
@@ -415,7 +493,7 @@ class SyncController {
 
             // 9. Garage Inventory
             if (!empty($payload['garage_inventory']) && is_array($payload['garage_inventory'])) {
-                $upsertInv = $this->db->prepare(
+                $upsertInv = $this->prepareUpsert(
                     "INSERT INTO garage_inventory (
                         id, user_id, vehicle_id, task_id, item_name, part_brand,
                         part_number, quantity, unit_label, purchase_price_usd,
@@ -434,7 +512,16 @@ class SyncController {
                         unit_label = VALUES(unit_label),
                         purchase_price_usd = VALUES(purchase_price_usd),
                         is_deleted = VALUES(is_deleted),
-                        updated_at = CURRENT_TIMESTAMP(3)"
+                        updated_at = CURRENT_TIMESTAMP(3)",
+                    "INSERT OR REPLACE INTO garage_inventory (
+                        id, user_id, vehicle_id, task_id, item_name, part_brand,
+                        part_number, quantity, unit_label, purchase_price_usd,
+                        is_deleted, updated_at
+                    ) VALUES (
+                        :id, :user_id, :vehicle_id, :task_id, :item_name, :part_brand,
+                        :part_number, :quantity, :unit_label, :purchase_price_usd,
+                        :is_deleted, CURRENT_TIMESTAMP
+                    )"
                 );
 
                 foreach ($payload['garage_inventory'] as $i) {
@@ -449,7 +536,7 @@ class SyncController {
                         ':part_number' => $i['part_number'] ?? null,
                         ':quantity' => (float)$i['quantity'],
                         ':unit_label' => $i['unit_label'] ?? 'pcs',
-                        ':purchase_price_usd' => $i['purchase_price_usd'] ?? null,
+                        ':purchase_price_usd' => !empty($i['purchase_price_usd']) ? (float)$i['purchase_price_usd'] : null,
                         ':is_deleted' => $isDeleted,
                     ]);
                     $syncedIds['garage_inventory'][] = $i['id'];
@@ -461,17 +548,17 @@ class SyncController {
             Response::success([
                 'synced_ids' => $syncedIds,
                 'server_timestamp' => date('Y-m-d H:i:s.v'),
-            ], 'Push sync completed successfully.');
+            ], 'Sync push processed successfully.');
 
         } catch (Throwable $e) {
             $this->db->rollBack();
-            error_log("Push sync failed: " . $e->getMessage());
-            Response::error('Push sync transaction failed: ' . $e->getMessage(), 'SYNC_FAILED', 500);
+            error_log("Sync push failed: " . $e->getMessage() . "\n" . $e->getTraceAsString());
+            Response::error('Sync push failed: ' . $e->getMessage(), 'SYNC_FAILED', 500);
         }
     }
 
     /**
-     * Pull delta updates since last sync timestamp
+     * Pull updates from server since last_sync_timestamp
      */
     public function pull(Request $request): void {
         $userId = $request->getUserId();

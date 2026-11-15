@@ -280,8 +280,27 @@ $router->post('/api/upload', [UploadController::class, 'upload'], [$authMiddlewa
 $router->get('/api/parts/suggest', [PartCatalogController::class, 'suggest'], [$authMiddleware]);
 $router->get('/api/obd/lookup', [PartCatalogController::class, 'searchObd']);
 
-// Vehicles (Protected)
+// Vehicles & Garage (Protected)
+$router->get('/api/garage', [VehicleController::class, 'getGarage'], [$authMiddleware]);
+$router->post('/api/vehicles', [VehicleController::class, 'createVehicle'], [$authMiddleware]);
+$router->post('/api/vehicles/{id}', [VehicleController::class, 'updateVehicle'], [$authMiddleware]);
+$router->post('/api/vehicles/{id}/specs', [VehicleController::class, 'saveQuickSpecs'], [$authMiddleware]);
 $router->post('/api/vehicles/{id}/share-token', [VehicleController::class, 'generateShareToken'], [$authMiddleware]);
+
+// Service Bundles (Protected)
+$router->post('/api/service-visits', [VehicleController::class, 'createServiceVisit'], [$authMiddleware]);
+
+// Fuel Analytics (Protected)
+$router->post('/api/fuel-logs', [VehicleController::class, 'createFuelLog'], [$authMiddleware]);
+
+// Diagnostic Symptoms (Protected)
+$router->post('/api/symptoms', [VehicleController::class, 'createSymptom'], [$authMiddleware]);
+$router->post('/api/symptoms/{id}/resolve', [VehicleController::class, 'resolveSymptom'], [$authMiddleware]);
+
+// Inventory & Contacts (Protected)
+$router->post('/api/inventory', [VehicleController::class, 'createInventoryItem'], [$authMiddleware]);
+$router->post('/api/inventory/{id}/quantity', [VehicleController::class, 'updateInventoryQuantity'], [$authMiddleware]);
+$router->post('/api/contacts', [VehicleController::class, 'createContact'], [$authMiddleware]);
 
 // 4. Dispatch Request
 $request = new Request();
