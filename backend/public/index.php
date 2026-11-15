@@ -252,8 +252,8 @@ $router->get('/', function (Request $req) {
 $router->get('/api/health', function (Request $req) {
     // Ensure DB connection is initialized
     try {
-        Database::getConnection();
-        $dbStatus = 'connected (' . Database::getDriver() . ')';
+        \CarLog\Config\Database::getConnection();
+        $dbStatus = 'connected (' . \CarLog\Config\Database::getDriver() . ')';
     } catch (\Throwable $e) {
         $dbStatus = 'error: ' . $e->getMessage();
     }
