@@ -250,10 +250,19 @@ $router->get('/', function (Request $req) {
 
 // Health check
 $router->get('/api/health', function (Request $req) {
+    // Ensure DB connection is initialized
+    try {
+        Database::getConnection();
+        $dbStatus = 'connected (' . Database::getDriver() . ')';
+    } catch (\Throwable $e) {
+        $dbStatus = 'error: ' . $e->getMessage();
+    }
+
     Response::success([
         'status' => 'healthy',
         'service' => 'CarLog API',
         'version' => '1.0.0',
+        'database' => $dbStatus,
         'timestamp' => date('c'),
     ]);
 });
