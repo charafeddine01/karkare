@@ -9,7 +9,7 @@ use RuntimeException;
 
 /**
  * Database Singleton Connection Handler
- * Supports MariaDB / MySQL with zero-configuration fallback to SQLite
+ * Supports MariaDB / MySQL with automatic schema provisioning and zero-configuration fallback to SQLite
  */
 class Database {
     private static ?PDO $instance = null;
@@ -22,30 +22,42 @@ class Database {
         if (self::$instance === null) {
             $config = Config::get()['database'];
             
-            // 1. Try MySQL/MariaDB PDO
+            // 1. Try MySQL/MariaDB PDO (try localhost then 127.0.0.1)
             $mysqlError = null;
-            if (!empty($config['host']) && !empty($config['dbname'])) {
-                try {
-                    $dsn = sprintf(
-                        'mysql:host=%s;port=%d;dbname=%s;charset=%s',
-                        $config['host'],
-                        $config['port'],
-                        $config['dbname'],
-                        $config['charset']
-                    );
+            if (!empty($config['dbname']) && !empty($config['user'])) {
+                $candidateHosts = array_unique([$config['host'], 'localhost', '127.0.0.1']);
+                
+                foreach ($candidateHosts as $host) {
+                    try {
+                        $dsn = sprintf(
+                            'mysql:host=%s;port=%d;dbname=%s;charset=%s',
+                            $host,
+                            $config['port'],
+                            $config['dbname'],
+                            $config['charset']
+                        );
 
-                    $options = [
-                        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                        PDO::ATTR_EMULATE_PREPARES => false,
-                        1002 => "SET NAMES {$config['charset']} COLLATE {$config['collation']}",
-                    ];
+                        $options = [
+                            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                            PDO::ATTR_EMULATE_PREPARES => false,
+                            1002 => "SET NAMES {$config['charset']} COLLATE {$config['collation']}",
+                        ];
+                        // Enable multi-statements for auto-provisioning
+                        if (defined('\Pdo\Mysql::ATTR_MULTI_STATEMENTS')) {
+                            $options[\Pdo\Mysql::ATTR_MULTI_STATEMENTS] = true;
+                        } elseif (defined('PDO::MYSQL_ATTR_MULTI_STATEMENTS')) {
+                            $options[@constant('PDO::MYSQL_ATTR_MULTI_STATEMENTS')] = true;
+                        }
 
-                    self::$instance = new PDO($dsn, $config['user'], $config['password'], $options);
-                    self::$driver = 'mysql';
-                    return self::$instance;
-                } catch (PDOException $e) {
-                    $mysqlError = $e->getMessage();
+                        $pdo = new PDO($dsn, $config['user'], $config['password'], $options);
+                        self::$driver = 'mysql';
+                        self::autoProvisionMysql($pdo);
+                        self::$instance = $pdo;
+                        return self::$instance;
+                    } catch (PDOException $e) {
+                        $mysqlError = $e->getMessage();
+                    }
                 }
             }
 
@@ -82,5 +94,46 @@ class Database {
 
     public static function getDriver(): string {
         return self::$driver;
+    }
+
+    /**
+     * Auto-provisions empty MySQL/MariaDB database with schema and seeds
+     */
+    private static function autoProvisionMysql(PDO $pdo): void {
+        try {
+            $stmt = $pdo->query("SHOW TABLES LIKE 'vehicles'");
+            if ($stmt->fetchColumn() === false) {
+                $dir = __DIR__ . '/../database';
+                $schemaFile = $dir . '/schema.sql';
+                $seedFile = $dir . '/seed_tasks_and_obd.sql';
+                $demoFile = $dir . '/demo_seed.sql';
+
+                if (file_exists($schemaFile)) {
+                    $sql = file_get_contents($schemaFile);
+                    $sql = preg_replace('/CREATE DATABASE[^;]+;/i', '', $sql);
+                    $sql = preg_replace('/USE[^;]+;/i', '', $sql);
+                    $sql = preg_replace('/DELIMITER\s+\$\$/i', '', $sql);
+                    $sql = preg_replace('/DELIMITER\s+;/i', '', $sql);
+                    $sql = str_replace('$$', ';', $sql);
+                    $pdo->exec($sql);
+                }
+
+                if (file_exists($seedFile)) {
+                    $seed = file_get_contents($seedFile);
+                    $seed = preg_replace('/USE[^;]+;/i', '', $seed);
+                    $pdo->exec($seed);
+                }
+
+                if (file_exists($demoFile)) {
+                    $demo = file_get_contents($demoFile);
+                    $demo = preg_replace('/USE[^;]+;/i', '', $demo);
+                    $pdo->exec($demo);
+                }
+
+                error_log("CarLog MariaDB auto-provisioning completed successfully.");
+            }
+        } catch (\Throwable $e) {
+            error_log("autoProvisionMysql note: " . $e->getMessage());
+        }
     }
 }
