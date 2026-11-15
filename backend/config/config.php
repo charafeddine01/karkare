@@ -54,6 +54,9 @@ class Config {
                     'audio/m4a', 'audio/mp4', 'audio/x-m4a', 'audio/aac', 'audio/mpeg'
                 ],
             ],
+            'google' => [
+                'client_id' => getenv('GOOGLE_CLIENT_ID') ?: '272115978287-i0leh96c3vmi5mdjrc7a1c9p26krllcj.apps.googleusercontent.com',
+            ],
         ];
     }
 }

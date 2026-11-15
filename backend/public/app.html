@@ -1255,7 +1255,7 @@
             }
         }
 
-        let googleClientId = localStorage.getItem('carlog_google_client_id') || '';
+        let googleClientId = localStorage.getItem('carlog_google_client_id') || '272115978287-i0leh96c3vmi5mdjrc7a1c9p26krllcj.apps.googleusercontent.com';
 
         function initGoogleSignIn() {
             if (!window.google || !googleClientId) return;
@@ -1269,11 +1269,11 @@
 
                 const container = document.getElementById('google-btn-container');
                 if (container) {
-                    container.innerHTML = '';
+                    const width = Math.min(container.offsetWidth || 376, 376);
                     google.accounts.id.renderButton(container, {
                         theme: 'filled_blue',
                         size: 'large',
-                        width: container.offsetWidth || 376,
+                        width: width,
                         text: 'continue_with',
                         shape: 'rectangular',
                         logo_alignment: 'left'
