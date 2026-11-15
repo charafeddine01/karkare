@@ -15,6 +15,9 @@
     # Route public share book: v/{token} -> public/view.php?token={token}
     RewriteRule ^v/([a-zA-Z0-9_\-]+)/?$ public/view.php?token=$1 [QSA,L]
 
+    # Route auto-deploy webhook: webhook -> public/webhook.php
+    RewriteRule ^webhook(\.php)?$ public/webhook.php [QSA,L]
+
     # Serve static assets from uploads directory directly if they exist
     RewriteCond %{REQUEST_FILENAME} -f
     RewriteRule ^uploads/ - [L]

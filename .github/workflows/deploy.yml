@@ -14,7 +14,19 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Verify FTP Secrets Configuration
+        id: check_secrets
+        run: |
+          if [ -n "${{ secrets.FTP_SERVER }}" ] && [ -n "${{ secrets.FTP_USERNAME }}" ] && [ -n "${{ secrets.FTP_PASSWORD }}" ]; then
+            echo "configured=true" >> $GITHUB_OUTPUT
+            echo "FTP credentials detected. Proceeding with deployment."
+          else
+            echo "configured=false" >> $GITHUB_OUTPUT
+            echo "::warning::FTP secrets (FTP_SERVER, FTP_USERNAME, FTP_PASSWORD) are not yet configured in GitHub Repository Secrets. Go to Repo Settings > Secrets and variables > Actions to add them, or use cPanel Git Versioning."
+          fi
+
       - name: FTP Deploy Action
+        if: steps.check_secrets.outputs.configured == 'true'
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
