@@ -24,16 +24,15 @@ if (preg_match('#^/v/([a-zA-Z0-9_\-]+)#', $uri, $matches)) {
     exit;
 }
 
-// 2. Web Application & Auth Views (/app, /login, /register, /verify, /dashboard)
-if (in_array($uri, ['/app', '/login', '/register', '/verify', '/dashboard'], true)) {
-    header('Content-Type: text/html; charset=UTF-8');
-    readfile(__DIR__ . '/public/app.html');
+// 2. Webhook (/webhook)
+if (str_starts_with($uri, '/webhook')) {
+    require __DIR__ . '/public/webhook.php';
     exit;
 }
 
-// 3. Webhook (/webhook)
-if (str_starts_with($uri, '/webhook')) {
-    require __DIR__ . '/public/webhook.php';
+// 3. API Routes (/api/...)
+if (str_starts_with($uri, '/api')) {
+    require __DIR__ . '/public/index.php';
     exit;
 }
 
@@ -58,5 +57,7 @@ if (str_starts_with($uri, '/uploads/')) {
     }
 }
 
-// 5. API and Everything else -> public/index.php
-require __DIR__ . '/public/index.php';
+// 5. Web Application Front Controller (Login, Register, Dashboard, /app, /login, or /)
+header('Content-Type: text/html; charset=UTF-8');
+readfile(__DIR__ . '/public/app.html');
+exit;
