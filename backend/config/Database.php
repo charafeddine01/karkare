@@ -27,28 +27,57 @@ class Database {
         if (self::$instance === null) {
             $config = Config::get()['database'];
             
-            // 1. Try MySQL/MariaDB PDO (try localhost then 127.0.0.1)
+            // 1. Try MySQL/MariaDB PDO
             $mysqlError = null;
             if (!empty($config['dbname']) && !empty($config['user'])) {
-                $candidateHosts = array_unique([$config['host'], 'localhost', '127.0.0.1']);
-                
-                foreach ($candidateHosts as $host) {
-                    try {
-                        $dsn = sprintf(
-                            'mysql:host=%s;port=%d;dbname=%s;charset=%s',
-                            $host,
-                            $config['port'],
-                            $config['dbname'],
-                            $config['charset']
-                        );
+                // Discover candidates from environment, .my.cnf, unix sockets, and localhost
+                $candidateDsns = [];
 
+                // Check .my.cnf in parent directories
+                $searchDir = __DIR__;
+                $foundCnf = null;
+                for ($i = 0; $i < 6; $i++) {
+                    $searchDir = dirname($searchDir);
+                    $cnfPath = $searchDir . '/.my.cnf';
+                    if (file_exists($cnfPath) && is_readable($cnfPath)) {
+                        $parsed = @parse_ini_file($cnfPath, true);
+                        if ($parsed) {
+                            $foundCnf = $cnfPath;
+                            $section = $parsed['client'] ?? ($parsed['mysql'] ?? reset($parsed));
+                            if (!empty($section['socket'])) {
+                                $candidateDsns[] = sprintf('mysql:unix_socket=%s;dbname=%s;charset=%s', $section['socket'], $config['dbname'], $config['charset']);
+                            }
+                            if (!empty($section['host'])) {
+                                $candidateDsns[] = sprintf('mysql:host=%s;port=%d;dbname=%s;charset=%s', $section['host'], (int)($section['port'] ?? 3306), $config['dbname'], $config['charset']);
+                            }
+                            break;
+                        }
+                    }
+                }
+
+                // Check common Unix domain sockets
+                $commonSockets = ['/var/run/mysqld/mysqld.sock', '/run/mysqld/mysqld.sock', '/tmp/mysql.sock', '/var/lib/mysql/mysql.sock'];
+                foreach ($commonSockets as $sock) {
+                    if (file_exists($sock)) {
+                        $candidateDsns[] = sprintf('mysql:unix_socket=%s;dbname=%s;charset=%s', $sock, $config['dbname'], $config['charset']);
+                    }
+                }
+
+                // TCP hosts
+                $candidateDsns[] = sprintf('mysql:host=%s;port=%d;dbname=%s;charset=%s', $config['host'], $config['port'], $config['dbname'], $config['charset']);
+                $candidateDsns[] = sprintf('mysql:host=localhost;port=3306;dbname=%s;charset=%s', $config['dbname'], $config['charset']);
+                $candidateDsns[] = sprintf('mysql:host=127.0.0.1;port=3306;dbname=%s;charset=%s', $config['dbname'], $config['charset']);
+
+                $candidateDsns = array_unique($candidateDsns);
+
+                foreach ($candidateDsns as $dsn) {
+                    try {
                         $options = [
                             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                             PDO::ATTR_EMULATE_PREPARES => false,
                             1002 => "SET NAMES {$config['charset']} COLLATE {$config['collation']}",
                         ];
-                        // Enable multi-statements for auto-provisioning
                         if (defined('\Pdo\Mysql::ATTR_MULTI_STATEMENTS')) {
                             $options[\Pdo\Mysql::ATTR_MULTI_STATEMENTS] = true;
                         } elseif (defined('PDO::MYSQL_ATTR_MULTI_STATEMENTS')) {
@@ -59,12 +88,13 @@ class Database {
                         self::$driver = 'mysql';
                         self::autoProvisionMysql($pdo);
                         self::$instance = $pdo;
+                        self::$lastError = "Connected via: {$dsn}" . ($foundCnf ? " (cnf: {$foundCnf})" : "");
                         return self::$instance;
                     } catch (PDOException $e) {
-                        $mysqlError = $e->getMessage();
+                        $mysqlError = "DSN [{$dsn}] error: " . $e->getMessage();
                     }
                 }
-                self::$lastError = $mysqlError;
+                self::$lastError = $mysqlError . ($foundCnf ? " (found cnf at {$foundCnf})" : " (no cnf found)");
             }
 
             // 2. Fallback to self-contained SQLite database
