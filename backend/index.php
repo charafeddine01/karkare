@@ -24,13 +24,20 @@ if (preg_match('#^/v/([a-zA-Z0-9_\-]+)#', $uri, $matches)) {
     exit;
 }
 
-// 2. Webhook (/webhook)
+// 2. Web Application & Auth Views (/app, /login, /register, /verify, /dashboard)
+if (in_array($uri, ['/app', '/login', '/register', '/verify', '/dashboard'], true)) {
+    header('Content-Type: text/html; charset=UTF-8');
+    require __DIR__ . '/public/app.html';
+    exit;
+}
+
+// 3. Webhook (/webhook)
 if (str_starts_with($uri, '/webhook')) {
     require __DIR__ . '/public/webhook.php';
     exit;
 }
 
-// 3. Static Uploads
+// 4. Static Uploads
 if (str_starts_with($uri, '/uploads/')) {
     $file = __DIR__ . $uri;
     if (is_file($file)) {

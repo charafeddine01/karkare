@@ -221,14 +221,14 @@ $router->get('/', function (Request $req) {
             </div>
         </div>
         <div class="actions">
-            <a href="v/demo-corolla-2022" class="btn btn-primary">
-                <span>View Public Service Book Demo</span> &rarr;
+            <a href="login" class="btn btn-primary">
+                <span>Launch Garage (Sign In)</span> &rarr;
+            </a>
+            <a href="v/demo-corolla-2022" class="btn btn-secondary">
+                <span>Service Book Demo</span>
             </a>
             <a href="api/health" class="btn btn-secondary">
                 <span>API Health Status</span>
-            </a>
-            <a href="https://github.com/charafeddine01/karkare" target="_blank" class="btn btn-secondary">
-                <span>GitHub Repository</span>
             </a>
         </div>
     </div>

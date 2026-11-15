@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarLog Garage — Vehicle Maintenance Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0B0F19;
+            --surface-dark: #151D2E;
+            --surface-card: #1A2338;
+            --surface-hover: #222E4A;
+            --primary-cyan: #38BDF8;
+            --primary-blue: #2563EB;
+            --accent-glow: rgba(56, 189, 248, 0.25);
+            --success-green: #10B981;
+            --warning-amber: #F59E0B;
+            --danger-red: #EF4444;
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            --border-dark: rgba(255, 255, 255, 0.08);
+            --border-active: rgba(56, 189, 248, 0.4);
+            --radius-md: 12px;
+            --radius-lg: 18px;
+            --radius-full: 9999px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* ------------------------------------------------------------- */
+        /* Top Navigation Bar & Offline Banner */
+        /* ------------------------------------------------------------- */
+        .offline-banner {
+            display: none;
+            background: linear-gradient(90deg, #D97706, #B45309);
+            color: #fff;
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 700;
+            text-align: center;
+            letter-spacing: 0.3px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            animation: slideDown 0.3s ease;
+        }
+
+        .offline-banner.active {
+            display: block;
+        }
+
+        header.navbar {
+            background: rgba(21, 29, 46, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-dark);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .brand-logo {
+            width: 38px;
+            height: 38px;
+            background: var(--surface-card);
+            border: 2px solid var(--primary-cyan);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-cyan);
+            font-size: 20px;
+            box-shadow: 0 0 16px var(--accent-glow);
+        }
+
+        .brand-title {
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            color: var(--text-main);
+        }
+
+        .brand-subtitle {
+            font-size: 11px;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            border-radius: var(--radius-full);
+            font-size: 12px;
+            font-weight: 700;
+            border: 1px solid var(--border-dark);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success-green);
+            box-shadow: 0 0 8px var(--success-green);
+        }
+
+        .status-dot.offline {
+            background: var(--warning-amber);
+            box-shadow: 0 0 8px var(--warning-amber);
+        }
+
+        .user-chip {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            background: var(--surface-card);
+            border: 1px solid var(--border-dark);
+            padding: 4px 12px;
+            border-radius: var(--radius-full);
+            font-size: 13px;
+        }
+
+        .user-chip .user-name {
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .btn-logout {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            padding: 4px;
+            transition: color 0.2s;
+        }
+
+        .btn-logout:hover {
+            color: var(--danger-red);
+        }
+
+        /* ------------------------------------------------------------- */
+        /* Main Layout & Cards */
+        /* ------------------------------------------------------------- */
+        main.container {
+            flex: 1;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 32px 20px 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .auth-card {
+            background: var(--surface-dark);
+            border: 1px solid var(--border-dark);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 440px;
+            padding: 36px 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+            position: relative;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .auth-header h2 {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 6px;
+        }
+
+        .auth-header p {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* Form Controls */
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            color: var(--primary-cyan);
+            font-size: 16px;
+            pointer-events: none;
+        }
+
+        .form-input {
+            width: 100%;
+            background: var(--surface-card);
+            border: 1px solid var(--border-dark);
+            border-radius: var(--radius-md);
+            padding: 13px 14px 13px 42px;
+            color: var(--text-main);
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .form-input:focus {
+            border-color: var(--primary-cyan);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 14px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 14px;
+            padding: 4px;
+        }
+
+        /* Demo Quick Pill */
+        .demo-pill {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(56, 189, 248, 0.08);
+            border: 1px dashed rgba(56, 189, 248, 0.4);
+            border-radius: var(--radius-md);
+            padding: 10px 14px;
+            margin-bottom: 20px;
+            font-size: 12px;
+            color: var(--primary-cyan);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .demo-pill:hover {
+            background: rgba(56, 189, 248, 0.14);
+            border-color: var(--primary-cyan);
+        }
+
+        .demo-pill-badge {
+            background: var(--primary-cyan);
+            color: var(--bg-dark);
+            font-weight: 800;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary-blue), #1D4ED8);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius-md);
+            padding: 14px;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-google {
+            width: 100%;
+            background: var(--surface-card);
+            border: 1px solid var(--border-dark);
+            color: var(--text-main);
+            border-radius: var(--radius-md);
+            padding: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.2s;
+        }
+
+        .btn-google:hover {
+            border-color: rgba(255,255,255,0.2);
+            background: var(--surface-hover);
+        }
+
+        .auth-switch {
+            text-align: center;
+            margin-top: 22px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .auth-switch a {
+            color: var(--primary-cyan);
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            margin-left: 4px;
+        }
+
+        .auth-switch a:hover {
+            text-decoration: underline;
+        }
+
+        /* OTP Input Grid */
+        .otp-inputs {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            margin: 24px 0;
+        }
+
+        .otp-box {
+            width: 100%;
+            height: 52px;
+            background: var(--surface-card);
+            border: 2px solid var(--border-dark);
+            border-radius: 10px;
+            text-align: center;
+            font-size: 22px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            color: var(--primary-cyan);
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .otp-box:focus {
+            border-color: var(--primary-cyan);
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
+            background: var(--surface-hover);
+        }
+
+        /* ------------------------------------------------------------- */
+        /* Dashboard Container (Active State) */
+        /* ------------------------------------------------------------- */
+        #dashboard-view {
+            display: none;
+            width: 100%;
+            max-width: 1100px;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .dash-welcome {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .dash-welcome h1 {
+            font-size: 26px;
+            font-weight: 800;
+        }
+
+        .vehicle-hero-card {
+            background: var(--surface-dark);
+            border: 1px solid var(--border-dark);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 28px;
+            margin-bottom: 28px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @media (max-width: 800px) {
+            .vehicle-hero-card {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .vehicle-img-box {
+            background: var(--surface-card);
+            border-radius: var(--radius-md);
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 54px;
+            color: var(--primary-cyan);
+            border: 1px solid var(--border-dark);
+        }
+
+        .vehicle-details h2 {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .badge-verified {
+            background: rgba(16, 185, 129, 0.12);
+            color: var(--success-green);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 3px 10px;
+            border-radius: var(--radius-full);
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .stat-box {
+            background: var(--surface-card);
+            border: 1px solid var(--border-dark);
+            border-radius: var(--radius-md);
+            padding: 12px 14px;
+        }
+
+        .stat-box .label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .stat-box .val {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-top: 4px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .quick-specs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .spec-card {
+            background: var(--surface-dark);
+            border: 1px solid var(--border-dark);
+            border-radius: var(--radius-md);
+            padding: 16px;
+        }
+
+        .spec-card .spec-title {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--primary-cyan);
+            margin-bottom: 6px;
+        }
+
+        .spec-card .spec-val {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .logs-section {
+            background: var(--surface-dark);
+            border: 1px solid var(--border-dark);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+        }
+
+        .logs-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .log-item {
+            background: var(--surface-card);
+            border: 1px solid var(--border-dark);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            transition: all 0.2s;
+        }
+
+        .log-item:hover {
+            border-color: var(--primary-cyan);
+            transform: translateX(2px);
+        }
+
+        .log-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .log-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--primary-cyan);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .log-title {
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--text-main);
+        }
+
+        .log-sub {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 3px;
+        }
+
+        .log-cost {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 800;
+            font-size: 16px;
+            color: var(--success-green);
+            text-align: right;
+        }
+
+        /* ------------------------------------------------------------- */
+        /* Toast Notifications */
+        /* ------------------------------------------------------------- */
+        .toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            background: var(--surface-card);
+            border: 1px solid var(--border-dark);
+            border-left: 4px solid var(--primary-cyan);
+            color: var(--text-main);
+            padding: 14px 20px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            font-size: 13.5px;
+            font-weight: 600;
+            animation: slideIn 0.3s ease;
+            max-width: 360px;
+        }
+
+        .toast.error { border-left-color: var(--danger-red); }
+        .toast.success { border-left-color: var(--success-green); }
+        .toast.warning { border-left-color: var(--warning-amber); }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+        @keyframes slideDown { from { transform: translateY(-100%); } to { transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <!-- Offline Persistent Guard Banner -->
+    <div id="offline-banner" class="offline-banner">
+        ⚠️ Offline Mode — Working from local storage. Changes will sync once internet is restored.
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="navbar">
+        <a href="./" class="brand-container">
+            <div class="brand-logo">⚙️</div>
+            <div>
+                <div class="brand-title">CARLOG</div>
+                <div class="brand-subtitle">VEHICLE & GARAGE PLATFORM</div>
+            </div>
+        </a>
+
+        <div class="header-actions">
+            <div id="connection-pill" class="status-pill">
+                <span id="connection-dot" class="status-dot"></span>
+                <span id="connection-text">Online</span>
+            </div>
+
+            <div id="user-chip" class="user-chip">
+                <span>👤 <span id="user-name-display" class="user-name">User</span></span>
+                <button class="btn-logout" title="Sign Out" onclick="handleLogout()">✕</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <!-- ========================================================= -->
+        <!-- 1. LOGIN VIEW -->
+        <!-- ========================================================= -->
+        <div id="login-view" class="auth-card">
+            <div class="auth-header">
+                <h2>Garage Sign In</h2>
+                <p>Offline-First Vehicle & Motorcycle Maintenance</p>
+            </div>
+
+            <!-- 1-Click Demo Fill Pill -->
+            <div class="demo-pill" onclick="fillDemoCredentials()">
+                <div>
+                    <strong>Demo Garage Account</strong>
+                    <div style="font-size: 11px; opacity: 0.85; margin-top: 2px;">demo@carlog.xyz • CarLog2026!</div>
+                </div>
+                <span class="demo-pill-badge">1-CLICK FILL</span>
+            </div>
+
+            <form id="login-form" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">✉️</span>
+                        <input type="email" id="login-email" class="form-input" placeholder="name@domain.com" required autocomplete="email">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">🔒</span>
+                        <input type="password" id="login-password" class="form-input" placeholder="••••••••" required autocomplete="current-password">
+                        <button type="button" class="password-toggle" onclick="togglePassword('login-password')">👁️</button>
+                    </div>
+                </div>
+
+                <button type="submit" id="btn-login-submit" class="btn-primary">
+                    <span id="login-spinner" style="display:none;">⏳</span>
+                    <span>ENTER GARAGE</span>
+                </button>
+
+                <button type="button" class="btn-google" onclick="handleGoogleSignIn()">
+                    <span>🌐</span>
+                    <span>Sign In with Google</span>
+                </button>
+
+                <div class="auth-switch">
+                    Don't have an account? <a onclick="showView('register-view')">Create Account</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- ========================================================= -->
+        <!-- 2. REGISTER VIEW -->
+        <!-- ========================================================= -->
+        <div id="register-view" class="auth-card" style="display: none;">
+            <div class="auth-header">
+                <h2>Create Garage Account</h2>
+                <p>Register for offline sync & fleet tracking</p>
+            </div>
+
+            <form id="register-form" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">👤</span>
+                        <input type="text" id="reg-name" class="form-input" placeholder="Your Name or Workshop" required autocomplete="name">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">✉️</span>
+                        <input type="email" id="reg-email" class="form-input" placeholder="name@domain.com" required autocomplete="email">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Password (Min 6 Characters)</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">🔒</span>
+                        <input type="password" id="reg-password" class="form-input" placeholder="••••••••" minlength="6" required autocomplete="new-password">
+                        <button type="button" class="password-toggle" onclick="togglePassword('reg-password')">👁️</button>
+                    </div>
+                </div>
+
+                <button type="submit" id="btn-register-submit" class="btn-primary">
+                    <span id="register-spinner" style="display:none;">⏳</span>
+                    <span>CREATE ACCOUNT</span>
+                </button>
+
+                <div class="auth-switch">
+                    Already registered? <a onclick="showView('login-view')">Sign In</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- ========================================================= -->
+        <!-- 3. OTP VERIFICATION VIEW -->
+        <!-- ========================================================= -->
+        <div id="otp-view" class="auth-card" style="display: none;">
+            <div class="auth-header">
+                <h2>Verify Email Address</h2>
+                <p>Enter the 6-digit verification code sent to <strong id="otp-target-email" style="color:var(--primary-cyan)"></strong></p>
+            </div>
+
+            <form id="otp-form" onsubmit="handleVerifyOtp(event)">
+                <div class="otp-inputs">
+                    <input type="text" class="otp-box" maxlength="1" oninput="handleOtpInput(this, 0)" onkeydown="handleOtpBackspace(this, event, 0)">
+                    <input type="text" class="otp-box" maxlength="1" oninput="handleOtpInput(this, 1)" onkeydown="handleOtpBackspace(this, event, 1)">
+                    <input type="text" class="otp-box" maxlength="1" oninput="handleOtpInput(this, 2)" onkeydown="handleOtpBackspace(this, event, 2)">
+                    <input type="text" class="otp-box" maxlength="1" oninput="handleOtpInput(this, 3)" onkeydown="handleOtpBackspace(this, event, 3)">
+                    <input type="text" class="otp-box" maxlength="1" oninput="handleOtpInput(this, 4)" onkeydown="handleOtpBackspace(this, event, 4)">
+                    <input type="text" class="otp-box" maxlength="1" oninput="handleOtpInput(this, 5)" onkeydown="handleOtpBackspace(this, event, 5)">
+                </div>
+
+                <button type="submit" id="btn-otp-submit" class="btn-primary">
+                    <span id="otp-spinner" style="display:none;">⏳</span>
+                    <span>VERIFY & ENTER GARAGE</span>
+                </button>
+
+                <div class="auth-switch">
+                    Didn't receive the code? <a id="btn-resend-otp" onclick="handleResendCode()">Resend Code</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- ========================================================= -->
+        <!-- 4. GARAGE DASHBOARD VIEW (AUTHENTICATED) -->
+        <!-- ========================================================= -->
+        <div id="dashboard-view">
+            <div class="dash-welcome">
+                <div>
+                    <h1 id="dash-greeting">My Garage</h1>
+                    <p style="color: var(--text-muted); font-size: 14px; margin-top: 4px;">Offline-first fleet status • Strictly USD ($) & 100% Metric (km, L, Bar)</p>
+                </div>
+
+                <div style="display: flex; gap: 10px;">
+                    <a id="btn-view-service-book" href="v/demo-corolla-2022" target="_blank" class="btn-primary" style="padding: 10px 18px; font-size: 13px; text-decoration: none;">
+                        <span>Digital Service Book</span> ↗
+                    </a>
+                </div>
+            </div>
+
+            <!-- Active Vehicle Card -->
+            <div class="vehicle-hero-card">
+                <div class="vehicle-img-box">🚗</div>
+                <div class="vehicle-details">
+                    <h2>
+                        <span id="veh-title">2022 TOYOTA COROLLA</span>
+                        <span class="badge-verified">✓ Verified Record</span>
+                    </h2>
+                    <div style="font-size: 13px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">
+                        VIN: <span id="veh-vin" style="color:var(--text-main)">2T1BURHE7NC123456</span> • Plate: <span id="veh-plate" style="color:var(--text-main)">B 789123</span>
+                    </div>
+
+                    <div class="stat-grid">
+                        <div class="stat-box">
+                            <div class="label">Odometer</div>
+                            <div class="val" id="veh-odo">32,450 km</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="label">Displacement</div>
+                            <div class="val" id="veh-disp">1798 cc</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="label">Power</div>
+                            <div class="val" id="veh-power">103 kW</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="label">TCO / km</div>
+                            <div class="val" style="color: var(--success-green);">$0.0075 / km</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Glovebox Quick Specs -->
+            <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 14px;">Glovebox Quick-Specs</h3>
+            <div class="quick-specs-grid">
+                <div class="spec-card">
+                    <div class="spec-title">Engine Oil & Volume</div>
+                    <div class="spec-val">0W-20 Full Synthetic (4.20 L)</div>
+                </div>
+                <div class="spec-card">
+                    <div class="spec-title">Coolant Spec</div>
+                    <div class="spec-val">Toyota Pink SLLC (6.50 L)</div>
+                </div>
+                <div class="spec-card">
+                    <div class="spec-title">Tire Pressures (Cold)</div>
+                    <div class="spec-val">Front: 2.30 Bar • Rear: 2.20 Bar</div>
+                </div>
+                <div class="spec-card">
+                    <div class="spec-title">Wheel Lug Torque</div>
+                    <div class="spec-val">103 Nm</div>
+                </div>
+            </div>
+
+            <!-- Maintenance Chronology -->
+            <div class="logs-section">
+                <div class="logs-header">
+                    <h3 style="font-size: 18px; font-weight: 800;">Recent Maintenance Visits</h3>
+                    <span style="font-size: 12px; color: var(--text-muted);">Currency: USD ($)</span>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-left">
+                        <div class="log-icon">🛢️</div>
+                        <div>
+                            <div class="log-title">Engine Oil & Filter Replacement</div>
+                            <div class="log-sub">2024-03-15 • 10,120 km • Mann-Filter W 68/3 (4.20 L) • Apex Auto Precision</div>
+                        </div>
+                    </div>
+                    <div class="log-cost">$70.00</div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-left">
+                        <div class="log-icon">🌬️</div>
+                        <div>
+                            <div class="log-title">Engine Air Intake & Pollen Filter</div>
+                            <div class="log-sub">2024-09-20 • 20,350 km • Denso 17801-0T060 • Apex Auto Precision</div>
+                        </div>
+                    </div>
+                    <div class="log-cost">$43.00</div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-left">
+                        <div class="log-icon">🛑</div>
+                        <div>
+                            <div class="log-title">Front Ceramic Brake Pads Overhaul</div>
+                            <div class="log-sub">2025-05-10 • 30,500 km • Brembo P 83 150 (FL, FR: 9.5 mm) • Apex Auto Precision</div>
+                        </div>
+                    </div>
+                    <div class="log-cost">$130.00</div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Toast Alerts -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script>
+        // -------------------------------------------------------------
+        // Core State & API Configuration
+        // -------------------------------------------------------------
+        const API_BASE = window.location.pathname.includes('/karkare') ? '/karkare/api' : '/api';
+        let currentTargetEmail = '';
+
+        // Check authentication state on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            initConnectivityListener();
+            checkSession();
+        });
+
+        function showView(viewId) {
+            ['login-view', 'register-view', 'otp-view', 'dashboard-view'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = (id === viewId) ? (id === 'dashboard-view' ? 'block' : 'block') : 'none';
+            });
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerText = message;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        function togglePassword(inputId) {
+            const el = document.getElementById(inputId);
+            el.type = el.type === 'password' ? 'text' : 'password';
+        }
+
+        // -------------------------------------------------------------
+        // Connectivity & Offline Detection
+        // -------------------------------------------------------------
+        function initConnectivityListener() {
+            const banner = document.getElementById('offline-banner');
+            const dot = document.getElementById('connection-dot');
+            const text = document.getElementById('connection-text');
+
+            function updateStatus() {
+                if (navigator.onLine) {
+                    banner.classList.remove('active');
+                    dot.classList.remove('offline');
+                    text.innerText = 'Online';
+                } else {
+                    banner.classList.add('active');
+                    dot.classList.add('offline');
+                    text.innerText = 'Offline';
+                    showToast('Offline: Working from local storage.', 'warning');
+                }
+            }
+
+            window.addEventListener('online', updateStatus);
+            window.addEventListener('offline', updateStatus);
+            updateStatus();
+        }
+
+        // -------------------------------------------------------------
+        // 1-Click Demo Credentials
+        // -------------------------------------------------------------
+        function fillDemoCredentials() {
+            document.getElementById('login-email').value = 'demo@carlog.xyz';
+            document.getElementById('login-password').value = 'CarLog2026!';
+            showToast('Demo credentials pre-filled!', 'success');
+        }
+
+        // -------------------------------------------------------------
+        // Session Management
+        // -------------------------------------------------------------
+        function checkSession() {
+            const token = localStorage.getItem('carlog_access_token');
+            const userStr = localStorage.getItem('carlog_user');
+
+            if (token && userStr) {
+                try {
+                    const user = JSON.parse(userStr);
+                    renderDashboard(user);
+                    return;
+                } catch (e) {
+                    localStorage.clear();
+                }
+            }
+            showView('login-view');
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('carlog_access_token');
+            localStorage.removeItem('carlog_refresh_token');
+            localStorage.removeItem('carlog_user');
+            document.getElementById('user-chip').style.display = 'none';
+            showToast('Signed out of garage.', 'info');
+            showView('login-view');
+        }
+
+        // -------------------------------------------------------------
+        // Auth Handlers (Login, Register, OTP)
+        // -------------------------------------------------------------
+        async function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value;
+            const btn = document.getElementById('btn-login-submit');
+            const spinner = document.getElementById('login-spinner');
+
+            btn.disabled = true;
+            spinner.style.display = 'inline';
+
+            try {
+                const res = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await res.json();
+
+                if (res.ok && data.success) {
+                    localStorage.setItem('carlog_access_token', data.data.tokens.access_token);
+                    localStorage.setItem('carlog_refresh_token', data.data.tokens.refresh_token);
+                    localStorage.setItem('carlog_user', JSON.stringify(data.data.user));
+                    showToast('Welcome back to CarLog Garage!', 'success');
+                    renderDashboard(data.data.user);
+                } else {
+                    const errMsg = data.error?.message || 'Login failed';
+                    if (errMsg.includes('EMAIL_NOT_VERIFIED')) {
+                        currentTargetEmail = email;
+                        document.getElementById('otp-target-email').innerText = email;
+                        showToast('Please verify your email with the 6-digit code.', 'warning');
+                        showView('otp-view');
+                    } else {
+                        showToast(errMsg, 'error');
+                    }
+                }
+            } catch (err) {
+                showToast(`Connection error: ${err.message}`, 'error');
+            } finally {
+                btn.disabled = false;
+                spinner.style.display = 'none';
+            }
+        }
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            const fullName = document.getElementById('reg-name').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
+            const password = document.getElementById('reg-password').value;
+            const btn = document.getElementById('btn-register-submit');
+            const spinner = document.getElementById('register-spinner');
+
+            btn.disabled = true;
+            spinner.style.display = 'inline';
+
+            try {
+                const res = await fetch(`${API_BASE}/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify({ full_name: fullName, email, password })
+                });
+
+                const data = await res.json();
+
+                if (res.ok && data.success) {
+                    currentTargetEmail = email;
+                    document.getElementById('otp-target-email').innerText = email;
+                    showToast('Account created! Enter the 6-digit verification code.', 'success');
+                    showView('otp-view');
+                } else {
+                    showToast(data.error?.message || 'Registration failed', 'error');
+                }
+            } catch (err) {
+                showToast(`Connection error: ${err.message}`, 'error');
+            } finally {
+                btn.disabled = false;
+                spinner.style.display = 'none';
+            }
+        }
+
+        function handleOtpInput(input, index) {
+            const boxes = document.querySelectorAll('.otp-box');
+            if (input.value.length === 1 && index < boxes.length - 1) {
+                boxes[index + 1].focus();
+            }
+        }
+
+        function handleOtpBackspace(input, event, index) {
+            if (event.key === 'Backspace' && !input.value && index > 0) {
+                const boxes = document.querySelectorAll('.otp-box');
+                boxes[index - 1].focus();
+            }
+        }
+
+        async function handleVerifyOtp(e) {
+            e.preventDefault();
+            const boxes = document.querySelectorAll('.otp-box');
+            let code = '';
+            boxes.forEach(b => code += b.value.trim());
+
+            if (code.length < 6) {
+                showToast('Please enter all 6 digits', 'warning');
+                return;
+            }
+
+            const btn = document.getElementById('btn-otp-submit');
+            const spinner = document.getElementById('otp-spinner');
+            btn.disabled = true;
+            spinner.style.display = 'inline';
+
+            try {
+                const res = await fetch(`${API_BASE}/auth/verify-email`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify({ email: currentTargetEmail, code })
+                });
+
+                const data = await res.json();
+
+                if (res.ok && data.success) {
+                    localStorage.setItem('carlog_access_token', data.data.tokens.access_token);
+                    localStorage.setItem('carlog_refresh_token', data.data.tokens.refresh_token);
+                    localStorage.setItem('carlog_user', JSON.stringify(data.data.user));
+                    showToast('Email verified successfully!', 'success');
+                    renderDashboard(data.data.user);
+                } else {
+                    showToast(data.error?.message || 'Verification failed', 'error');
+                }
+            } catch (err) {
+                showToast(`Connection error: ${err.message}`, 'error');
+            } finally {
+                btn.disabled = false;
+                spinner.style.display = 'none';
+            }
+        }
+
+        async function handleResendCode() {
+            if (!currentTargetEmail) return;
+            try {
+                const res = await fetch(`${API_BASE}/auth/resend-code`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify({ email: currentTargetEmail })
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    showToast('New verification code sent to your email.', 'success');
+                } else {
+                    showToast(data.error?.message || 'Failed to resend code', 'error');
+                }
+            } catch (err) {
+                showToast('Network error resending code', 'error');
+            }
+        }
+
+        function handleGoogleSignIn() {
+            showToast('Google Sign-In ready for OAuth Client ID integration.', 'info');
+        }
+
+        // -------------------------------------------------------------
+        // Render Dashboard View
+        // -------------------------------------------------------------
+        function renderDashboard(user) {
+            document.getElementById('user-chip').style.display = 'flex';
+            document.getElementById('user-name-display').innerText = user.full_name || user.email;
+            document.getElementById('dash-greeting').innerText = `Welcome, ${user.full_name || 'Driver'}`;
+            showView('dashboard-view');
+        }
+    </script>
+</body>
+</html>

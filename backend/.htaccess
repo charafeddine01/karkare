@@ -18,8 +18,11 @@ DirectoryIndex index.php public/index.php index.html
     # Route root request to index.php
     RewriteRule ^$ index.php [QSA,L]
 
-    # Route public share book: v/{token} -> public/view.php?token={token}
+    # Route public share book: v/{token} -> public/view.php?token=$1
     RewriteRule ^v/([a-zA-Z0-9_\-]+)/?$ public/view.php?token=$1 [QSA,L]
+
+    # Route Web App & Auth views (login, app, register, verify, dashboard)
+    RewriteRule ^(app|login|register|verify|dashboard)/?$ public/app.html [QSA,L]
 
     # Route auto-deploy webhook: webhook -> public/webhook.php
     RewriteRule ^webhook(\.php)?$ public/webhook.php [QSA,L]

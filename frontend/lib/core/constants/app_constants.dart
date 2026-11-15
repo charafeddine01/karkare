@@ -6,7 +6,7 @@
 
 class AppConstants {
   static const String appName = 'CarLog';
-  static const String apiBaseUrl = 'https://carlog.charafeddine.xyz/api';
+  static const String apiBaseUrl = 'https://charafeddine.xyz/karkare/api';
 
   // Strict Global Currency
   static const String currencyCode = 'USD';
