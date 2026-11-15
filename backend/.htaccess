@@ -3,6 +3,9 @@
 # Works seamlessly in root domain or subfolder (/karkare/)
 # =============================================================================
 
+# Directory Index Priority
+DirectoryIndex index.php public/index.php index.html
+
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
@@ -11,6 +14,9 @@
 
     # Security: Block direct access to hidden files (.env, .htaccess, etc)
     RewriteRule (^|/)\.(?!well-known) - [F]
+
+    # Route root request to index.php
+    RewriteRule ^$ index.php [QSA,L]
 
     # Route public share book: v/{token} -> public/view.php?token={token}
     RewriteRule ^v/([a-zA-Z0-9_\-]+)/?$ public/view.php?token=$1 [QSA,L]

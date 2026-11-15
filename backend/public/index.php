@@ -59,6 +59,195 @@ set_error_handler(function (int $errno, string $errstr, string $errfile, int $er
 $router = new Router();
 $authMiddleware = [AuthMiddleware::class, 'handle'];
 
+// Root Platform Status & Portal
+$router->get('/', function (Request $req) {
+    $accept = $_SERVER['HTTP_ACCEPT'] ?? '';
+    if (str_contains($accept, 'text/html')) {
+        header('Content-Type: text/html; charset=UTF-8');
+        echo '<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarLog — Vehicle Maintenance Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0B0F19;
+            --bg-card: #151D2E;
+            --brand-primary: #2563EB;
+            --brand-accent: #38BDF8;
+            --success: #10B981;
+            --text-primary: #F8FAFC;
+            --text-secondary: #94A3B8;
+            --border: rgba(255, 255, 255, 0.08);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: \'Plus Jakarta Sans\', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            max-width: 640px;
+            width: 100%;
+            padding: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(16, 185, 129, 0.12);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 6px 14px;
+            border-radius: 9999px;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--success);
+        }
+        h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+        p.lead {
+            color: var(--text-secondary);
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+            text-align: left;
+        }
+        .grid-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+        }
+        .grid-item .title {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        .grid-item .val {
+            font-size: 15px;
+            font-weight: 700;
+            color: #fff;
+            margin-top: 4px;
+        }
+        .actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: var(--brand-primary);
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.06);
+            color: #fff;
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="badge">
+            <span class="pulse-dot"></span>
+            API & Service Engine Operational
+        </div>
+        <h1>CarLog Platform</h1>
+        <p class="lead">Offline-First Vehicle & Motorcycle Maintenance Platform with MariaDB Delta Sync, ML Kit OCR, and Verified Digital Service Books.</p>
+        <div class="grid">
+            <div class="grid-item">
+                <div class="title">Currency</div>
+                <div class="val">USD ($) Strictly</div>
+            </div>
+            <div class="grid-item">
+                <div class="title">Measurement</div>
+                <div class="val">100% Metric (km, L, Bar)</div>
+            </div>
+            <div class="grid-item">
+                <div class="title">Sync Engine</div>
+                <div class="val">Bidirectional Delta</div>
+            </div>
+        </div>
+        <div class="actions">
+            <a href="v/demo-corolla-2022" class="btn btn-primary">
+                <span>View Public Service Book Demo</span> &rarr;
+            </a>
+            <a href="api/health" class="btn btn-secondary">
+                <span>API Health Status</span>
+            </a>
+            <a href="https://github.com/charafeddine01/karkare" target="_blank" class="btn btn-secondary">
+                <span>GitHub Repository</span>
+            </a>
+        </div>
+    </div>
+</body>
+</html>';
+        exit;
+    }
+
+    Response::success([
+        'platform' => 'CarLog Vehicle Maintenance Platform',
+        'status' => 'operational',
+        'version' => '1.0.0',
+        'demo_book_url' => '/v/demo-corolla-2022',
+        'health_url' => '/api/health',
+        'units' => '100% Metric (km, L, Bar, mm, kW, Nm)',
+        'currency' => 'USD ($)',
+    ]);
+});
+
 // Health check
 $router->get('/api/health', function (Request $req) {
     Response::success([

@@ -1,10 +1,11 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/$USER/public_html/karkare
+    - /bin/bash ./build.sh 2>/dev/null || true
+    - export DEPLOYPATH=$(if [ -d "$HOME/public_html" ]; then echo "$HOME/public_html/karkare"; else echo "/home/$USER/public_html/karkare"; fi)
     - /bin/mkdir -p $DEPLOYPATH
     - /bin/cp -rf backend/* $DEPLOYPATH/ 2>/dev/null || true
     - /bin/cp -f backend/.htaccess $DEPLOYPATH/ 2>/dev/null || true
+    - /bin/cp -f backend/index.php $DEPLOYPATH/ 2>/dev/null || true
     - /bin/mkdir -p $DEPLOYPATH/uploads
     - /bin/chmod 755 $DEPLOYPATH/uploads 2>/dev/null || true
-    - /bin/cp -f backend/uploads/.htaccess $DEPLOYPATH/uploads/ 2>/dev/null || true
