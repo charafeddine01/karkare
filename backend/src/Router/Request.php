@@ -21,6 +21,11 @@ class Request {
         $path = rtrim($uriParts[0], '/') ?: '/';
 
         // Automatically normalize subfolder if deployed under a subdirectory (e.g. /karkare)
+        if (str_starts_with($path, '/karkare')) {
+            $path = substr($path, strlen('/karkare'));
+            $path = rtrim($path, '/') ?: '/';
+        }
+
         $scriptDir = dirname($_SERVER['SCRIPT_NAME'] ?? '');
         $baseDir = preg_replace('#/public$#', '', $scriptDir);
         if (!empty($baseDir) && $baseDir !== '/' && str_starts_with($path, $baseDir)) {

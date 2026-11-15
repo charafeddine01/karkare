@@ -27,7 +27,7 @@ if (preg_match('#^/v/([a-zA-Z0-9_\-]+)#', $uri, $matches)) {
 // 2. Web Application & Auth Views (/app, /login, /register, /verify, /dashboard)
 if (in_array($uri, ['/app', '/login', '/register', '/verify', '/dashboard'], true)) {
     header('Content-Type: text/html; charset=UTF-8');
-    require __DIR__ . '/public/app.html';
+    readfile(__DIR__ . '/public/app.html');
     exit;
 }
 
@@ -58,5 +58,5 @@ if (str_starts_with($uri, '/uploads/')) {
     }
 }
 
-// 4. API and Everything else -> public/index.php
+// 5. API and Everything else -> public/index.php
 require __DIR__ . '/public/index.php';
