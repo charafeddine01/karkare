@@ -1,0 +1,37 @@
+# =============================================================================
+# CarLog - Root .htaccess for Shared Hosting (Apache / LiteSpeed)
+# Works seamlessly in root domain or subfolder (/karkare/)
+# =============================================================================
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Security: Block sensitive directories and files
+    RewriteRule ^(\.git|config|src|vendor|composer\.(json|lock)) - [F,L]
+
+    # Security: Block direct access to hidden files (.env, .htaccess, etc)
+    RewriteRule (^|/)\.(?!well-known) - [F]
+
+    # Route public share book: v/{token} -> public/view.php?token={token}
+    RewriteRule ^v/([a-zA-Z0-9_\-]+)/?$ public/view.php?token=$1 [QSA,L]
+
+    # Serve static assets from uploads directory directly if they exist
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ^uploads/ - [L]
+
+    # Route all API requests: api/* -> public/index.php
+    RewriteRule ^api(/.*)?$ public/index.php [QSA,L]
+
+    # Fallback to public/index.php for other sub-routes
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ public/index.php [QSA,L]
+</IfModule>
+
+# Security Headers
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>

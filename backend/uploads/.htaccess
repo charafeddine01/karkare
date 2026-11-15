@@ -1,0 +1,18 @@
+# =============================================================================
+# CarLog - Uploads Directory Security Rules
+# Block script execution inside uploads directory
+# =============================================================================
+
+<FilesMatch "\.(php|php[0-9]|phtml|pl|py|cgi|sh|bash)$">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
+
+Options -Indexes -ExecCGI
+php_flag engine off
+
+# Allow only standard media types
+<FilesMatch "\.(jpg|jpeg|png|webp|m4a|mp4|aac|pdf)$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>

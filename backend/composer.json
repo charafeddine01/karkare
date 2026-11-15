@@ -1,0 +1,17 @@
+{
+    "name": "carlog/api",
+    "description": "CarLog Platform - Production Offline-First Vehicle & Motorcycle Maintenance REST API",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.2",
+        "firebase/php-jwt": "^6.10",
+        "phpmailer/phpmailer": "^6.9"
+    },
+    "autoload": {
+        "psr-4": {
+            "CarLog\\": "src/",
+            "CarLog\\Config\\": "config/"
+        }
+    }
+}
