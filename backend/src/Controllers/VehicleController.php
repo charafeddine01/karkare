@@ -672,11 +672,17 @@ class VehicleController {
     public function updateInventoryQuantity(Request $request): void {
         $id = $request->getParam('id');
         $b = $request->getBody();
-        $delta = (float)($b['delta'] ?? 0);
 
         try {
-            $stmt = $this->db->prepare("UPDATE garage_inventory SET quantity = MAX(0, quantity + ?) WHERE id = ?");
-            $stmt->execute([$delta, $id]);
+            if (isset($b['quantity'])) {
+                $newQty = max(0.0, (float)$b['quantity']);
+                $stmt = $this->db->prepare("UPDATE garage_inventory SET quantity = ? WHERE id = ?");
+                $stmt->execute([$newQty, $id]);
+            } else {
+                $delta = (float)($b['delta'] ?? 0);
+                $stmt = $this->db->prepare("UPDATE garage_inventory SET quantity = CASE WHEN quantity + ? < 0 THEN 0 ELSE quantity + ? END WHERE id = ?");
+                $stmt->execute([$delta, $delta, $id]);
+            }
             Response::success(['id' => $id], 'Quantity adjusted.');
         } catch (Throwable $e) {
             Response::error('Failed to adjust quantity: ' . $e->getMessage(), 'DATABASE_ERROR', 500);
