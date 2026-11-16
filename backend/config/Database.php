@@ -57,12 +57,18 @@ class Database {
                     }
                 }
 
-                // Check common Unix domain sockets
-                $commonSockets = ['/var/run/mysqld/mysqld.sock', '/run/mysqld/mysqld.sock', '/tmp/mysql.sock', '/var/lib/mysql/mysql.sock'];
-                foreach ($commonSockets as $sock) {
-                    if (file_exists($sock)) {
-                        $candidateDsns[] = sprintf('mysql:unix_socket=%s;dbname=%s;charset=%s', $sock, $config['dbname'], $config['charset']);
-                    }
+                // Check common Unix domain sockets and php.ini default sockets
+                $commonSockets = [
+                    ini_get('pdo_mysql.default_socket'),
+                    ini_get('mysqli.default_socket'),
+                    '/var/run/mysqld/mysqld.sock',
+                    '/run/mysqld/mysqld.sock',
+                    '/tmp/mysql.sock',
+                    '/var/lib/mysql/mysql.sock',
+                    '/var/run/mysql/mysql.sock',
+                ];
+                foreach (array_filter($commonSockets) as $sock) {
+                    $candidateDsns[] = sprintf('mysql:unix_socket=%s;dbname=%s;charset=%s', $sock, $config['dbname'], $config['charset']);
                 }
 
                 // TCP hosts
@@ -72,28 +78,40 @@ class Database {
 
                 $candidateDsns = array_unique($candidateDsns);
 
-                foreach ($candidateDsns as $dsn) {
-                    try {
-                        $options = [
-                            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                            PDO::ATTR_EMULATE_PREPARES => false,
-                            1002 => "SET NAMES {$config['charset']} COLLATE {$config['collation']}",
-                        ];
-                        if (defined('\Pdo\Mysql::ATTR_MULTI_STATEMENTS')) {
-                            $options[\Pdo\Mysql::ATTR_MULTI_STATEMENTS] = true;
-                        } elseif (defined('PDO::MYSQL_ATTR_MULTI_STATEMENTS')) {
-                            $options[@constant('PDO::MYSQL_ATTR_MULTI_STATEMENTS')] = true;
-                        }
+                $authPairs = [
+                    ['user' => $config['user'], 'pass' => $config['password']],
+                ];
+                if (!empty($parsed['mysql']['password'])) {
+                    $authPairs[] = [
+                        'user' => $parsed['mysql']['user'] ?? 'charafed3',
+                        'pass' => $parsed['mysql']['password'],
+                    ];
+                }
 
-                        $pdo = new PDO($dsn, $config['user'], $config['password'], $options);
-                        self::$driver = 'mysql';
-                        self::autoProvisionMysql($pdo);
-                        self::$instance = $pdo;
-                        self::$lastError = "Connected via: {$dsn}" . ($foundCnf ? " (cnf: {$foundCnf})" : "");
-                        return self::$instance;
-                    } catch (PDOException $e) {
-                        $mysqlError = "DSN [{$dsn}] error: " . $e->getMessage();
+                foreach ($candidateDsns as $dsn) {
+                    foreach ($authPairs as $auth) {
+                        try {
+                            $options = [
+                                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                                PDO::ATTR_EMULATE_PREPARES => false,
+                                1002 => "SET NAMES {$config['charset']} COLLATE {$config['collation']}",
+                            ];
+                            if (defined('\Pdo\Mysql::ATTR_MULTI_STATEMENTS')) {
+                                $options[\Pdo\Mysql::ATTR_MULTI_STATEMENTS] = true;
+                            } elseif (defined('PDO::MYSQL_ATTR_MULTI_STATEMENTS')) {
+                                $options[@constant('PDO::MYSQL_ATTR_MULTI_STATEMENTS')] = true;
+                            }
+
+                            $pdo = new PDO($dsn, $auth['user'], $auth['pass'], $options);
+                            self::$driver = 'mysql';
+                            self::autoProvisionMysql($pdo);
+                            self::$instance = $pdo;
+                            self::$lastError = "Connected via: {$dsn} (user: {$auth['user']})";
+                            return self::$instance;
+                        } catch (PDOException $e) {
+                            $mysqlError = "DSN [{$dsn}] user [{$auth['user']}] error: " . $e->getMessage();
+                        }
                     }
                 }
                 $safeCnf = [];
