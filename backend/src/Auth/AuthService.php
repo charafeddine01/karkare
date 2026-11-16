@@ -172,12 +172,29 @@ class AuthService {
         $stmt->execute([$email]);
         $user = $stmt->fetch();
 
-        if (!$user || !password_verify($password, $user['password_hash'] ?? '')) {
-            throw new RuntimeException("Invalid email or password");
-        }
+        // Support demo credentials seamlessly in online MariaDB
+        if ($email === 'demo@carlog.xyz' && $password === 'CarLog2026!') {
+            if (!$user) {
+                $userId = 'd0000000-0000-0000-0000-000000000001';
+                $hash = password_hash($password, PASSWORD_BCRYPT);
+                $this->db->prepare(
+                    "INSERT INTO users (id, email, password_hash, full_name, is_email_verified) VALUES (?, ?, ?, 'Abbas Charafeddine', 1)"
+                )->execute([$userId, $email, $hash]);
+                $stmt->execute([$email]);
+                $user = $stmt->fetch();
+            } else if (!password_verify($password, $user['password_hash'] ?? '')) {
+                $hash = password_hash($password, PASSWORD_BCRYPT);
+                $this->db->prepare("UPDATE users SET password_hash = ?, is_email_verified = 1 WHERE email = ?")->execute([$hash, $email]);
+                $user['password_hash'] = $hash;
+            }
+        } else {
+            if (!$user || !password_verify($password, $user['password_hash'] ?? '')) {
+                throw new RuntimeException("Invalid email or password");
+            }
 
-        if ($user['is_email_verified'] == 0) {
-            throw new RuntimeException("EMAIL_NOT_VERIFIED: Please verify your email with the 6-digit code.");
+            if ($user['is_email_verified'] == 0) {
+                throw new RuntimeException("EMAIL_NOT_VERIFIED: Please verify your email with the 6-digit code.");
+            }
         }
 
         $tokens = $this->jwt->generateTokenPair($user);
