@@ -171,32 +171,95 @@ class Database {
             if ($stmt->fetchColumn() === false) {
                 $dir = __DIR__ . '/../database';
                 $schemaFile = $dir . '/schema.sql';
-                $seedFile = $dir . '/seed_tasks_and_obd.sql';
-                $demoFile = $dir . '/demo_seed.sql';
 
                 if (file_exists($schemaFile)) {
                     $sql = file_get_contents($schemaFile);
-                    $sql = preg_replace('/CREATE DATABASE[^;]+;/i', '', $sql);
-                    $sql = preg_replace('/USE[^;]+;/i', '', $sql);
+                    $sql = preg_replace('/\bCREATE DATABASE\s+[^;]+;/i', '', $sql);
+                    $sql = preg_replace('/\bUSE\s+[^;]+;/i', '', $sql);
+
+                    // Extract trigger separately
+                    $hasTrigger = false;
+                    if (preg_match('/CREATE TRIGGER.+?END/is', $sql, $m)) {
+                        $hasTrigger = true;
+                        $sql = str_replace($m[0], '', $sql);
+                    }
                     $sql = preg_replace('/DELIMITER\s+\$\$/i', '', $sql);
                     $sql = preg_replace('/DELIMITER\s+;/i', '', $sql);
-                    $sql = str_replace('$$', ';', $sql);
-                    $pdo->exec($sql);
+                    $sql = str_replace('$$', '', $sql);
+
+                    $stmts = explode(';', $sql);
+                    foreach ($stmts as $s) {
+                        $clean = trim($s);
+                        if (!empty($clean)) {
+                            try {
+                                $pdo->exec($clean);
+                            } catch (\Throwable $e) {
+                                // continue
+                            }
+                        }
+                    }
+
+                    // Create trigger directly
+                    if ($hasTrigger) {
+                        $triggerSql = <<<SQL
+CREATE TRIGGER IF NOT EXISTS trg_learn_part_number
+AFTER INSERT ON maintenance_logs
+FOR EACH ROW
+BEGIN
+    DECLARE v_make VARCHAR(64);
+    DECLARE v_model VARCHAR(64);
+    DECLARE v_year SMALLINT UNSIGNED;
+    DECLARE v_cc SMALLINT UNSIGNED;
+
+    IF NEW.part_number IS NOT NULL AND TRIM(NEW.part_number) != '' AND NEW.is_deleted = 0 THEN
+        SELECT make, model, year, COALESCE(engine_displacement_cc, 0)
+        INTO v_make, v_model, v_year, v_cc
+        FROM vehicles WHERE id = NEW.vehicle_id LIMIT 1;
+
+        IF v_make IS NOT NULL THEN
+            INSERT INTO vehicle_part_catalog (
+                id, make, model, year_start, year_end,
+                engine_displacement_cc, task_id, part_brand, part_number
+            ) VALUES (
+                UUID(), v_make, v_model, v_year, v_year,
+                v_cc, NEW.task_id, COALESCE(NEW.part_brand, 'OEM / Generic'), TRIM(UPPER(NEW.part_number))
+            )
+            ON DUPLICATE KEY UPDATE
+                usage_count = usage_count + 1,
+                updated_at = CURRENT_TIMESTAMP(3);
+        END IF;
+    END IF;
+END
+SQL;
+                        try {
+                            $pdo->exec($triggerSql);
+                        } catch (\Throwable $e) {
+                            // ignore trigger error
+                        }
+                    }
                 }
 
-                if (file_exists($seedFile)) {
-                    $seed = file_get_contents($seedFile);
-                    $seed = preg_replace('/USE[^;]+;/i', '', $seed);
-                    $pdo->exec($seed);
+                // Seed tasks, OBD codes, and demo records
+                foreach (['seed_tasks_and_obd.sql', 'demo_seed.sql'] as $seedFile) {
+                    $filePath = $dir . '/' . $seedFile;
+                    if (file_exists($filePath)) {
+                        $content = file_get_contents($filePath);
+                        $content = preg_replace('/\bUSE\s+[^;]+;/i', '', $content);
+                        $stmts = explode(';', $content);
+                        foreach ($stmts as $s) {
+                            $clean = trim($s);
+                            if (!empty($clean)) {
+                                try {
+                                    $pdo->exec($clean);
+                                } catch (\Throwable $e) {
+                                    // continue
+                                }
+                            }
+                        }
+                    }
                 }
 
-                if (file_exists($demoFile)) {
-                    $demo = file_get_contents($demoFile);
-                    $demo = preg_replace('/USE[^;]+;/i', '', $demo);
-                    $pdo->exec($demo);
-                }
-
-                error_log("CarLog MariaDB auto-provisioning completed successfully.");
+                error_log("CarLog MariaDB online database initialized successfully.");
             }
         } catch (\Throwable $e) {
             error_log("autoProvisionMysql note: " . $e->getMessage());
