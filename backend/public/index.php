@@ -40,6 +40,7 @@ use CarLog\Controllers\SyncController;
 use CarLog\Controllers\UploadController;
 use CarLog\Controllers\PartCatalogController;
 use CarLog\Controllers\VehicleController;
+use CarLog\Controllers\OcrController;
 
 // 2. Global Error Handling
 set_exception_handler(function (Throwable $e) {
@@ -287,6 +288,9 @@ $router->get('/api/sync/pull', [SyncController::class, 'pull'], [$authMiddleware
 
 // Media Upload (Protected)
 $router->post('/api/upload', [UploadController::class, 'upload'], [$authMiddleware]);
+
+// High-Accuracy Cloud Neural OCR Scanner (Feature E)
+$router->post('/api/ocr/scan', [OcrController::class, 'scan']);
 
 // Part Catalog & Suggestions (Protected)
 $router->get('/api/parts/suggest', [PartCatalogController::class, 'suggest'], [$authMiddleware]);

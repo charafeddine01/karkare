@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <script src="https://accounts.google.com/gsi/client" async defer onload="initGoogleSignIn()"></script>
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <script src="https://unpkg.com/@zxing/library@0.23.0/umd/index.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -1722,30 +1723,37 @@
     </div>
 
     <!-- ========================================================= -->
-    <!-- MODAL 9: ON-DEVICE CAMERA OCR SCANNER (Feature E) -->
+    <!-- MODAL 9: MULTI-ENGINE CAMERA OCR & BARCODE SCANNER (Feature E) -->
     <!-- ========================================================= -->
     <div id="modal-camera-scanner" class="modal-backdrop">
-        <div class="modal-box" style="max-width: 520px; padding: 20px;">
+        <div class="modal-box" style="max-width: 540px; padding: 20px;">
             <div class="modal-header">
                 <div style="display:flex; align-items:center; gap:8px;">
                     <span style="font-size:22px;">📷</span>
                     <div>
-                        <h3 id="ocr-scanner-title" style="margin:0; font-size:16px;">Scan with Camera</h3>
-                        <div id="ocr-scanner-subtitle" style="font-size:11px; color:var(--text-muted);">Point camera at the number or text to scan</div>
+                        <h3 id="ocr-scanner-title" style="margin:0; font-size:16px;">Multi-Engine Camera Scanner</h3>
+                        <div id="ocr-scanner-subtitle" style="font-size:11px; color:var(--text-muted);">High-accuracy optical & barcode scanner</div>
                     </div>
                 </div>
                 <button type="button" class="btn-close-modal" onclick="closeOcrScanner()">✕</button>
             </div>
 
+            <!-- Engine Mode Selector -->
+            <div style="display:flex; gap:6px; margin-bottom:12px; background:var(--surface-dark); padding:4px; border-radius:8px; border:1px solid var(--border-dark);">
+                <button type="button" id="btn-engine-cloud" class="btn-secondary btn-xs" style="flex:1; background:var(--primary-blue); color:#fff; border-color:var(--primary-cyan);" onclick="setOcrEngine('cloud')">☁️ Cloud Neural OCR</button>
+                <button type="button" id="btn-engine-barcode" class="btn-secondary btn-xs" style="flex:1;" onclick="setOcrEngine('barcode')">⚡ Barcode / QR (100%)</button>
+                <button type="button" id="btn-engine-local" class="btn-secondary btn-xs" style="flex:1;" onclick="setOcrEngine('local')">🔤 Local Engine</button>
+            </div>
+
             <!-- Viewfinder Area -->
-            <div style="position:relative; width:100%; height:280px; background:#000; border-radius:12px; overflow:hidden; display:flex; align-items:center; justify-content:center; margin-bottom:12px; border:1px solid var(--border-dark);">
+            <div style="position:relative; width:100%; height:280px; background:#000; border-radius:12px; overflow:hidden; display:flex; align-items:center; justify-content:center; margin-bottom:10px; border:1px solid var(--border-dark);">
                 <video id="ocr-video" autoplay playsinline muted style="width:100%; height:100%; object-fit:cover;"></video>
                 <canvas id="ocr-canvas" style="display:none;"></canvas>
 
                 <!-- Reticle / Target Box -->
-                <div id="ocr-reticle" style="position:absolute; width:85%; height:45%; border:2px dashed var(--primary-cyan); border-radius:8px; box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.45); pointer-events:none; display:flex; align-items:center; justify-content:center;">
+                <div id="ocr-reticle" style="position:absolute; width:88%; height:48%; border:2px dashed var(--primary-cyan); border-radius:8px; box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.45); pointer-events:none; display:flex; align-items:center; justify-content:center;">
                     <div style="position:absolute; top:-22px; background:var(--primary-cyan); color:#000; font-size:10px; font-weight:800; padding:2px 8px; border-radius:4px; text-transform:uppercase; letter-spacing:0.5px;" id="ocr-reticle-label">
-                        Align Text Here
+                        Align VIN Code or Barcode
                     </div>
                     <!-- Animated Scanning Laser Line -->
                     <div class="ocr-laser-line"></div>
@@ -1754,17 +1762,27 @@
                 <!-- Processing Spinner Overlay -->
                 <div id="ocr-loading-overlay" style="display:none; position:absolute; inset:0; background:rgba(11,15,25,0.85); backdrop-filter:blur(4px); flex-direction:column; align-items:center; justify-content:center; z-index:10;">
                     <div class="spinner" style="width:36px; height:36px; border-width:3px; margin-bottom:12px;"></div>
-                    <div id="ocr-status-text" style="color:var(--primary-cyan); font-weight:700; font-size:13px; font-family:'JetBrains Mono', monospace;">Reading text...</div>
+                    <div id="ocr-status-text" style="color:var(--primary-cyan); font-weight:700; font-size:13px; font-family:'JetBrains Mono', monospace; text-align:center; padding:0 20px;">Analyzing image...</div>
                 </div>
+            </div>
+
+            <!-- Helpful Automotive Hint -->
+            <div style="font-size:11px; color:var(--text-muted); display:flex; align-items:center; gap:6px; margin-bottom:12px;">
+                <span>💡</span>
+                <span id="ocr-scanner-hint">Tip: Position the stamped 17-digit code OR barcode (on door jamb or windshield) inside the box.</span>
             </div>
 
             <!-- OCR Result Box (when text is detected) -->
             <div id="ocr-result-box" style="display:none; background:var(--surface-dark); border:1px solid var(--primary-cyan); border-radius:8px; padding:10px 14px; margin-bottom:12px;">
-                <div style="font-size:11px; color:var(--text-muted); margin-bottom:4px;">Detected Text / Number:</div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                    <div style="font-size:11px; color:var(--text-muted);">Detected Value:</div>
+                    <span id="ocr-engine-badge" style="font-size:10px; color:var(--primary-cyan); font-weight:700;">Cloud Engine 2</span>
+                </div>
                 <div style="display:flex; align-items:center; gap:8px;">
                     <input type="text" id="ocr-result-input" class="form-input no-icon" style="font-family:'JetBrains Mono', monospace; font-weight:700; font-size:15px; color:var(--primary-cyan);">
                     <button type="button" class="btn-primary btn-sm" onclick="applyOcrResult()" style="white-space:nowrap;">✓ Use This</button>
                 </div>
+                <div id="ocr-validation-note" style="font-size:11px; color:var(--success-green); margin-top:4px;"></div>
             </div>
 
             <!-- Controls Row -->
@@ -2997,12 +3015,54 @@
         }
 
         // -------------------------------------------------------------
-        // On-Device Camera OCR Scanner Engine (Feature E)
+        // Multi-Engine Camera OCR & Barcode Scanner (Feature E)
         // -------------------------------------------------------------
         let ocrTargetElement = null;
         let ocrScanMode = 'text'; // 'vin', 'odometer', 'part_number'
         let ocrStream = null;
         let ocrFacingMode = 'environment';
+        let currentOcrEngine = 'cloud'; // 'cloud', 'barcode', 'local'
+        let zxingReaderInstance = null;
+
+        function getZxingReader() {
+            if (!zxingReaderInstance && typeof ZXing !== 'undefined') {
+                try {
+                    zxingReaderInstance = new ZXing.BrowserMultiFormatReader();
+                } catch (e) {
+                    console.warn('ZXing init error:', e);
+                }
+            }
+            return zxingReaderInstance;
+        }
+
+        function setOcrEngine(engine) {
+            currentOcrEngine = engine;
+            const btnCloud = document.getElementById('btn-engine-cloud');
+            const btnBarcode = document.getElementById('btn-engine-barcode');
+            const btnLocal = document.getElementById('btn-engine-local');
+
+            [btnCloud, btnBarcode, btnLocal].forEach(b => {
+                if (b) {
+                    b.style.background = 'transparent';
+                    b.style.color = 'var(--text-muted)';
+                    b.style.borderColor = 'transparent';
+                }
+            });
+
+            if (engine === 'cloud' && btnCloud) {
+                btnCloud.style.background = 'var(--primary-blue)';
+                btnCloud.style.color = '#fff';
+                btnCloud.style.borderColor = 'var(--primary-cyan)';
+            } else if (engine === 'barcode' && btnBarcode) {
+                btnBarcode.style.background = 'var(--primary-blue)';
+                btnBarcode.style.color = '#fff';
+                btnBarcode.style.borderColor = 'var(--primary-cyan)';
+            } else if (engine === 'local' && btnLocal) {
+                btnLocal.style.background = 'var(--primary-blue)';
+                btnLocal.style.color = '#fff';
+                btnLocal.style.borderColor = 'var(--primary-cyan)';
+            }
+        }
 
         async function openOcrScanner(targetIdOrElement, mode = 'text') {
             ocrTargetElement = typeof targetIdOrElement === 'string'
@@ -3013,26 +3073,34 @@
             const title = document.getElementById('ocr-scanner-title');
             const subtitle = document.getElementById('ocr-scanner-subtitle');
             const reticleLabel = document.getElementById('ocr-reticle-label');
+            const hint = document.getElementById('ocr-scanner-hint');
             const resultBox = document.getElementById('ocr-result-box');
 
             if (resultBox) resultBox.style.display = 'none';
 
             if (mode === 'vin') {
-                title.innerText = '📷 Scan VIN (17 Chars)';
-                subtitle.innerText = 'Align the 17-digit VIN code on the chassis plate or door jamb';
-                reticleLabel.innerText = 'Align VIN Code';
+                title.innerText = '📷 Scan Vehicle VIN';
+                subtitle.innerText = 'Multi-Engine: Cloud Neural OCR • Barcode • Local';
+                reticleLabel.innerText = 'Align VIN Stamping or Barcode';
+                if (hint) hint.innerText = 'Tip: Point at the 17-char VIN on windshield/door jamb, OR at the barcode sticker.';
+                setOcrEngine('cloud');
             } else if (mode === 'odometer') {
                 title.innerText = '📷 Scan Odometer (km)';
-                subtitle.innerText = 'Align the digital or analog odometer reading on the cluster';
-                reticleLabel.innerText = 'Align Odometer Numbers';
+                subtitle.innerText = 'Multi-Engine: Neural Digit Extraction';
+                reticleLabel.innerText = 'Align Odometer Mileage';
+                if (hint) hint.innerText = 'Tip: Position the instrument cluster mileage display squarely inside the box.';
+                setOcrEngine('cloud');
             } else if (mode === 'part_number') {
                 title.innerText = '📷 Scan Part Number';
-                subtitle.innerText = 'Align the part number stamped on the box or component';
-                reticleLabel.innerText = 'Align Part Code';
+                subtitle.innerText = 'Multi-Engine: Box / Stamping Code Reader';
+                reticleLabel.innerText = 'Align Part Code or Barcode';
+                if (hint) hint.innerText = 'Tip: Point at the part number text or UPC/EAN barcode on the component or box.';
+                setOcrEngine('cloud');
             } else {
-                title.innerText = '📷 Camera Text Scanner';
-                subtitle.innerText = 'Point camera at text or numbers to scan';
-                reticleLabel.innerText = 'Align Text';
+                title.innerText = '📷 Camera Scanner';
+                subtitle.innerText = 'Point camera at text or barcode to scan';
+                reticleLabel.innerText = 'Align Content';
+                setOcrEngine('cloud');
             }
 
             openModal('modal-camera-scanner');
@@ -3056,21 +3124,21 @@
             stopOcrStream();
 
             if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                showToast('Camera stream unavailable. Click "📁 Photo" to upload or take a picture.', 'warning', 5000);
+                showToast('Direct camera stream unavailable. Tap "📁 Photo" to snap or upload a picture.', 'warning', 5000);
                 return;
             }
 
             try {
                 if (loadingOverlay) {
                     loadingOverlay.style.display = 'flex';
-                    statusText.innerText = 'Starting camera...';
+                    statusText.innerText = 'Starting camera stream...';
                 }
 
                 const stream = await navigator.mediaDevices.getUserMedia({
                     video: {
                         facingMode: { ideal: ocrFacingMode },
-                        width: { ideal: 1280 },
-                        height: { ideal: 720 }
+                        width: { ideal: 1920 },
+                        height: { ideal: 1080 }
                     },
                     audio: false
                 });
@@ -3115,7 +3183,12 @@
             reader.onload = async (event) => {
                 const img = new Image();
                 img.onload = async () => {
-                    await runOcrOnImage(img);
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.naturalWidth || img.width;
+                    canvas.height = img.naturalHeight || img.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+                    await runMultiEngineScan(canvas);
                 };
                 img.src = event.target.result;
             };
@@ -3124,86 +3197,209 @@
 
         async function captureAndOcr() {
             const video = document.getElementById('ocr-video');
-            const canvas = document.getElementById('ocr-canvas');
 
             if (!video || !video.videoWidth) {
                 document.getElementById('ocr-file-input').click();
                 return;
             }
 
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const vw = video.videoWidth;
+            const vh = video.videoHeight;
 
-            await runOcrOnImage(canvas);
+            // Crop tightly to reticle box (88% width, 48% height centered)
+            const cropX = Math.floor(vw * 0.06);
+            const cropY = Math.floor(vh * 0.26);
+            const cropW = Math.floor(vw * 0.88);
+            const cropH = Math.floor(vh * 0.48);
+
+            const cropCanvas = document.createElement('canvas');
+            cropCanvas.width = cropW;
+            cropCanvas.height = cropH;
+            const ctx = cropCanvas.getContext('2d');
+            ctx.drawImage(video, cropX, cropY, cropW, cropH, 0, 0, cropW, cropH);
+
+            await runMultiEngineScan(cropCanvas);
         }
 
-        async function runOcrOnImage(imageSource) {
+        async function runMultiEngineScan(sourceCanvas) {
             const loadingOverlay = document.getElementById('ocr-loading-overlay');
             const statusText = document.getElementById('ocr-status-text');
-            const resultBox = document.getElementById('ocr-result-box');
-            const resultInput = document.getElementById('ocr-result-input');
 
             if (loadingOverlay) loadingOverlay.style.display = 'flex';
-            if (statusText) statusText.innerText = 'Recognizing text...';
 
+            // -------------------------------------------------------------
+            // Pipeline Step 1: Barcode / Code-39 / Code-128 / QR Check (100% Exact)
+            // -------------------------------------------------------------
+            if (currentOcrEngine === 'barcode' || currentOcrEngine === 'cloud') {
+                statusText.innerText = '⚡ Checking for Barcode / QR (100% Exact)...';
+                try {
+                    const reader = getZxingReader();
+                    if (reader) {
+                        const result = await reader.decodeFromCanvas(sourceCanvas);
+                        if (result && result.getText()) {
+                            const raw = result.getText().trim();
+                            const cleaned = processOcrText(raw, ocrScanMode);
+                            if (cleaned) {
+                                if (loadingOverlay) loadingOverlay.style.display = 'none';
+                                displayOcrResult(cleaned, '⚡ 100% Exact Barcode Match (' + (result.getBarcodeFormat() || 'Code 39/128') + ')');
+                                return;
+                            }
+                        }
+                    }
+                } catch (barcodeErr) {
+                    // No barcode in frame, proceed to OCR
+                }
+            }
+
+            if (currentOcrEngine === 'barcode') {
+                statusText.innerText = 'No barcode detected. Falling back to Cloud Neural OCR...';
+            }
+
+            // -------------------------------------------------------------
+            // Pipeline Step 2: High-Accuracy Cloud Neural OCR (Engine 2)
+            // -------------------------------------------------------------
+            if (currentOcrEngine !== 'local') {
+                statusText.innerText = '☁️ Running Online Deep-Learning Neural OCR (Engine 2)...';
+                try {
+                    const b64 = sourceCanvas.toDataURL('image/jpeg', 0.90);
+                    const resp = await fetch('api/ocr/scan', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ image: b64, mode: ocrScanMode })
+                    });
+                    const json = await resp.json();
+
+                    if (json.success && json.data && json.data.extracted_value) {
+                        if (loadingOverlay) loadingOverlay.style.display = 'none';
+                        const isVinValid = json.data.is_valid_vin;
+                        const label = '☁️ Cloud Neural Engine 2' + (isVinValid ? ' • ✓ Valid ISO 3779 VIN' : '');
+                        displayOcrResult(json.data.extracted_value, label, isVinValid);
+                        return;
+                    }
+                } catch (cloudErr) {
+                    console.warn('Cloud OCR network fallback:', cloudErr);
+                }
+            }
+
+            // -------------------------------------------------------------
+            // Pipeline Step 3: Local Whitelisted Tesseract OCR Fallback
+            // -------------------------------------------------------------
+            statusText.innerText = '🔤 Running Local OCR with VIN Whitelist...';
             try {
                 if (typeof Tesseract === 'undefined') {
-                    throw new Error('Tesseract OCR library not ready yet. Please check your internet connection.');
+                    throw new Error('Local OCR engine not available.');
                 }
 
+                const prepCanvas = document.createElement('canvas');
+                prepCanvas.width = sourceCanvas.width;
+                prepCanvas.height = sourceCanvas.height;
+                const pctx = prepCanvas.getContext('2d');
+                pctx.drawImage(sourceCanvas, 0, 0);
+
+                const imgData = pctx.getImageData(0, 0, prepCanvas.width, prepCanvas.height);
+                const d = imgData.data;
+                for (let i = 0; i < d.length; i += 4) {
+                    const gray = 0.299 * d[i] + 0.587 * d[i+1] + 0.114 * d[i+2];
+                    const factor = 1.4;
+                    const adj = Math.min(255, Math.max(0, factor * (gray - 128) + 128));
+                    d[i] = adj;
+                    d[i+1] = adj;
+                    d[i+2] = adj;
+                }
+                pctx.putImageData(imgData, 0, 0);
+
                 const worker = await Tesseract.createWorker('eng');
-                const ret = await worker.recognize(imageSource);
+                if (ocrScanMode === 'vin') {
+                    await worker.setParameters({
+                        tessedit_char_whitelist: 'ABCDEFGHJKLMNPRSTUVWXYZ0123456789',
+                    });
+                } else if (ocrScanMode === 'odometer') {
+                    await worker.setParameters({
+                        tessedit_char_whitelist: '0123456789KMkm ',
+                    });
+                }
+                const ret = await worker.recognize(prepCanvas);
                 await worker.terminate();
 
-                const rawText = ret.data.text || '';
-                const cleaned = processOcrText(rawText, ocrScanMode);
+                const raw = ret.data.text || '';
+                const cleaned = processOcrText(raw, ocrScanMode);
 
                 if (loadingOverlay) loadingOverlay.style.display = 'none';
 
                 if (cleaned) {
-                    if (resultBox && resultInput) {
-                        resultBox.style.display = 'block';
-                        resultInput.value = cleaned;
-                    }
-                    showToast(`Detected: ${cleaned}`, 'success');
+                    displayOcrResult(cleaned, '🔤 Local Whitelisted OCR');
                 } else {
-                    showToast('No clear reading detected. Try holding camera closer or clearer.', 'warning', 5000);
-                    if (rawText.trim()) {
-                        if (resultBox && resultInput) {
-                            resultBox.style.display = 'block';
-                            resultInput.value = rawText.trim().split('\n')[0].substring(0, 30);
-                        }
+                    showToast('Could not clearly read the code. Try holding steady with good lighting, or scan the barcode.', 'warning', 6000);
+                    if (raw.trim()) {
+                        displayOcrResult(raw.trim().split('\n')[0].substring(0, 30), 'Raw Text (Manual Adjust)');
                     }
                 }
             } catch (err) {
-                console.error('OCR Error:', err);
+                console.error('All OCR engines failed:', err);
                 if (loadingOverlay) loadingOverlay.style.display = 'none';
-                showToast('OCR Error: ' + err.message, 'error');
+                showToast('Scanning error: ' + err.message + '. Please enter manually or retry.', 'error', 5000);
             }
+        }
+
+        function displayOcrResult(val, engineName, isValid = null) {
+            const resultBox = document.getElementById('ocr-result-box');
+            const resultInput = document.getElementById('ocr-result-input');
+            const badge = document.getElementById('ocr-engine-badge');
+            const note = document.getElementById('ocr-validation-note');
+
+            if (resultBox && resultInput) {
+                resultBox.style.display = 'block';
+                resultInput.value = val;
+                if (badge) badge.innerText = engineName;
+
+                if (note) {
+                    if (ocrScanMode === 'vin') {
+                        if (val.length === 17) {
+                            note.innerText = '✓ Complete 17-character VIN code detected.';
+                            note.style.color = 'var(--success-green)';
+                        } else {
+                            note.innerText = `Detected ${val.length} chars (Standard VIN requires 17). Please verify before applying.`;
+                            note.style.color = 'var(--warning-amber)';
+                        }
+                    } else {
+                        note.innerText = '';
+                    }
+                }
+            }
+            showToast(`✓ Scanned: ${val}`, 'success');
         }
 
         function processOcrText(raw, mode) {
             if (!raw) return '';
-            const lines = raw.split(/[\r\n]+/).map(l => l.trim()).filter(Boolean);
-            const fullNormalized = raw.replace(/\s+/g, ' ').trim();
+            const clean = raw.toUpperCase().replace(/(VIN|CHASSIS|IDENTIFICATION|NUMBER|NO)[:.\s-]*/gi, '');
+            const lines = clean.split(/[\r\n]+/).map(l => l.trim()).filter(Boolean);
+            const fullNormalized = clean.replace(/\s+/g, '').trim();
 
             if (mode === 'vin') {
-                const candidates = fullNormalized.match(/[A-HJ-NPR-Z0-9]{17}/gi) 
-                    || fullNormalized.match(/[A-Z0-9]{17}/gi);
-                if (candidates && candidates.length > 0) {
-                    return candidates[0].toUpperCase();
+                const disambiguated = fullNormalized.replace(/[IOQ]/g, char => {
+                    if (char === 'I') return '1';
+                    if (char === 'O' || char === 'Q') return '0';
+                    return char;
+                });
+
+                const matches = disambiguated.match(/[A-HJ-NPR-Z0-9]{17}/g);
+                if (matches && matches.length > 0) {
+                    return matches[0];
                 }
-                const token = fullNormalized.replace(/[^A-Za-z0-9]/g, '');
+
+                const token = disambiguated.replace(/[^A-Z0-9]/g, '');
                 if (token.length >= 17) {
-                    return token.substring(0, 17).toUpperCase();
+                    return token.substring(0, 17);
+                }
+
+                if (token.length >= 10) {
+                    return token;
                 }
                 return '';
             }
 
             if (mode === 'odometer') {
-                const numbers = fullNormalized.match(/\b\d{2,7}\b/g);
+                const numbers = raw.match(/\b\d{2,7}\b/g);
                 if (numbers && numbers.length > 0) {
                     const valid = numbers.map(n => parseInt(n, 10)).filter(n => n >= 10 && n <= 2000000);
                     if (valid.length > 0) {
