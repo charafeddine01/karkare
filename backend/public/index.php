@@ -314,6 +314,89 @@ $router->post('/api/inventory', [VehicleController::class, 'createInventoryItem'
 $router->post('/api/inventory/{id}/quantity', [VehicleController::class, 'updateInventoryQuantity'], [$authMiddleware]);
 $router->post('/api/contacts', [VehicleController::class, 'createContact'], [$authMiddleware]);
 
+// Public QR Digital Service Book & Verification (Feature L)
+$router->get('/v/{token}', function (Request $req) {
+    $_GET['token'] = $req->getParam('token');
+    require __DIR__ . '/view.php';
+});
+
+$router->get('/api/verify/{token}', function (Request $req) {
+    $token = preg_replace('/[^a-zA-Z0-9_\-]/', '', (string)$req->getParam('token'));
+    if (empty($token)) {
+        Response::error('Invalid verification token', 'VALIDATION_ERROR', 400);
+        return;
+    }
+    try {
+        $db = \CarLog\Config\Database::getConnection();
+        $stmt = $db->prepare("SELECT * FROM vehicles WHERE public_share_token = ? AND is_deleted = 0 LIMIT 1");
+        $stmt->execute([$token]);
+        $vehicle = $stmt->fetch();
+        if (!$vehicle) {
+            Response::error('Vehicle service book not found or private', 'NOT_FOUND', 404);
+            return;
+        }
+
+        // Fetch specs
+        $stmtSpecs = $db->prepare("SELECT * FROM vehicle_quick_specs WHERE vehicle_id = ?");
+        $stmtSpecs->execute([$vehicle['id']]);
+        $specs = $stmtSpecs->fetch() ?: null;
+
+        // Fetch visits
+        $stmtVisits = $db->prepare(
+            "SELECT sv.id, sv.service_date, sv.odometer_km, sv.visit_title, sv.receipt_photo_url, sv.notes,
+                    cd.shop_name
+             FROM service_visits sv
+             LEFT JOIN contacts_directory cd ON sv.contact_id = cd.id
+             WHERE sv.vehicle_id = ? AND sv.is_deleted = 0
+             ORDER BY sv.service_date DESC, sv.odometer_km DESC"
+        );
+        $stmtVisits->execute([$vehicle['id']]);
+        $visits = $stmtVisits->fetchAll();
+
+        // Fetch logs
+        $stmtLogs = $db->prepare(
+            "SELECT ml.id, ml.visit_id, ml.task_id, ml.part_brand, ml.part_number, ml.fluid_liters,
+                    ml.position_tag, ml.warranty_months, ml.cost_parts_usd, ml.cost_labor_usd,
+                    COALESCE(mtt.task_name, ml.custom_task_name, 'Maintenance Service') AS task_name,
+                    mtt.category
+             FROM maintenance_logs ml
+             LEFT JOIN maintenance_tasks_template mtt ON ml.task_id = mtt.id
+             WHERE ml.vehicle_id = ? AND ml.is_deleted = 0
+             ORDER BY ml.id ASC"
+        );
+        $stmtLogs->execute([$vehicle['id']]);
+        $allLogs = $stmtLogs->fetchAll();
+
+        $logsByVisit = [];
+        foreach ($allLogs as $l) {
+            $vid = $l['visit_id'] ?? 'unassigned';
+            $logsByVisit[$vid][] = $l;
+        }
+
+        foreach ($visits as &$v) {
+            $v['tasks'] = $logsByVisit[$v['id']] ?? [];
+        }
+
+        Response::success([
+            'vehicle' => [
+                'make' => $vehicle['make'],
+                'model' => $vehicle['model'],
+                'year' => (int)$vehicle['year'],
+                'vehicle_type' => $vehicle['vehicle_type'],
+                'vin' => $vehicle['vin'],
+                'current_odometer_km' => (int)$vehicle['current_odometer_km'],
+                'photo_url' => $vehicle['photo_url'] ?? null,
+                'public_share_token' => $vehicle['public_share_token'],
+            ],
+            'quick_specs' => $specs,
+            'visits' => $visits,
+            'is_verified' => true,
+        ], 'Verified digital service record retrieved.');
+    } catch (\Throwable $e) {
+        Response::error('Verification failed: ' . $e->getMessage(), 'DATABASE_ERROR', 500);
+    }
+});
+
 // 4. Dispatch Request
 $request = new Request();
 $router->dispatch($request);
