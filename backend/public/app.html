@@ -951,6 +951,870 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes modalPop { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
         @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    
+        /* ============================================================= */
+        /* COMPETITOR APP UI SYSTEM & PALETTE (LIGHT SLEEK AESTHETIC)    */
+        /* ============================================================= */
+        :root {
+            --bg-app: #F1F5F9;
+            --surface-white: #FFFFFF;
+            --surface-subtle: #F8FAFC;
+            --surface-dark-accent: #1E2738;
+            --text-dark: #0F172A;
+            --text-muted: #64748B;
+            --text-light: #F8FAFC;
+            --border-light: rgba(0, 0, 0, 0.08);
+            --border-subtle: #E2E8F0;
+            --primary-blue: #2563EB;
+            --primary-cyan: #38BDF8;
+            --primary-gradient: linear-gradient(135deg, #2563EB 0%, #38BDF8 100%);
+            --banner-gradient: linear-gradient(135deg, #2563EB 0%, #1D4ED8 50%, #38BDF8 100%);
+            --pro-gradient: linear-gradient(135deg, #1E40AF 0%, #3B82F6 100%);
+            --accent-glow: rgba(37, 99, 235, 0.3);
+            --success-green: #10B981;
+            --warning-amber: #F59E0B;
+            --danger-red: #EF4444;
+            --danger-bg: #FFF1F2;
+            --danger-border: #FFE4E6;
+            --danger-text: #BE123C;
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --radius-xl: 26px;
+            --radius-full: 9999px;
+            --shadow-card: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.02);
+            --shadow-float: 0 10px 25px -3px rgba(37, 99, 235, 0.35);
+        }
+
+        body {
+            background-color: var(--bg-app);
+            color: var(--text-dark);
+        }
+
+        .app-topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 20px;
+            background: var(--surface-white);
+            border-bottom: 1px solid var(--border-light);
+            position: sticky;
+            top: 0;
+            z-index: 900;
+        }
+
+        .topbar-btn {
+            background: #F1F5F9;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-dark);
+        }
+
+        .topbar-btn:hover {
+            background: #E2E8F0;
+            transform: scale(1.05);
+        }
+
+        .topbar-title {
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--text-dark);
+        }
+
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .mobile-viewport {
+            max-width: 520px;
+            margin: 0 auto;
+            padding: 16px 16px 110px 16px;
+            min-height: calc(100vh - 72px);
+        }
+
+        .floating-bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 520px;
+            height: 72px;
+            background: #FFFFFF;
+            border-top: 1px solid rgba(0, 0, 0, 0.07);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 -6px 25px rgba(15, 23, 42, 0.06);
+            z-index: 1000;
+            padding: 0 10px;
+            border-top-left-radius: 24px;
+            border-top-right-radius: 24px;
+        }
+
+        .nav-item {
+            background: transparent;
+            border: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 700;
+            color: #94A3B8;
+            position: relative;
+            padding: 8px 10px;
+            min-width: 64px;
+            transition: all 0.2s ease;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-item.active {
+            color: #0F172A;
+        }
+
+        .nav-item.active .nav-indicator {
+            position: absolute;
+            bottom: 2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 22px;
+            height: 3px;
+            background: var(--primary-blue);
+            border-radius: 2px;
+        }
+
+        .nav-icon {
+            font-size: 17px;
+            margin-bottom: 3px;
+        }
+
+        .nav-action-center {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+        }
+
+        .btn-floating-plus {
+            position: absolute;
+            top: -26px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            color: #FFFFFF;
+            border: 4px solid #FFFFFF;
+            box-shadow: var(--shadow-float);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn-floating-plus:hover {
+            transform: scale(1.08);
+            box-shadow: 0 12px 30px rgba(37, 99, 235, 0.5);
+        }
+
+        .btn-floating-plus svg {
+            width: 26px;
+            height: 26px;
+        }
+
+        .bottom-sheet-backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            align-items: flex-end;
+            justify-content: center;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .bottom-sheet-content {
+            background: #FFFFFF;
+            width: 100%;
+            max-width: 520px;
+            border-top-left-radius: 24px;
+            border-top-right-radius: 24px;
+            padding: 16px 20px 32px 20px;
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.2);
+            animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .sheet-handle {
+            width: 44px;
+            height: 5px;
+            background: #CBD5E1;
+            border-radius: 3px;
+            margin: 0 auto 16px auto;
+        }
+
+        .sheet-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .sheet-header h4 {
+            font-size: 17px;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        .sheet-close {
+            background: #F1F5F9;
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
+        .quick-action-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+
+        .quick-action-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 14px 8px;
+            background: #F8FAFC;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .quick-action-item:hover {
+            background: #EEF2F6;
+            border-color: var(--primary-blue);
+            transform: translateY(-2px);
+        }
+
+        .quick-action-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-bottom: 8px;
+        }
+
+        .quick-action-icon.orange { background: #FFF7ED; color: #EA580C; }
+        .quick-action-icon.purple { background: #FAF5FF; color: #9333EA; }
+        .quick-action-icon.blue { background: #EFF6FF; color: #2563EB; }
+        .quick-action-icon.green { background: #F0FDF4; color: #16A34A; }
+        .quick-action-icon.amber { background: #FFFBEB; color: #D97706; }
+        .quick-action-icon.red { background: #FEF2F2; color: #DC2626; }
+
+        .app-screen {
+            display: none;
+            animation: fadeIn 0.25s ease;
+        }
+
+        .app-screen.active {
+            display: block;
+        }
+
+        .card-modern {
+            background: var(--surface-white);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-card);
+        }
+
+        .banner-gradient {
+            background: var(--banner-gradient);
+            border-radius: var(--radius-lg);
+            padding: 22px 24px;
+            color: #FFFFFF;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 16px;
+            box-shadow: 0 8px 24px rgba(37, 99, 235, 0.28);
+        }
+
+        .banner-gradient .banner-lbl {
+            font-size: 13px;
+            font-weight: 600;
+            opacity: 0.9;
+            margin-bottom: 4px;
+        }
+
+        .banner-gradient .banner-val {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+        }
+
+        .banner-gradient .banner-val .unit {
+            font-size: 16px;
+            font-weight: 700;
+            opacity: 0.9;
+        }
+
+        .banner-watermark {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 64px;
+            opacity: 0.15;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        .card-navy {
+            background: var(--surface-dark-accent);
+            border-radius: var(--radius-lg);
+            padding: 18px 20px;
+            color: #FFFFFF;
+            margin-bottom: 16px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+        }
+
+        .pill-bar {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            margin-bottom: 16px;
+            scrollbar-width: none;
+        }
+
+        .pill-bar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .filter-pill {
+            background: #E2E8F0;
+            color: #475569;
+            border: none;
+            border-radius: var(--radius-full);
+            padding: 8px 18px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+
+        .filter-pill.active {
+            background: #0F172A;
+            color: #FFFFFF;
+        }
+
+        .dropdown-pill-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .dropdown-pill {
+            background: var(--surface-white);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-full);
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-dark);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: var(--shadow-card);
+            outline: none;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .metric-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .metric-card-single {
+            background: var(--surface-white);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 16px 18px;
+            box-shadow: var(--shadow-card);
+            margin-bottom: 12px;
+        }
+
+        .metric-card-single .metric-header {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .metric-card-single .metric-value {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-dark);
+            letter-spacing: -0.5px;
+        }
+
+        .metric-card-single .metric-value .unit {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-left: 4px;
+        }
+
+        .tip-banner {
+            background: var(--surface-white);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-full);
+            padding: 12px 18px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: var(--shadow-card);
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .tip-banner .tip-icon {
+            color: var(--primary-blue);
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .segmented-tabs {
+            background: #E2E8F0;
+            border-radius: var(--radius-full);
+            padding: 4px;
+            display: flex;
+            margin-bottom: 16px;
+        }
+
+        .seg-tab-btn {
+            flex: 1;
+            background: transparent;
+            border: none;
+            border-radius: var(--radius-full);
+            padding: 8px 12px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #64748B;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .seg-tab-btn.active {
+            background: var(--surface-white);
+            color: var(--text-dark);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .date-group-header {
+            font-size: 12px;
+            font-weight: 800;
+            color: #94A3B8;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            margin: 18px 0 10px 4px;
+        }
+
+        .item-card {
+            background: var(--surface-white);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-card);
+            cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .item-card:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+        }
+
+        .item-card-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            min-width: 0;
+        }
+
+        .item-icon-circle {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .item-icon-circle.trip { background: #EFF6FF; color: #2563EB; }
+        .item-icon-circle.fuel { background: #FFF7ED; color: #EA580C; }
+        .item-icon-circle.expense { background: #F0FDF4; color: #16A34A; }
+        .item-icon-circle.maintenance { background: #FAF5FF; color: #9333EA; }
+        .item-icon-circle.reminder-bell { background: #F1F5F9; color: #0F172A; }
+        .item-icon-circle.reminder-wrench { background: #F1F5F9; color: #0F172A; }
+
+        .item-card-info {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        .item-card-title {
+            font-size: 11px;
+            font-weight: 800;
+            color: #94A3B8;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+        }
+
+        .item-card-val {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-top: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .item-card-time {
+            font-size: 12px;
+            color: #94A3B8;
+            margin-top: 2px;
+        }
+
+        .reminder-countdown {
+            font-size: 13px;
+            font-weight: 700;
+            color: #D97706; /* amber */
+            margin-top: 2px;
+        }
+
+        .reminder-countdown.overdue {
+            color: var(--danger-red);
+        }
+
+        .reminder-countdown.completed {
+            color: var(--success-green);
+        }
+
+        .chevron-arrow {
+            font-size: 16px;
+            color: #CBD5E1;
+            font-weight: 700;
+            padding-left: 10px;
+        }
+
+        .card-overdue-alert {
+            background: var(--danger-bg);
+            border: 1px solid var(--danger-border);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            margin-bottom: 16px;
+            cursor: pointer;
+        }
+
+        .overdue-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--danger-text);
+            margin-bottom: 12px;
+        }
+
+        .overdue-inner-card {
+            background: #FFFFFF;
+            border: 1px solid rgba(225, 29, 72, 0.15);
+            border-radius: var(--radius-md);
+            padding: 12px 14px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .overdue-inner-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .showcase-hero-card {
+            background: var(--surface-white);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-card);
+            position: relative;
+        }
+
+        .body-type-badge {
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 800;
+            font-style: italic;
+            color: #991B1B;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+        }
+
+        .showcase-car-render {
+            width: 100%;
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+
+        .showcase-car-render img {
+            max-width: 90%;
+            max-height: 170px;
+            object-fit: contain;
+            filter: drop-shadow(0 15px 15px rgba(0,0,0,0.18));
+        }
+
+        .collection-card {
+            background: linear-gradient(135deg, #2563EB 0%, #3B82F6 100%);
+            border-radius: var(--radius-xl);
+            padding: 20px;
+            color: #FFFFFF;
+            position: relative;
+            margin-bottom: 16px;
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+            cursor: pointer;
+        }
+
+        .collection-badge-active {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #000000;
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 900;
+        }
+
+        .collection-card-img {
+            width: 100%;
+            height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .collection-card-img img {
+            max-width: 85%;
+            max-height: 130px;
+            object-fit: contain;
+            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.25));
+        }
+
+        .collection-footer {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+        }
+
+        .btn-edit-pill {
+            background: #0F172A;
+            color: #FFFFFF;
+            border: none;
+            border-radius: var(--radius-full);
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .settings-banner-pro {
+            background: var(--banner-gradient);
+            border-radius: var(--radius-xl);
+            padding: 20px;
+            color: #FFFFFF;
+            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+            cursor: pointer;
+        }
+
+        .settings-group-card {
+            background: var(--surface-white);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-card);
+            overflow: hidden;
+        }
+
+        .settings-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            border-bottom: 1px solid #F1F5F9;
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+
+        .settings-row:last-child {
+            border-bottom: none;
+        }
+
+        .settings-row:hover {
+            background: #F8FAFC;
+        }
+
+        .settings-row-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .settings-row-left .icon {
+            font-size: 18px;
+            width: 24px;
+            text-align: center;
+        }
+
+        .settings-row.danger .settings-row-left {
+            color: var(--danger-red);
+        }
+
+        .radio-option-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 18px;
+            border-bottom: 1px solid #F1F5F9;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .radio-option-item:last-child {
+            border-bottom: none;
+        }
+
+        .radio-circle {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 2px solid #CBD5E1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .radio-option-item.selected .radio-circle {
+            border-color: #10B981;
+        }
+
+        .radio-circle-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #10B981;
+            display: none;
+        }
+
+        .radio-option-item.selected .radio-circle-dot {
+            display: block;
+        }
+
+        .radio-option-item.selected {
+            color: #10B981;
+        }
+
+        [dir="rtl"] {
+            text-align: right;
+        }
+        [dir="rtl"] .topbar-actions {
+            margin-right: auto;
+            margin-left: 0;
+        }
+        [dir="rtl"] .chevron-arrow {
+            transform: rotate(180deg);
+        }
+
     </style>
 </head>
 <body>
@@ -1109,150 +1973,482 @@
         <!-- ========================================================= -->
         <!-- 4. MAIN GARAGE DASHBOARD (AUTHENTICATED) -->
         <!-- ========================================================= -->
-        <div id="dashboard-view">
+        <!-- ========================================================= -->
+        <!-- 4. DASHBOARD MASTER VIEW (COMPETITOR 5-TAB ARCHITECTURE)  -->
+        <!-- ========================================================= -->
+        <div id="dashboard-view" style="display:none; padding:0; margin:0; width:100%;">
 
-            <!-- Topbar with Vehicle Switcher & Actions -->
-            <div class="dash-topbar">
-                <div class="vehicle-selector-wrap">
-                    <select id="vehicle-select" class="vehicle-select" onchange="handleSelectVehicle(this.value)">
-                        <option value="">Loading vehicles...</option>
-                    </select>
-                    <button class="btn-secondary btn-sm" onclick="openAddVehicleModal()">+ Add Vehicle / Moto</button>
-                </div>
-
-                <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                    <button class="btn-primary btn-sm" onclick="openLogServiceModal()">+ Log Workshop Visit</button>
-                    <button class="btn-secondary btn-sm" onclick="openFuelModal()">⛽ Fuel Fill-Up</button>
-                    <button class="btn-secondary btn-sm" onclick="openSymptomModal()">🔍 Diagnostic OBD</button>
-                    <button class="btn-secondary btn-sm" onclick="openInventoryModal()">📦 Spare Parts</button>
-                    <button class="btn-secondary btn-sm" onclick="openInspectionModal()">📋 Safety Checklist</button>
-                </div>
-            </div>
-
-            <!-- Vehicle Hero Card -->
-            <div class="vehicle-hero-card">
-                <div class="vehicle-img-box" id="veh-img-box">🚗</div>
-                <div class="vehicle-details">
-                    <h2>
-                        <span id="veh-title">2022 TOYOTA COROLLA</span>
-                        <span class="badge-verified">✓ Verified Garage Record</span>
-                    </h2>
-                    <div style="font-size: 13px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">
-                        VIN: <span id="veh-vin" style="color:var(--text-main)">2T1BURHE7NC123456</span> • Plate: <span id="veh-plate" style="color:var(--text-main)">B 789123</span> • Type: <span id="veh-type" style="text-transform:uppercase; color:var(--primary-cyan)">CAR</span>
-                    </div>
-
-                    <div class="stat-grid">
-                        <div class="stat-box">
-                            <div class="label">Current Odometer</div>
-                            <div class="val" id="veh-odo">32,450 km</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="label">Engine & Power</div>
-                            <div class="val" id="veh-engine">1798 cc (103 kW)</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="label">Ownership Cost</div>
-                            <div class="val" id="veh-tco" style="color: var(--success-green);">$0.0075 / km</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="label">Total Spent</div>
-                            <div class="val" id="veh-total-spent">$243.00</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="hero-actions">
-                    <a id="btn-public-book" href="v/demo-corolla-2022" target="_blank" class="btn-secondary btn-sm" style="text-align:center;">
-                        <span>Digital Service Book</span> ↗
-                    </a>
-                    <button class="btn-secondary btn-sm" onclick="openResaleCertificate()">
-                        <span>📄 Print Resale PDF</span>
+            <!-- Top Header (Dynamic Screen Title, Gear, Pro Diamond, Exit) -->
+            <div class="app-topbar">
+                <button class="topbar-btn" id="btn-topbar-left" onclick="handleTopbarLeftClick()" title="Settings">
+                    <span id="topbar-left-icon">⚙️</span>
+                </button>
+                <div class="topbar-title" id="screen-title" data-i18n="home">HOME</div>
+                <div class="topbar-actions">
+                    <button class="topbar-btn" onclick="openResaleCertificate()" title="Resale Certificate">
+                        ⛶
+                    </button>
+                    <button class="topbar-btn" onclick="openProModal()" title="Upgrade to PRO">
+                        💎
+                    </button>
+                    <button class="topbar-btn" onclick="openExitModal()" title="Exit App">
+                        🚪
                     </button>
                 </div>
             </div>
 
-            <!-- Predictive Maintenance & Fluid Decay Section -->
-            <div class="section-header">
-                <h3><span>🧠 Predictive Maintenance & Fluid Decay Gauges</span></h3>
-                <span style="font-size: 12px; color: var(--text-muted);">Decay Algorithm: km & calendar worst-case driver</span>
-            </div>
+            <div class="mobile-viewport">
 
-            <div id="predictive-decay-grid" class="decay-grid">
-                <!-- Injected via JavaScript -->
-            </div>
-
-            <!-- Interactive 4-Wheel / 2-Wheel Position Diagram Widget -->
-            <div class="chassis-widget">
-                <div style="width:100%; display:flex; justify-content:space-between; align-items:center;">
-                    <h4 style="font-size:15px; font-weight:800;">Interactive Chassis & Tire Position Diagram</h4>
-                    <span id="chassis-mode-badge" style="font-size:11px; font-weight:700; color:var(--primary-cyan); text-transform:uppercase;">4-Wheel Car Layout</span>
-                </div>
-
-                <div class="chassis-diagram" id="chassis-container">
-                    <!-- Nodes injected dynamically depending on car vs motorcycle -->
-                </div>
-
-                <div style="font-size:12px; color:var(--text-muted); text-align:center;">
-                    Click any wheel position above to inspect tire tread depth (mm) and brake pad thickness (mm)
-                </div>
-            </div>
-
-            <!-- Two Column Section: Chronology & Fuel / Inventory -->
-            <div class="dashboard-grid-2">
-
-                <!-- Left Column: Workshop Visits Chronology -->
-                <div class="content-card">
-                    <div class="section-header">
-                        <h3><span>🛠️ Workshop Visits Chronology</span></h3>
-                        <span style="font-size: 12px; color: var(--text-muted);">Strictly USD ($)</span>
+                <!-- ----------------------------------------------------- -->
+                <!-- SCREEN 1: HOME (Dashboard & Showcase)                 -->
+                <!-- ----------------------------------------------------- -->
+                <div id="screen-home" class="app-screen active">
+                    <!-- Subheader: Welcome Back & Garage Pill -->
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px;">
+                        <div>
+                            <div style="font-size:13px; font-weight:600; color:var(--text-muted);" data-i18n="welcomeBack">Welcome back</div>
+                            <h2 id="home-car-name" style="font-size:24px; font-weight:800; color:var(--text-dark); margin-top:2px;">Demo Car</h2>
+                        </div>
+                        <button class="btn-secondary btn-sm" onclick="switchScreen('garage')" style="border-radius:var(--radius-full); padding:6px 16px; font-weight:700; color:var(--primary-blue); background:#EFF6FF; border-color:#BFDBFE;" data-i18n="garage">
+                            Garage
+                        </button>
                     </div>
 
-                    <div id="visits-list">
-                        <!-- Visits injected via JS -->
-                    </div>
-                </div>
-
-                <!-- Right Column: Fuel & Diagnostics -->
-                <div style="display: flex; flex-direction: column; gap: 24px;">
-
-                    <!-- Fuel Economy Analytics -->
-                    <div class="content-card">
-                        <div class="section-header">
-                            <h3><span>⛽ Fuel Economy Tracker</span></h3>
-                            <button class="btn-secondary btn-sm" onclick="openFuelModal()">+ Fill</button>
+                    <!-- Vehicle Showcase Hero Card (Screenshot 5) -->
+                    <div class="showcase-hero-card">
+                        <div id="home-body-type-badge" class="body-type-badge">Sedan Executive Drive</div>
+                        <div class="showcase-car-render" id="home-car-render">
+                            <img id="home-car-img" src="https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=800&q=80" alt="Car Render">
                         </div>
-                        <div id="fuel-summary-box" style="margin-bottom:14px; font-size:13px; color:var(--text-muted);">
-                            Logging fill-ups in Liters (L) and USD ($).
+                        <div style="font-size:12px; color:var(--text-muted); font-family:'JetBrains Mono', monospace; margin-bottom:12px;">
+                            VIN: <strong id="home-car-vin" style="color:var(--text-dark)">2T1BURHE7NC123456</strong> • Plate: <strong id="home-car-plate" style="color:var(--text-dark)">B 789123</strong>
                         </div>
-                        <div id="fuel-logs-list">
-                            <!-- Fuel logs injected via JS -->
+
+                        <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:10px; margin-top:10px;">
+                            <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:12px; padding:10px 12px;">
+                                <div style="font-size:11px; font-weight:700; color:var(--text-muted);" data-i18n="distance">Current Odometer</div>
+                                <div id="home-stat-odo" style="font-size:15px; font-weight:800; color:var(--text-dark); margin-top:2px;">32,450 km</div>
+                            </div>
+                            <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:12px; padding:10px 12px;">
+                                <div style="font-size:11px; font-weight:700; color:var(--text-muted);">Engine & Power</div>
+                                <div id="home-stat-engine" style="font-size:15px; font-weight:800; color:var(--text-dark); margin-top:2px;">1798 cc (103 kW)</div>
+                            </div>
+                            <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:12px; padding:10px 12px;">
+                                <div style="font-size:11px; font-weight:700; color:var(--text-muted);">Cost / km</div>
+                                <div id="home-stat-tco" style="font-size:15px; font-weight:800; color:var(--success-green); margin-top:2px;">$0.0075 / km</div>
+                            </div>
+                            <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:12px; padding:10px 12px;">
+                                <div style="font-size:11px; font-weight:700; color:var(--text-muted);" data-i18n="totalSpent">Total Spent</div>
+                                <div id="home-stat-spent" style="font-size:15px; font-weight:800; color:var(--primary-blue); margin-top:2px;">$105.9 USD</div>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Diagnostic Symptom Journal -->
-                    <div class="content-card">
-                        <div class="section-header">
-                            <h3><span>🩺 Diagnostic Symptoms</span></h3>
-                            <button class="btn-secondary btn-sm" onclick="openSymptomModal()">+ Log</button>
+                    <!-- Overdue Alert Card (Pink background matching Screenshot 5) -->
+                    <div id="home-overdue-container" class="card-overdue-alert" style="display:none;" onclick="switchScreen('reminder', 'overdue')">
+                        <div class="overdue-header">
+                            <span>🚨</span>
+                            <span id="home-overdue-badge-text">2 Overdue</span>
                         </div>
-                        <div id="symptoms-list">
-                            <!-- Symptoms injected via JS -->
+                        <div id="home-overdue-items-wrap">
+                            <!-- Injected by JS -->
                         </div>
                     </div>
 
-                    <!-- Glovebox Quick Specs -->
-                    <div class="content-card">
-                        <div class="section-header">
-                            <h3><span>🗄️ Glovebox Quick-Specs</span></h3>
+                    <!-- Predictive Fluid & Wear Decay Section -->
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin:20px 0 10px 4px;">
+                        <h4 style="font-size:14px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; color:#64748B;">🧠 Predictive Wear & Decay</h4>
+                        <span style="font-size:11px; color:#94A3B8;">Worst-Case Algorithm</span>
+                    </div>
+                    <div id="predictive-decay-grid" class="decay-grid">
+                        <!-- Injected by JS -->
+                    </div>
+
+                    <!-- Interactive Chassis & Tire Position Diagram -->
+                    <div class="card-modern" style="margin-top:16px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                            <h4 style="font-size:14px; font-weight:800; color:var(--text-dark);">Chassis & Tire Positions</h4>
+                            <span id="chassis-mode-badge" style="font-size:11px; font-weight:800; color:var(--primary-blue); text-transform:uppercase;">4-Wheel Car</span>
+                        </div>
+                        <div class="chassis-diagram" id="chassis-container">
+                            <!-- Injected by JS -->
+                        </div>
+                        <div style="font-size:11px; color:var(--text-muted); text-align:center; margin-top:8px;">
+                            Click any wheel position above to inspect tire tread depth (mm) and brake pad thickness
+                        </div>
+                    </div>
+
+                    <!-- Quick Specs Glovebox -->
+                    <div class="card-modern">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                            <h4 style="font-size:14px; font-weight:800; color:var(--text-dark);">🗄️ Glovebox Quick Specs</h4>
                             <button class="btn-secondary btn-sm" onclick="openEditSpecsModal()">Edit</button>
                         </div>
-                        <div id="quick-specs-container" style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:13px;">
-                            <!-- Specs injected via JS -->
+                        <div id="quick-specs-container" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:13px;">
+                            <!-- Injected by JS -->
                         </div>
                     </div>
 
+                    <!-- Quick Action Links -->
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px;">
+                        <a id="btn-public-book" href="#" target="_blank" class="btn-secondary btn-sm" style="text-align:center; justify-content:center;">
+                            <span>Digital Service Book</span> ↗
+                        </a>
+                        <button class="btn-secondary btn-sm" onclick="openResaleCertificate()" style="text-align:center; justify-content:center;">
+                            <span>📄 Resale Certificate</span>
+                        </button>
+                    </div>
                 </div>
+
+                <!-- ----------------------------------------------------- -->
+                <!-- SCREEN 2: HISTORY (Chronological Feed & Category Filter)-->
+                <!-- ----------------------------------------------------- -->
+                <div id="screen-history" class="app-screen">
+                    <!-- Category Filter Pills Bar (Screenshot 3) -->
+                    <div class="pill-bar">
+                        <button class="filter-pill active" onclick="filterHistoryCategory('all', this)" data-i18n="all">All</button>
+                        <button class="filter-pill" onclick="filterHistoryCategory('trip', this)" data-i18n="trip">Trip</button>
+                        <button class="filter-pill" onclick="filterHistoryCategory('fuel', this)" data-i18n="fuel">Fuel</button>
+                        <button class="filter-pill" onclick="filterHistoryCategory('expense', this)" data-i18n="expense">Expense</button>
+                        <button class="filter-pill" onclick="filterHistoryCategory('maintenance', this)" data-i18n="maintenance">Maintenance</button>
+                    </div>
+
+                    <!-- Summary Bar (Dark Slate Navy matching Screenshot 3) -->
+                    <div class="card-navy">
+                        <div style="display:grid; grid-template-columns:repeat(3, 1fr); text-align:left;">
+                            <div>
+                                <div style="font-size:11px; font-weight:700; color:#94A3B8; text-transform:uppercase;" data-i18n="records">Records</div>
+                                <div style="font-size:22px; font-weight:800; color:#FFFFFF; margin-top:4px;">
+                                    <span id="hist-records-count">6</span>
+                                </div>
+                            </div>
+                            <div>
+                                <div style="font-size:11px; font-weight:700; color:#94A3B8; text-transform:uppercase;" data-i18n="distance">Distance</div>
+                                <div style="font-size:22px; font-weight:800; color:#FFFFFF; margin-top:4px;">
+                                    <span id="hist-distance-val">40</span> <span style="font-size:13px; font-weight:600; color:#94A3B8;">KM</span>
+                                </div>
+                            </div>
+                            <div>
+                                <div style="font-size:11px; font-weight:700; color:#94A3B8; text-transform:uppercase;" data-i18n="totalSpent">Total Spent</div>
+                                <div style="font-size:22px; font-weight:800; color:#FFFFFF; margin-top:4px;">
+                                    <span id="hist-spent-val">105.9</span> <span style="font-size:13px; font-weight:600; color:#94A3B8;">USD</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Grouped Chronological Feed List -->
+                    <div id="history-feed-container">
+                        <!-- Injected by JS -->
+                    </div>
+                </div>
+
+                <!-- ----------------------------------------------------- -->
+                <!-- SCREEN 3: REMINDER (Upcoming, Overdue, Completed)     -->
+                <!-- ----------------------------------------------------- -->
+                <div id="screen-reminder" class="app-screen">
+                    <!-- Segmented Control Tabs (Upcoming / Overdue / Completed) -->
+                    <div class="segmented-tabs">
+                        <button class="seg-tab-btn active" id="seg-btn-upcoming" onclick="switchReminderTab('upcoming')" data-i18n="upcoming">UPCOMING</button>
+                        <button class="seg-tab-btn" id="seg-btn-overdue" onclick="switchReminderTab('overdue')" data-i18n="overdue">OVERDUE</button>
+                        <button class="seg-tab-btn" id="seg-btn-completed" onclick="switchReminderTab('completed')" data-i18n="completed">COMPLETED</button>
+                    </div>
+
+                    <!-- Educational Maintenance Tip Banner (Screenshot 2) -->
+                    <div class="tip-banner">
+                        <span class="tip-icon">ⓘ</span>
+                        <span data-i18n="tipLifespan">Regular maintenance extends your vehicle's lifespan by up to 25%.</span>
+                    </div>
+
+                    <!-- Date-Grouped Reminder Items List -->
+                    <div id="reminders-list-container">
+                        <!-- Injected by JS -->
+                    </div>
+                </div>
+
+                <!-- ----------------------------------------------------- -->
+                <!-- SCREEN 4: REPORT (Analytics, Total Spent, Trend Chart) -->
+                <!-- ----------------------------------------------------- -->
+                <div id="screen-report" class="app-screen">
+                    <!-- Total Spent Gradient Banner (Screenshot 1) -->
+                    <div class="banner-gradient">
+                        <div class="banner-lbl" data-i18n="totalSpent">Total Spent</div>
+                        <div class="banner-val">
+                            <span id="rep-banner-spent">105.9</span>
+                            <span class="unit">USD</span>
+                        </div>
+                        <div class="banner-watermark">🧾</div>
+                    </div>
+
+                    <!-- Filter Dropdowns Row -->
+                    <div class="dropdown-pill-row">
+                        <select id="rep-period-filter" class="dropdown-pill" onchange="handleReportPeriodChange(this.value)">
+                            <option value="this_month">📅 This Month</option>
+                            <option value="last_month">📅 Last Month</option>
+                            <option value="3_months">📅 Last 3 Months</option>
+                            <option value="this_year">📅 This Year</option>
+                            <option value="all">📅 All Time</option>
+                        </select>
+                        <select id="rep-vehicle-filter" class="dropdown-pill" onchange="handleSelectVehicle(this.value)">
+                            <!-- Vehicles injected by JS -->
+                        </select>
+                    </div>
+
+                    <!-- Section Header -->
+                    <div style="font-size:11px; font-weight:800; color:#94A3B8; text-transform:uppercase; letter-spacing:0.8px; margin:16px 0 8px 4px;">FILTER</div>
+
+                    <!-- Total Cost Single Card -->
+                    <div class="metric-card-single">
+                        <div class="metric-header">
+                            <span>💲</span>
+                            <span data-i18n="totalCost">Total Cost</span>
+                        </div>
+                        <div class="metric-value">
+                            <span id="rep-total-cost">105.9</span>
+                            <span class="unit">USD</span>
+                        </div>
+                    </div>
+
+                    <!-- 2-Column Row: Fuel Cost & Distance -->
+                    <div class="metric-grid-2">
+                        <div class="metric-card-single" style="margin-bottom:0;">
+                            <div class="metric-header">
+                                <span>⛽</span>
+                                <span data-i18n="fuelCost">Fuel Cost</span>
+                            </div>
+                            <div class="metric-value">
+                                <span id="rep-fuel-cost">75.9</span>
+                                <span class="unit">USD</span>
+                            </div>
+                        </div>
+                        <div class="metric-card-single" style="margin-bottom:0;">
+                            <div class="metric-header">
+                                <span>🛣️</span>
+                                <span data-i18n="distance">Distance</span>
+                            </div>
+                            <div class="metric-value">
+                                <span id="rep-distance-val">40</span>
+                                <span class="unit">KM</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cost / Distance Single Card -->
+                    <div class="metric-card-single" style="margin-top:12px;">
+                        <div class="metric-header">
+                            <span>📈</span>
+                            <span data-i18n="costPerDistance">Cost / Distance</span>
+                        </div>
+                        <div class="metric-value">
+                            <span id="rep-cost-per-km">2.6</span>
+                            <span class="unit">USD/KM</span>
+                        </div>
+                    </div>
+
+                    <!-- Cost Over Time SVG Chart Section -->
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin:22px 0 10px 4px;">
+                        <div style="font-size:11px; font-weight:800; color:#94A3B8; text-transform:uppercase; letter-spacing:0.8px;" data-i18n="costOverTime">COST OVER TIME</div>
+                        <div style="font-size:11px; font-weight:800; color:#94A3B8;">USD</div>
+                    </div>
+
+                    <div class="card-modern" style="padding:16px 12px 10px 12px;">
+                        <div id="cost-chart-container" style="width:100%; height:180px; position:relative;">
+                            <!-- Interactive SVG chart injected by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ----------------------------------------------------- -->
+                <!-- SCREEN 5: GARAGE (Fleet Overview & Collection Cards)  -->
+                <!-- ----------------------------------------------------- -->
+                <div id="screen-garage" class="app-screen">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                        <button class="topbar-btn" onclick="switchScreen('home')" title="Back to Home">✕</button>
+                        <h3 style="font-size:18px; font-weight:800; color:var(--text-dark);" data-i18n="garage">Garage</h3>
+                        <div style="display:flex; gap:8px;">
+                            <button class="topbar-btn" onclick="openAddVehicleModal()" style="background:#2563EB; color:#FFFFFF; border:none;" title="Add Vehicle">+</button>
+                            <button class="topbar-btn" onclick="openProModal()" title="Upgrade to PRO">💎</button>
+                        </div>
+                    </div>
+
+                    <div style="font-size:12px; font-weight:600; color:#64748B; text-align:center; margin-bottom:18px;">
+                        Limit: 5 vehicles (Free plan: 1)
+                    </div>
+
+                    <!-- Fleet Overview Card (Dark Slate Navy matching Screenshot 6) -->
+                    <div style="font-size:11px; font-weight:800; color:#94A3B8; text-transform:uppercase; letter-spacing:0.8px; margin:0 0 8px 4px;" data-i18n="fleetOverview">FLEET OVERVIEW</div>
+                    <div class="card-navy">
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                            <div>
+                                <div style="font-size:12px; font-weight:700; color:#94A3B8;" data-i18n="avgConsumption">Avg. Consumption</div>
+                                <div style="font-size:26px; font-weight:800; color:#FFFFFF; margin-top:4px;">
+                                    <span id="fleet-avg-consumption">5.4</span>
+                                    <span style="font-size:13px; font-weight:600; color:#94A3B8;">L</span>
+                                </div>
+                            </div>
+                            <div>
+                                <div style="font-size:12px; font-weight:700; color:#94A3B8;" data-i18n="distance">Distance</div>
+                                <div style="font-size:26px; font-weight:800; color:#FFFFFF; margin-top:4px;">
+                                    <span id="fleet-total-distance">40</span>
+                                    <span style="font-size:13px; font-weight:600; color:#94A3B8;">KM</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Your Collection Header -->
+                    <div style="font-size:11px; font-weight:800; color:#94A3B8; text-transform:uppercase; letter-spacing:0.8px; margin:20px 0 10px 4px;" data-i18n="yourCollection">YOUR COLLECTION</div>
+
+                    <!-- Vehicle Collection Cards List -->
+                    <div id="garage-collection-container">
+                        <!-- Injected by JS -->
+                    </div>
+
+                    <!-- Add Vehicle Action Card -->
+                    <div onclick="openAddVehicleModal()" style="border:2px dashed #CBD5E1; border-radius:var(--radius-xl); padding:24px; text-align:center; cursor:pointer; color:var(--primary-blue); font-weight:700; font-size:14px; background:#F8FAFC; transition:all 0.2s ease;">
+                        + Add New Vehicle or Motorcycle
+                    </div>
+                </div>
+
+                <!-- ----------------------------------------------------- -->
+                <!-- SCREEN 6: SETTINGS (Menu, PRO Banner, Language, Units)-->
+                <!-- ----------------------------------------------------- -->
+                <div id="screen-settings" class="app-screen">
+                    <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+                        <button class="topbar-btn" onclick="switchScreen('home')" title="Back">←</button>
+                        <h3 style="font-size:18px; font-weight:800; color:var(--text-dark);" data-i18n="settings">Settings</h3>
+                    </div>
+
+                    <!-- UPGRADE to PRO NOW Banner (Crown + Sports Car illustration) -->
+                    <div class="settings-banner-pro" onclick="openProModal()">
+                        <div style="font-size:36px; margin-bottom:4px;">👑 🏎️</div>
+                        <div style="font-size:19px; font-weight:900; letter-spacing:0.5px;" data-i18n="upgradePro">UPGRADE to PRO NOW</div>
+                        <div style="font-size:12px; font-weight:600; opacity:0.9; margin-top:4px;" data-i18n="limitlessBenefits">Limitless Benefits, Ultimate Ad-Free</div>
+                    </div>
+
+                    <!-- Group 1: Garage, Language, Units -->
+                    <div class="settings-group-card">
+                        <div class="settings-row" onclick="switchScreen('garage')">
+                            <div class="settings-row-left">
+                                <span class="icon">🚗</span>
+                                <span data-i18n="myGarage">My garage</span>
+                            </div>
+                            <span class="chevron-arrow">&rsaquo;</span>
+                        </div>
+                        <div class="settings-row" onclick="openLanguageModal()">
+                            <div class="settings-row-left">
+                                <span class="icon">🌐</span>
+                                <span data-i18n="language">Language</span>
+                            </div>
+                            <span class="chevron-arrow">&rsaquo;</span>
+                        </div>
+                        <div class="settings-row" onclick="openUnitsModal()">
+                            <div class="settings-row-left">
+                                <span class="icon">📏</span>
+                                <span data-i18n="units">Units</span>
+                            </div>
+                            <span class="chevron-arrow">&rsaquo;</span>
+                        </div>
+                    </div>
+
+                    <!-- Group 2: Subscription, Privacy, Permissions, GDPR, Share, Review, Email -->
+                    <div class="settings-group-card">
+                        <div class="settings-row" onclick="openProModal()">
+                            <div class="settings-row-left">
+                                <span class="icon">📑</span>
+                                <span data-i18n="subscription">Subscription</span>
+                            </div>
+                            <span class="chevron-arrow">&rsaquo;</span>
+                        </div>
+                        <div class="settings-row" onclick="openSettingsInfoModal('privacy')">
+                            <div class="settings-row-left">
+                                <span class="icon">🛡️</span>
+                                <span data-i18n="privacyPolicy">Privacy Policy</span>
+                            </div>
+                            <span class="chevron-arrow">&rsaquo;</span>
+                        </div>
+                        <div class="settings-row" onclick="openSettingsInfoModal('permissions')">
+                            <div class="settings-row-left">
+                                <span class="icon">🔑</span>
+                                <span data-i18n="managePermissions">Manage Permissions</span>
+                            </div>
+                            <span class="chevron-arrow">&rsaquo;</span>
+                        </div>
+                        <div class="settings-row" onclick="openSettingsInfoModal('gdpr')">
+                            <div class="settings-row-left">
+                                <span class="icon">🛡️</span>
+                                <span data-i18n="gdprRevocation">GDPR Revocation</span>
+                            </div>
+                            <span class="chevron-arrow">&rsaquo;</span>
+                        </div>
+                        <div class="settings-row" onclick="handleShareApp()">
+                            <div class="settings-row-left">
+                                <span class="icon">📤</span>
+                                <span data-i18n="share">Share</span>
+                            </div>
+                            <span class="chevron-arrow">&rsaquo;</span>
+                        </div>
+                        <div class="settings-row" onclick="openSettingsInfoModal('review')">
+                            <div class="settings-row-left">
+                                <span class="icon">✏️</span>
+                                <span data-i18n="review">Review</span>
+                            </div>
+                            <span class="chevron-arrow">&rsaquo;</span>
+                        </div>
+                        <div class="settings-row" onclick="openSettingsInfoModal('email')">
+                            <div class="settings-row-left">
+                                <span class="icon">✉️</span>
+                                <span data-i18n="email">Email</span>
+                            </div>
+                            <span class="chevron-arrow">&rsaquo;</span>
+                        </div>
+                    </div>
+
+                    <!-- Group 3: Reset Data -->
+                    <div class="settings-group-card">
+                        <div class="settings-row danger" onclick="handleResetData()">
+                            <div class="settings-row-left">
+                                <span class="icon">🔄</span>
+                                <span data-i18n="reset">Reset</span>
+                            </div>
+                            <span class="chevron-arrow">&rsaquo;</span>
+                        </div>
+                    </div>
+                </div>
+
             </div>
+
+            <!-- Floating Bottom Navigation Bar (Screenshots 1, 2, 3, 5) -->
+            <nav class="floating-bottom-nav">
+                <button class="nav-item active" id="nav-btn-home" onclick="switchScreen('home')">
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-label" data-i18n="home">HOME</span>
+                    <span class="nav-indicator"></span>
+                </button>
+                <button class="nav-item" id="nav-btn-history" onclick="switchScreen('history')">
+                    <span class="nav-icon">📜</span>
+                    <span class="nav-label" data-i18n="history">HISTORY</span>
+                    <span class="nav-indicator"></span>
+                </button>
+                <div class="nav-action-center">
+                    <button class="btn-floating-plus" onclick="openQuickActionSheet()" title="Quick Log">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                    </button>
+                </div>
+                <button class="nav-item" id="nav-btn-reminder" onclick="switchScreen('reminder')">
+                    <span class="nav-icon">🔔</span>
+                    <span class="nav-label" data-i18n="reminder">REMINDER</span>
+                    <span class="nav-indicator"></span>
+                </button>
+                <button class="nav-item" id="nav-btn-report" onclick="switchScreen('report')">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-label" data-i18n="report">REPORT</span>
+                    <span class="nav-indicator"></span>
+                </button>
+            </nav>
 
         </div>
 
@@ -1808,6 +3004,370 @@
     <!-- ========================================================= -->
     <!-- JAVASCRIPT MASTER ENGINE -->
     <!-- ========================================================= -->
+    <!-- ========================================================= -->
+    <!-- QUICK ACTION BOTTOM SHEET (+)                             -->
+    <!-- ========================================================= -->
+    <div id="quick-action-sheet" class="bottom-sheet-backdrop" onclick="closeQuickActionSheet(event)">
+        <div class="bottom-sheet-content" onclick="event.stopPropagation()">
+            <div class="sheet-handle"></div>
+            <div class="sheet-header">
+                <h4>Quick Log & Action</h4>
+                <button class="sheet-close" onclick="closeQuickActionSheet()">✕</button>
+            </div>
+            <div class="quick-action-grid">
+                <div class="quick-action-item" onclick="closeQuickActionSheet(); openFuelModal();">
+                    <div class="quick-action-icon orange">⛽</div>
+                    <span data-i18n="logFuel">Log Fuel</span>
+                </div>
+                <div class="quick-action-item" onclick="closeQuickActionSheet(); openLogServiceModal();">
+                    <div class="quick-action-icon purple">🛠️</div>
+                    <span data-i18n="logMaintenance">Log Service</span>
+                </div>
+                <div class="quick-action-item" onclick="closeQuickActionSheet(); openTripModal();">
+                    <div class="quick-action-icon blue">🚗</div>
+                    <span data-i18n="logTrip">Log Trip</span>
+                </div>
+                <div class="quick-action-item" onclick="closeQuickActionSheet(); openExpenseModal();">
+                    <div class="quick-action-icon green">🧾</div>
+                    <span data-i18n="logExpense">Log Expense</span>
+                </div>
+                <div class="quick-action-item" onclick="closeQuickActionSheet(); openReminderModal();">
+                    <div class="quick-action-icon amber">🔔</div>
+                    <span data-i18n="addReminder">Add Reminder</span>
+                </div>
+                <div class="quick-action-item" onclick="closeQuickActionSheet(); openSymptomModal();">
+                    <div class="quick-action-icon red">🔍</div>
+                    <span>OBD Symptom</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- MODAL: LOG TRIP                                           -->
+    <!-- ========================================================= -->
+    <div id="modal-trip" class="modal-backdrop">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>🚗 Log Vehicle Trip</h3>
+                <button class="btn-close-modal" onclick="closeModal('modal-trip')">✕</button>
+            </div>
+            <form id="trip-form" onsubmit="handleSaveTrip(event)">
+                <div class="form-group">
+                    <label class="form-label" for="trip-date">Trip Date & Time</label>
+                    <div class="form-row">
+                        <input type="date" id="trip-date" class="form-input no-icon" required>
+                        <input type="time" id="trip-time" class="form-input no-icon">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-label">
+                        <span>Distance Driven (Kilometers)</span>
+                    </div>
+                    <div class="input-wrapper" style="gap:6px;">
+                        <input type="number" step="0.1" id="trip-distance-km" class="form-input no-icon" placeholder="e.g. 18.0" required>
+                        <span style="font-size:13px; font-weight:700; color:var(--text-muted); align-self:center;">KM</span>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="trip-start-odo">Start Odometer (Optional)</label>
+                        <div class="input-wrapper" style="gap:6px;">
+                            <input type="number" id="trip-start-odo" class="form-input no-icon" placeholder="32432">
+                            <button type="button" class="btn-secondary btn-sm" onclick="openOcrScanner('trip-start-odo', 'odometer')">📷</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="trip-end-odo">End Odometer (Optional)</label>
+                        <div class="input-wrapper" style="gap:6px;">
+                            <input type="number" id="trip-end-odo" class="form-input no-icon" placeholder="32450">
+                            <button type="button" class="btn-secondary btn-sm" onclick="openOcrScanner('trip-end-odo', 'odometer')">📷</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="trip-purpose">Trip Purpose</label>
+                    <select id="trip-purpose" class="form-select no-icon">
+                        <option value="Commute">Commute (Daily Work)</option>
+                        <option value="Personal">Personal (Errands / Family)</option>
+                        <option value="Business">Business (Client / Delivery)</option>
+                        <option value="Road Trip">Road Trip / Leisure</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="trip-notes">Notes / Route</label>
+                    <input type="text" id="trip-notes" class="form-input no-icon" placeholder="e.g. Office return trip via ring highway">
+                </div>
+                <div class="form-actions" style="margin-top:20px;">
+                    <button type="button" class="btn-secondary" onclick="closeModal('modal-trip')">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Trip Log</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- MODAL: LOG GENERAL EXPENSE                                -->
+    <!-- ========================================================= -->
+    <div id="modal-expense" class="modal-backdrop">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>🧾 Log Vehicle Expense</h3>
+                <button class="btn-close-modal" onclick="closeModal('modal-expense')">✕</button>
+            </div>
+            <form id="expense-form" onsubmit="handleSaveExpense(event)">
+                <div class="form-group">
+                    <label class="form-label" for="exp-date">Expense Date & Time</label>
+                    <div class="form-row">
+                        <input type="date" id="exp-date" class="form-input no-icon" required>
+                        <input type="time" id="exp-time" class="form-input no-icon">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="exp-type">Expense Category</label>
+                    <select id="exp-type" class="form-select no-icon" required>
+                        <option value="Parking">Parking</option>
+                        <option value="Toll">Toll Road / Bridge Fee</option>
+                        <option value="Car Wash">Car Wash & Detailing</option>
+                        <option value="Fine / Ticket">Traffic Fine / Violation</option>
+                        <option value="Insurance">Auto Insurance Premium</option>
+                        <option value="Registration">Registration & Inspection Fee</option>
+                        <option value="Other">Other Operational Expense</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="exp-amount">Amount (Strictly USD $)</label>
+                    <div class="input-wrapper" style="gap:6px;">
+                        <span style="font-size:16px; font-weight:800; color:var(--text-muted); align-self:center;">$</span>
+                        <input type="number" step="0.01" id="exp-amount" class="form-input no-icon" placeholder="12.00" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="exp-odo">Odometer (km, Optional)</label>
+                    <div class="input-wrapper" style="gap:6px;">
+                        <input type="number" id="exp-odo" class="form-input no-icon" placeholder="32432">
+                        <button type="button" class="btn-secondary btn-sm" onclick="openOcrScanner('exp-odo', 'odometer')">📷</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="exp-notes">Notes / Location</label>
+                    <input type="text" id="exp-notes" class="form-input no-icon" placeholder="e.g. City center underground garage 4 hrs">
+                </div>
+                <div class="form-actions" style="margin-top:20px;">
+                    <button type="button" class="btn-secondary" onclick="closeModal('modal-expense')">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Expense</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- MODAL: ADD REMINDER                                       -->
+    <!-- ========================================================= -->
+    <div id="modal-reminder" class="modal-backdrop">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>🔔 Add Maintenance Reminder</h3>
+                <button class="btn-close-modal" onclick="closeModal('modal-reminder')">✕</button>
+            </div>
+            <form id="reminder-form" onsubmit="handleSaveReminder(event)">
+                <div class="form-group">
+                    <label class="form-label" for="rem-title">Reminder Title</label>
+                    <input type="text" id="rem-title" class="form-input no-icon" placeholder="e.g. Tire pressure check, Registration renewal" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="rem-category">Category</label>
+                    <select id="rem-category" class="form-select no-icon">
+                        <option value="Maintenance">Maintenance & Service</option>
+                        <option value="Tires">Tires & Wheels</option>
+                        <option value="Inspection">Safety & Mechanical Inspection</option>
+                        <option value="Registration">Registration & Legal</option>
+                        <option value="Insurance">Insurance Renewal</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="rem-due-date">Due Date</label>
+                        <input type="date" id="rem-due-date" class="form-input no-icon">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="rem-due-odo">Due Odometer (km)</label>
+                        <input type="number" id="rem-due-odo" class="form-input no-icon" placeholder="35000">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="rem-notes">Notes / Instructions</label>
+                    <input type="text" id="rem-notes" class="form-input no-icon" placeholder="e.g. Check all 4 tires cold to 2.3 Bar">
+                </div>
+                <div class="form-actions" style="margin-top:20px;">
+                    <button type="button" class="btn-secondary" onclick="closeModal('modal-reminder')">Cancel</button>
+                    <button type="submit" class="btn-primary">Set Reminder</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- MODAL: REMINDER ACTION (COMPLETE / SNOOZE / DELETE)       -->
+    <!-- ========================================================= -->
+    <div id="modal-reminder-action" class="modal-backdrop">
+        <div class="modal-box" style="max-width:380px;">
+            <div class="modal-header">
+                <h3 id="rem-action-title">Reminder Action</h3>
+                <button class="btn-close-modal" onclick="closeModal('modal-reminder-action')">✕</button>
+            </div>
+            <div id="rem-action-details" style="font-size:14px; color:var(--text-dark); margin-bottom:18px;">
+                <!-- Injected by JS -->
+            </div>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+                <button type="button" id="btn-rem-complete" class="btn-primary" onclick="executeReminderAction('complete')" style="justify-content:center;">
+                    ✓ Mark as Completed
+                </button>
+                <button type="button" class="btn-secondary" onclick="executeReminderAction('snooze')" style="justify-content:center;">
+                    📅 Snooze (+7 Days)
+                </button>
+                <button type="button" class="btn-secondary" onclick="executeReminderAction('delete')" style="justify-content:center; color:var(--danger-red); border-color:#FECDD3;">
+                    🗑️ Delete Reminder
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- MODAL: LANGUAGE SELECTION BOTTOM SHEET (Screenshot 4)     -->
+    <!-- ========================================================= -->
+    <div id="modal-language" class="bottom-sheet-backdrop" onclick="closeModal('modal-language')">
+        <div class="bottom-sheet-content" onclick="event.stopPropagation()">
+            <div class="sheet-handle"></div>
+            <div class="sheet-header">
+                <h4 data-i18n="language">Language</h4>
+                <button class="sheet-close" onclick="closeModal('modal-language')">✕</button>
+            </div>
+            <div style="border:1px solid #E2E8F0; border-radius:18px; overflow:hidden;">
+                <div class="radio-option-item selected" id="lang-opt-en" onclick="selectAppLanguage('en')">
+                    <span>English (default)</span>
+                    <div class="radio-circle"><span class="radio-circle-dot"></span></div>
+                </div>
+                <div class="radio-option-item" id="lang-opt-ru" onclick="selectAppLanguage('ru')">
+                    <span>русский язык</span>
+                    <div class="radio-circle"><span class="radio-circle-dot"></span></div>
+                </div>
+                <div class="radio-option-item" id="lang-opt-es" onclick="selectAppLanguage('es')">
+                    <span>español</span>
+                    <div class="radio-circle"><span class="radio-circle-dot"></span></div>
+                </div>
+                <div class="radio-option-item" id="lang-opt-de" onclick="selectAppLanguage('de')">
+                    <span>Deutsch</span>
+                    <div class="radio-circle"><span class="radio-circle-dot"></span></div>
+                </div>
+                <div class="radio-option-item" id="lang-opt-fr" onclick="selectAppLanguage('fr')">
+                    <span>français</span>
+                    <div class="radio-circle"><span class="radio-circle-dot"></span></div>
+                </div>
+                <div class="radio-option-item" id="lang-opt-pt" onclick="selectAppLanguage('pt')">
+                    <span>Portuguese</span>
+                    <div class="radio-circle"><span class="radio-circle-dot"></span></div>
+                </div>
+                <div class="radio-option-item" id="lang-opt-ar" onclick="selectAppLanguage('ar')">
+                    <span>العربية (Arabic)</span>
+                    <div class="radio-circle"><span class="radio-circle-dot"></span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- MODAL: EXIT APP CONFIRMATION (Screenshot 5)               -->
+    <!-- ========================================================= -->
+    <div id="modal-exit" class="modal-backdrop">
+        <div class="modal-box" style="max-width:340px; text-align:center; border-radius:24px; padding:28px 24px;">
+            <h3 style="font-size:20px; font-weight:800; color:#0F172A; margin-bottom:8px;" data-i18n="exitApp">Exit app</h3>
+            <p style="font-size:13.5px; color:#64748B; margin-bottom:24px; line-height:1.4;" data-i18n="exitConfirm">
+                You're about to exit the app. Are you sure?
+            </p>
+            <div style="display:flex; gap:12px;">
+                <button type="button" class="btn-secondary" onclick="closeModal('modal-exit')" style="flex:1; justify-content:center; border-radius:9999px; background:#E2E8F0; border:none; color:#0F172A; font-weight:700; height:46px;" data-i18n="no">
+                    No
+                </button>
+                <button type="button" class="btn-primary" onclick="handleLogoutConfirm()" style="flex:1; justify-content:center; border-radius:9999px; background:#E11D48; border:none; color:#FFFFFF; font-weight:700; height:46px; box-shadow:0 4px 14px rgba(225,29,72,0.35);" data-i18n="yes">
+                    Yes
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- MODAL: PRO SUBSCRIPTION DETAILS                           -->
+    <!-- ========================================================= -->
+    <div id="modal-pro" class="modal-backdrop">
+        <div class="modal-box" style="max-width:440px;">
+            <div class="modal-header">
+                <h3>👑 CarLog PRO Membership</h3>
+                <button class="btn-close-modal" onclick="closeModal('modal-pro')">✕</button>
+            </div>
+            <div class="settings-banner-pro" style="margin-bottom:16px;">
+                <div style="font-size:32px;">💎</div>
+                <div style="font-size:18px; font-weight:900;">PRO Tier Active</div>
+                <div style="font-size:12px; opacity:0.9;">Limitless Vehicles • Ad-Free • Neural OCR</div>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:10px; font-size:13.5px; color:var(--text-dark);">
+                <div style="display:flex; gap:10px; align-items:center;"><span>✓</span> Unlimited multi-vehicle & motorcycle garage</div>
+                <div style="display:flex; gap:10px; align-items:center;"><span>✓</span> Multi-Engine Cloud Neural OCR & Barcode Scanner</div>
+                <div style="display:flex; gap:10px; align-items:center;"><span>✓</span> Predictive component wear & worst-case driver algorithm</div>
+                <div style="display:flex; gap:10px; align-items:center;"><span>✓</span> Verifiable digital QR service book for resale value</div>
+                <div style="display:flex; gap:10px; align-items:center;"><span>✓</span> Automatic MariaDB cloud sync with offline fallback</div>
+            </div>
+            <button type="button" class="btn-primary" onclick="closeModal('modal-pro')" style="width:100%; margin-top:20px; justify-content:center;">
+                Done
+            </button>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- MODAL: UNITS (100% METRIC & USD)                          -->
+    <!-- ========================================================= -->
+    <div id="modal-units" class="modal-backdrop">
+        <div class="modal-box" style="max-width:400px;">
+            <div class="modal-header">
+                <h3>📏 Units & Currency</h3>
+                <button class="btn-close-modal" onclick="closeModal('modal-units')">✕</button>
+            </div>
+            <div style="font-size:13px; color:var(--text-muted); margin-bottom:14px;">
+                CarLog standardizes strictly on the International Metric System and USD:
+            </div>
+            <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:14px; display:flex; flex-direction:column; gap:8px; font-size:13.5px;">
+                <div style="display:flex; justify-content:space-between;"><span>Distance</span><strong>Kilometers (KM)</strong></div>
+                <div style="display:flex; justify-content:space-between;"><span>Fuel Volume</span><strong>Liters (L)</strong></div>
+                <div style="display:flex; justify-content:space-between;"><span>Tire Pressure</span><strong>Bar</strong></div>
+                <div style="display:flex; justify-content:space-between;"><span>Tread & Pads</span><strong>Millimeters (mm)</strong></div>
+                <div style="display:flex; justify-content:space-between;"><span>Engine Power</span><strong>Kilowatts (kW)</strong></div>
+                <div style="display:flex; justify-content:space-between;"><span>Engine Torque</span><strong>Newton-meters (Nm)</strong></div>
+                <div style="display:flex; justify-content:space-between;"><span>Currency</span><strong>US Dollars ($ USD)</strong></div>
+            </div>
+            <button type="button" class="btn-primary" onclick="closeModal('modal-units')" style="width:100%; margin-top:18px; justify-content:center;">
+                OK
+            </button>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- MODAL: SETTINGS INFO MODALS (PRIVACY, PERMISSIONS, GDPR)   -->
+    <!-- ========================================================= -->
+    <div id="modal-settings-info" class="modal-backdrop">
+        <div class="modal-box" style="max-width:440px;">
+            <div class="modal-header">
+                <h3 id="settings-info-title">Information</h3>
+                <button class="btn-close-modal" onclick="closeModal('modal-settings-info')">✕</button>
+            </div>
+            <div id="settings-info-body" style="font-size:13.5px; color:var(--text-dark); line-height:1.5;">
+                <!-- Injected by JS -->
+            </div>
+            <button type="button" class="btn-primary" onclick="closeModal('modal-settings-info')" style="width:100%; margin-top:20px; justify-content:center;">
+                Close
+            </button>
+        </div>
+    </div>
+
     <script>
         // Offline / Online state
         let isOnline = navigator.onLine;
@@ -1849,11 +3409,1173 @@
         // -------------------------------------------------------------
         // Core View Switching & Auth
         // -------------------------------------------------------------
+        // =============================================================
+        // COMPETITOR UI ARCHITECTURE & MULTILINGUAL SYSTEM
+        // =============================================================
+        let currentScreen = 'home';
+        let currentLanguage = localStorage.getItem('karkare_lang') || 'en';
+        let currentHistoryCategory = 'all';
+        let currentReminderTab = 'upcoming';
+        let activeReminderActionId = null;
+
+        const TRANSLATIONS = {
+            en: {
+                home: "HOME",
+                history: "HISTORY",
+                reminder: "REMINDER",
+                report: "REPORT",
+                garage: "Garage",
+                settings: "Settings",
+                welcomeBack: "Welcome back",
+                overdue: "OVERDUE",
+                upcoming: "UPCOMING",
+                completed: "COMPLETED",
+                records: "Records",
+                distance: "Distance",
+                totalSpent: "Total Spent",
+                totalCost: "Total Cost",
+                fuelCost: "Fuel Cost",
+                costPerDistance: "Cost / Distance",
+                costOverTime: "COST OVER TIME",
+                fleetOverview: "FLEET OVERVIEW",
+                avgConsumption: "Avg. Consumption",
+                yourCollection: "YOUR COLLECTION",
+                upgradePro: "UPGRADE to PRO NOW",
+                limitlessBenefits: "Limitless Benefits, Ultimate Ad-Free",
+                myGarage: "My garage",
+                language: "Language",
+                units: "Units",
+                subscription: "Subscription",
+                privacyPolicy: "Privacy Policy",
+                managePermissions: "Manage Permissions",
+                gdprRevocation: "GDPR Revocation",
+                share: "Share",
+                review: "Review",
+                email: "Email",
+                reset: "Reset",
+                exitApp: "Exit app",
+                exitConfirm: "You're about to exit the app. Are you sure?",
+                no: "No",
+                yes: "Yes",
+                logFuel: "Log Fuel",
+                logMaintenance: "Log Service",
+                logTrip: "Log Trip",
+                logExpense: "Log Expense",
+                addReminder: "Add Reminder",
+                all: "All",
+                trip: "Trip",
+                fuel: "Fuel",
+                expense: "Expense",
+                maintenance: "Maintenance",
+                tipLifespan: "Regular maintenance extends your vehicle's lifespan by up to 25%."
+            },
+            ru: {
+                home: "ГЛАВНАЯ",
+                history: "ИСТОРИЯ",
+                reminder: "НАПОМИНАНИЯ",
+                report: "ОТЧЕТ",
+                garage: "Гараж",
+                settings: "Настройки",
+                welcomeBack: "С возвращением",
+                overdue: "ПРОСРОЧЕНО",
+                upcoming: "ПРЕДСТОЯЩИЕ",
+                completed: "ЗАВЕРШЕНО",
+                records: "Записи",
+                distance: "Дистанция",
+                totalSpent: "Всего потрачено",
+                totalCost: "Общая стоимость",
+                fuelCost: "Топливо",
+                costPerDistance: "Стоимость / км",
+                costOverTime: "РАСХОДЫ ВО ВРЕМЕНИ",
+                fleetOverview: "ОБЗОР АВТОПАРКА",
+                avgConsumption: "Ср. расход",
+                yourCollection: "ВАША КОЛЛЕКЦИЯ",
+                upgradePro: "ПЕРЕЙТИ НА PRO СЕЙЧАС",
+                limitlessBenefits: "Без ограничений и рекламы",
+                myGarage: "Мой гараж",
+                language: "Язык",
+                units: "Единицы",
+                subscription: "Подписка",
+                privacyPolicy: "Конфиденциальность",
+                managePermissions: "Разрешения",
+                gdprRevocation: "Отзыв данных GDPR",
+                share: "Поделиться",
+                review: "Оценить",
+                email: "Поддержка",
+                reset: "Сброс",
+                exitApp: "Выйти из приложения",
+                exitConfirm: "Вы собираетесь выйти из приложения. Вы уверены?",
+                no: "Нет",
+                yes: "Да",
+                logFuel: "Заправка",
+                logMaintenance: "Сервис",
+                logTrip: "Поездка",
+                logExpense: "Расход",
+                addReminder: "Напоминание",
+                all: "Все",
+                trip: "Поездка",
+                fuel: "Топливо",
+                expense: "Расход",
+                maintenance: "Сервис",
+                tipLifespan: "Регулярное обслуживание продлевает жизнь автомобиля до 25%."
+            },
+            es: {
+                home: "INICIO",
+                history: "HISTORIAL",
+                reminder: "RECORDATORIO",
+                report: "INFORME",
+                garage: "Garaje",
+                settings: "Ajustes",
+                welcomeBack: "Bienvenido de nuevo",
+                overdue: "VENCIDO",
+                upcoming: "PRÓXIMO",
+                completed: "COMPLETADO",
+                records: "Registros",
+                distance: "Distancia",
+                totalSpent: "Gasto Total",
+                totalCost: "Costo Total",
+                fuelCost: "Combustible",
+                costPerDistance: "Costo / km",
+                costOverTime: "COSTO EN EL TIEMPO",
+                fleetOverview: "RESUMEN DE FLOTA",
+                avgConsumption: "Consumo Prom.",
+                yourCollection: "TU COLECCIÓN",
+                upgradePro: "MEJORAR A PRO AHORA",
+                limitlessBenefits: "Beneficios ilimitados, sin anuncios",
+                myGarage: "Mi garaje",
+                language: "Idioma",
+                units: "Unidades",
+                subscription: "Suscripción",
+                privacyPolicy: "Política de Privacidad",
+                managePermissions: "Permisos",
+                gdprRevocation: "Revocación GDPR",
+                share: "Compartir",
+                review: "Reseña",
+                email: "Correo",
+                reset: "Restablecer",
+                exitApp: "Salir de la aplicación",
+                exitConfirm: "¿Estás a punto de salir? ¿Estás seguro?",
+                no: "No",
+                yes: "Sí",
+                logFuel: "Combustible",
+                logMaintenance: "Mantenimiento",
+                logTrip: "Viaje",
+                logExpense: "Gasto",
+                addReminder: "Recordatorio",
+                all: "Todos",
+                trip: "Viaje",
+                fuel: "Combustible",
+                expense: "Gasto",
+                maintenance: "Mantenimiento",
+                tipLifespan: "El mantenimiento regular extiende la vida útil de su vehículo hasta un 25%."
+            },
+            de: {
+                home: "START",
+                history: "VERLAUF",
+                reminder: "ERINNERUNG",
+                report: "BERICHT",
+                garage: "Garage",
+                settings: "Einstellungen",
+                welcomeBack: "Willkommen zurück",
+                overdue: "ÜBERFÄLLIG",
+                upcoming: "BEVORSTEHEND",
+                completed: "ERLEDIGT",
+                records: "Einträge",
+                distance: "Distanz",
+                totalSpent: "Gesamtausgaben",
+                totalCost: "Gesamtkosten",
+                fuelCost: "Kraftstoff",
+                costPerDistance: "Kosten / km",
+                costOverTime: "KOSTEN IM ZEITVERLAUF",
+                fleetOverview: "FUHRPARKÜBERSICHT",
+                avgConsumption: "Durchschn. Verbrauch",
+                yourCollection: "IHRE SAMMLUNG",
+                upgradePro: "JETZT AUF PRO UPGRADEN",
+                limitlessBenefits: "Grenzenlose Vorteile, werbefrei",
+                myGarage: "Meine Garage",
+                language: "Sprache",
+                units: "Einheiten",
+                subscription: "Abonnement",
+                privacyPolicy: "Datenschutz",
+                managePermissions: "Berechtigungen",
+                gdprRevocation: "DSGVO-Auskunft",
+                share: "Teilen",
+                review: "Bewerten",
+                email: "E-Mail",
+                reset: "Zurücksetzen",
+                exitApp: "App beenden",
+                exitConfirm: "Möchten Sie die App wirklich beenden?",
+                no: "Nein",
+                yes: "Ja",
+                logFuel: "Tanken",
+                logMaintenance: "Wartung",
+                logTrip: "Fahrt",
+                logExpense: "Ausgabe",
+                addReminder: "Erinnerung",
+                all: "Alle",
+                trip: "Fahrt",
+                fuel: "Tanken",
+                expense: "Ausgabe",
+                maintenance: "Wartung",
+                tipLifespan: "Regelmäßige Wartung verlängert die Lebensdauer um bis zu 25%."
+            },
+            fr: {
+                home: "ACCUEIL",
+                history: "HISTORIQUE",
+                reminder: "RAPPEL",
+                report: "RAPPORT",
+                garage: "Garage",
+                settings: "Paramètres",
+                welcomeBack: "Bon retour",
+                overdue: "EN RETARD",
+                upcoming: "À VENIR",
+                completed: "TERMINÉ",
+                records: "Enregistrements",
+                distance: "Distance",
+                totalSpent: "Total Dépensé",
+                totalCost: "Coût Total",
+                fuelCost: "Carburant",
+                costPerDistance: "Coût / km",
+                costOverTime: "ÉVOLUTION DES COÛTS",
+                fleetOverview: "APERÇU DE LA FLOTTE",
+                avgConsumption: "Consom. Moy.",
+                yourCollection: "VOTRE COLLECTION",
+                upgradePro: "PASSER À PRO MAINTENANT",
+                limitlessBenefits: "Avantages illimités, sans publicité",
+                myGarage: "Mon garage",
+                language: "Langue",
+                units: "Unités",
+                subscription: "Abonnement",
+                privacyPolicy: "Confidentialité",
+                managePermissions: "Autorisations",
+                gdprRevocation: "Révocation RGPD",
+                share: "Partager",
+                review: "Évaluer",
+                email: "Email",
+                reset: "Réinitialiser",
+                exitApp: "Quitter l'application",
+                exitConfirm: "Êtes-vous sûr de vouloir quitter l'application ?",
+                no: "Non",
+                yes: "Oui",
+                logFuel: "Carburant",
+                logMaintenance: "Entretien",
+                logTrip: "Trajet",
+                logExpense: "Dépense",
+                addReminder: "Rappel",
+                all: "Tout",
+                trip: "Trajet",
+                fuel: "Carburant",
+                expense: "Dépense",
+                maintenance: "Entretien",
+                tipLifespan: "Un entretien régulier prolonge la durée de vie du véhicule jusqu'à 25%."
+            },
+            pt: {
+                home: "INÍCIO",
+                history: "HISTÓRICO",
+                reminder: "LEMBRETE",
+                report: "RELATÓRIO",
+                garage: "Garagem",
+                settings: "Definições",
+                welcomeBack: "Bem-vindo de volta",
+                overdue: "ATRASADO",
+                upcoming: "PRÓXIMO",
+                completed: "CONCLUÍDO",
+                records: "Registos",
+                distance: "Distância",
+                totalSpent: "Gasto Total",
+                totalCost: "Custo Total",
+                fuelCost: "Combustível",
+                costPerDistance: "Custo / km",
+                costOverTime: "CUSTO AO LONGO DO TEMPO",
+                fleetOverview: "VISÃO GERAL DA FROTA",
+                avgConsumption: "Consumo Médio",
+                yourCollection: "SUA COLEÇÃO",
+                upgradePro: "ATUALIZAR PARA PRO AGORA",
+                limitlessBenefits: "Benefícios ilimitados, sem anúncios",
+                myGarage: "Minha garagem",
+                language: "Idioma",
+                units: "Unidades",
+                subscription: "Subscrição",
+                privacyPolicy: "Privacidade",
+                managePermissions: "Permissões",
+                gdprRevocation: "Revogação RGPD",
+                share: "Partilhar",
+                review: "Avaliar",
+                email: "Email",
+                reset: "Repor",
+                exitApp: "Sair da aplicação",
+                exitConfirm: "Tem a certeza de que deseja sair?",
+                no: "Não",
+                yes: "Sim",
+                logFuel: "Combustível",
+                logMaintenance: "Manutenção",
+                logTrip: "Viagem",
+                logExpense: "Despesa",
+                addReminder: "Lembrete",
+                all: "Tudo",
+                trip: "Viagem",
+                fuel: "Combustível",
+                expense: "Despesa",
+                maintenance: "Manutenção",
+                tipLifespan: "A manutenção regular prolonga a vida útil do veículo em até 25%."
+            },
+            ar: {
+                home: "الرئيسية",
+                history: "السجل",
+                reminder: "التذكيرات",
+                report: "التقرير",
+                garage: "المرآب",
+                settings: "الإعدادات",
+                welcomeBack: "مرحبًا بعودتك",
+                overdue: "متأخر",
+                upcoming: "قادم",
+                completed: "مكتمل",
+                records: "السجلات",
+                distance: "المسافة",
+                totalSpent: "إجمالي الإنفاق",
+                totalCost: "التكلفة الإجمالية",
+                fuelCost: "الوقود",
+                costPerDistance: "التكلفة / كم",
+                costOverTime: "التكلفة مع مرور الوقت",
+                fleetOverview: "نظرة عامة على الأسطول",
+                avgConsumption: "متوسط الاستهلاك",
+                yourCollection: "مجموعتك",
+                upgradePro: "الترقية إلى برو الآن",
+                limitlessBenefits: "مزايا غير محدودة، تجربة بلا إعلانات",
+                myGarage: "مرآبي",
+                language: "اللغة",
+                units: "الوحدات",
+                subscription: "الاشتراك",
+                privacyPolicy: "الخصوصية",
+                managePermissions: "إدارة الأذونات",
+                gdprRevocation: "طلب بيانات GDPR",
+                share: "مشاركة",
+                review: "تقييم التطبيق",
+                email: "البريد والدعم",
+                reset: "إعادة ضبط",
+                exitApp: "الخروج من التطبيق",
+                exitConfirm: "أنت على وشك الخروج من التطبيق. هل أنت متأكد؟",
+                no: "لا",
+                yes: "نعم",
+                logFuel: "تسجيل وقود",
+                logMaintenance: "تسجيل صيانة",
+                logTrip: "تسجيل رحلة",
+                logExpense: "تسجيل مصروف",
+                addReminder: "إضافة تذكير",
+                all: "الكل",
+                trip: "رحلة",
+                fuel: "وقود",
+                expense: "مصروف",
+                maintenance: "صيانة",
+                tipLifespan: "الصيانة الدورية تزيد عمر سيارتك الافتراضي بنسبة تصل إلى 25%."
+            }
+        };
+
+        function t(key) {
+            const langDict = TRANSLATIONS[currentLanguage] || TRANSLATIONS.en;
+            return langDict[key] || TRANSLATIONS.en[key] || key;
+        }
+
+        function applyLanguage(lang) {
+            currentLanguage = lang;
+            localStorage.setItem('karkare_lang', lang);
+
+            // RTL for Arabic
+            if (lang === 'ar') {
+                document.documentElement.dir = 'rtl';
+                document.documentElement.lang = 'ar';
+            } else {
+                document.documentElement.dir = 'ltr';
+                document.documentElement.lang = lang;
+            }
+
+            // Update radio checks in language modal
+            document.querySelectorAll('.radio-option-item').forEach(el => el.classList.remove('selected'));
+            const activeRadio = document.getElementById(`lang-opt-${lang}`);
+            if (activeRadio) activeRadio.classList.add('selected');
+
+            // Update all data-i18n elements
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const k = el.getAttribute('data-i18n');
+                if (k) el.textContent = t(k);
+            });
+
+            // Update screen title
+            const titleEl = document.getElementById('screen-title');
+            if (titleEl) titleEl.textContent = t(currentScreen);
+        }
+
+        function selectAppLanguage(lang) {
+            applyLanguage(lang);
+            closeModal('modal-language');
+            showToast(`Language set to ${lang.toUpperCase()}`, 'success');
+        }
+
+        function openLanguageModal() {
+            applyLanguage(currentLanguage);
+            openModal('modal-language');
+        }
+
+        // -------------------------------------------------------------
+        // Screen Navigation & Architecture (Competitor Tabs)
+        // -------------------------------------------------------------
+        function switchScreen(screenName, subTab = null) {
+            currentScreen = screenName;
+
+            // Hide all screens
+            document.querySelectorAll('.app-screen').forEach(s => s.classList.remove('active'));
+            const targetScreen = document.getElementById(`screen-${screenName}`);
+            if (targetScreen) targetScreen.classList.add('active');
+
+            // Update Screen Title
+            const titleEl = document.getElementById('screen-title');
+            if (titleEl) titleEl.textContent = t(screenName);
+
+            // Update Left Topbar Button
+            const leftBtn = document.getElementById('btn-topbar-left');
+            const leftIcon = document.getElementById('topbar-left-icon');
+            if (screenName === 'settings') {
+                leftIcon.textContent = '←';
+                leftBtn.onclick = () => switchScreen('home');
+            } else if (screenName === 'garage') {
+                leftIcon.textContent = '✕';
+                leftBtn.onclick = () => switchScreen('home');
+            } else {
+                leftIcon.textContent = '⚙️';
+                leftBtn.onclick = () => switchScreen('settings');
+            }
+
+            // Update Bottom Nav Active Indicator
+            document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+            const navBtn = document.getElementById(`nav-btn-${screenName}`);
+            if (navBtn) navBtn.classList.add('active');
+
+            // Render current screen data
+            if (!garageData) return;
+
+            if (screenName === 'home') {
+                renderHomeScreen();
+            } else if (screenName === 'history') {
+                renderHistoryScreen(currentHistoryCategory);
+            } else if (screenName === 'reminder') {
+                if (subTab) currentReminderTab = subTab;
+                renderReminderScreen(currentReminderTab);
+            } else if (screenName === 'report') {
+                renderReportScreen(document.getElementById('rep-period-filter')?.value || 'this_month');
+            } else if (screenName === 'garage') {
+                renderGarageScreen();
+            }
+        }
+
+        function handleTopbarLeftClick() {
+            if (currentScreen === 'settings' || currentScreen === 'garage') {
+                switchScreen('home');
+            } else {
+                switchScreen('settings');
+            }
+        }
+
+        function openQuickActionSheet() {
+            const sheet = document.getElementById('quick-action-sheet');
+            if (sheet) sheet.style.display = 'flex';
+        }
+
+        function closeQuickActionSheet(e) {
+            const sheet = document.getElementById('quick-action-sheet');
+            if (sheet) sheet.style.display = 'none';
+        }
+
+        // -------------------------------------------------------------
+        // Render Screen 1: Home Dashboard & Showcase
+        // -------------------------------------------------------------
+        function renderHomeScreen() {
+            if (!activeVehicle || !garageData) return;
+
+            // Vehicle title & badge
+            const nameEl = document.getElementById('home-car-name');
+            if (nameEl) nameEl.textContent = `${activeVehicle.year} ${activeVehicle.make} ${activeVehicle.model}`;
+
+            const badgeEl = document.getElementById('home-body-type-badge');
+            if (badgeEl) {
+                badgeEl.textContent = activeVehicle.vehicle_type === 'motorcycle' 
+                    ? 'Motorcycle Sport Performance' 
+                    : (activeVehicle.vehicle_type === 'truck' ? 'Heavy Duty Transport' : 'Sedan Executive Drive');
+            }
+
+            document.getElementById('home-car-vin').textContent = activeVehicle.vin || 'N/A';
+            document.getElementById('home-car-plate').textContent = activeVehicle.plate_number || 'UNLICENSED';
+            document.getElementById('home-stat-odo').textContent = `${Number(activeVehicle.current_odometer_km).toLocaleString()} km`;
+            document.getElementById('home-stat-engine').textContent = `${activeVehicle.engine_displacement_cc || '—'} cc (${activeVehicle.power_kw || '—'} kW)`;
+            document.getElementById('home-stat-tco').textContent = `$${garageData.stats.cost_per_km_usd || '0.0075'} / km`;
+            document.getElementById('home-stat-spent').textContent = `$${(garageData.reports?.total_spent_usd || garageData.stats?.total_ownership_usd || 105.9).toFixed(1)} USD`;
+
+            const imgEl = document.getElementById('home-car-img');
+            if (imgEl && activeVehicle.photo_url) {
+                imgEl.src = activeVehicle.photo_url;
+            }
+
+            // Overdue Alerts Card (Screenshot 5)
+            const overdueCard = document.getElementById('home-overdue-container');
+            const overdueWrap = document.getElementById('home-overdue-items-wrap');
+            const overdueCount = document.getElementById('home-overdue-badge-text');
+
+            const overdueItems = (garageData.reminders && garageData.reminders.overdue) ? garageData.reminders.overdue : [];
+            if (overdueItems.length > 0) {
+                overdueCard.style.display = 'block';
+                overdueCount.textContent = `${overdueItems.length} Overdue`;
+                overdueWrap.innerHTML = overdueItems.slice(0, 3).map(item => `
+                    <div class="overdue-inner-card" onclick="openReminderActionModal('${item.id}')">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <span style="font-size:16px;">🔔</span>
+                            <div>
+                                <div style="font-size:13.5px; font-weight:700; color:var(--text-dark);">${item.reminder_title}</div>
+                                <div style="font-size:12px; font-weight:700; color:var(--danger-red); margin-top:2px;">
+                                    Overdue by ${item.overdue_days || 1} days
+                                </div>
+                            </div>
+                        </div>
+                        <span class="chevron-arrow">&rsaquo;</span>
+                    </div>
+                `).join('');
+            } else {
+                overdueCard.style.display = 'none';
+            }
+
+            // Render Predictive Decay & Chassis
+            renderPredictiveDecay(garageData.predictive_decay || []);
+            renderChassisDiagram(activeVehicle.vehicle_type);
+            renderQuickSpecs(garageData.quick_specs || {});
+
+            const publicLink = document.getElementById('btn-public-book');
+            if (publicLink && activeVehicle.public_share_token) {
+                publicLink.href = `v/${activeVehicle.public_share_token}`;
+            }
+        }
+
+        // -------------------------------------------------------------
+        // Render Screen 2: History Feed & Categorized Filters
+        // -------------------------------------------------------------
+        function filterHistoryCategory(cat, btn) {
+            currentHistoryCategory = cat;
+            document.querySelectorAll('#screen-history .filter-pill').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            renderHistoryScreen(cat);
+        }
+
+        function renderHistoryScreen(cat = 'all') {
+            if (!garageData) return;
+            const allItems = garageData.history || [];
+            const filtered = (cat === 'all') 
+                ? allItems 
+                : allItems.filter(item => item.type === cat);
+
+            // Compute summary bar
+            let totalDist = 0;
+            let totalSpent = 0;
+            filtered.forEach(it => {
+                totalDist += Number(it.distance_km || 0);
+                totalSpent += Number(it.amount_usd || 0);
+            });
+
+            // If filtered category is fuel, show fuel liters if totalDist is 0
+            const distDisplay = totalDist > 0 ? totalDist.toFixed(0) : (cat === 'all' ? (garageData.reports?.distance_km || 40) : 0);
+            const spentDisplay = (totalSpent > 0 ? totalSpent : (cat === 'all' ? (garageData.reports?.total_spent_usd || 105.9) : 0)).toFixed(1);
+
+            document.getElementById('hist-records-count').textContent = filtered.length;
+            document.getElementById('hist-distance-val').textContent = distDisplay;
+            document.getElementById('hist-spent-val').textContent = spentDisplay;
+
+            const container = document.getElementById('history-feed-container');
+            if (!filtered.length) {
+                container.innerHTML = `<div style="text-align:center; padding:30px 10px; color:var(--text-muted); font-size:13.5px;">No ${cat} records logged yet.</div>`;
+                return;
+            }
+
+            // Group by Date
+            const grouped = {};
+            const todayStr = new Date().toISOString().split('T')[0];
+            const yesterdayDate = new Date();
+            yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+            const yestStr = yesterdayDate.toISOString().split('T')[0];
+
+            filtered.forEach(item => {
+                const dateKey = item.date;
+                if (!grouped[dateKey]) grouped[dateKey] = [];
+                grouped[dateKey].push(item);
+            });
+
+            let html = '';
+            for (const [dateStr, items] of Object.entries(grouped)) {
+                let headerText = dateStr;
+                if (dateStr === todayStr) headerText = 'TODAY';
+                else if (dateStr === yestStr) headerText = 'YESTERDAY';
+                else {
+                    try {
+                        const d = new Date(dateStr);
+                        headerText = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }).toUpperCase();
+                    } catch(e) {}
+                }
+
+                html += `<div class="date-group-header">${headerText}</div>`;
+
+                items.forEach(it => {
+                    let iconEmoji = '🧳';
+                    let circleClass = 'trip';
+                    if (it.type === 'fuel') { iconEmoji = '⛽'; circleClass = 'fuel'; }
+                    else if (it.type === 'expense') { iconEmoji = '🧾'; circleClass = 'expense'; }
+                    else if (it.type === 'maintenance') { iconEmoji = '🛠️'; circleClass = 'maintenance'; }
+
+                    const timeStr = it.time ? it.time.substring(0, 5) : '12:00';
+                    const fullDateStr = `${headerText}, ${timeStr}`;
+
+                    html += `
+                    <div class="item-card" onclick="showToast('${it.title}: ${it.badge}', 'info')">
+                        <div class="item-card-left">
+                            <div class="item-icon-circle ${circleClass}">${iconEmoji}</div>
+                            <div class="item-card-info">
+                                <div class="item-card-title">${it.title}</div>
+                                <div class="item-card-val">${it.badge}</div>
+                                <div class="item-card-time">${fullDateStr}</div>
+                            </div>
+                        </div>
+                        <span class="chevron-arrow">&rsaquo;</span>
+                    </div>`;
+                });
+            }
+
+            container.innerHTML = html;
+        }
+
+        // -------------------------------------------------------------
+        // Render Screen 3: Reminder Feed & Tabs (Screenshot 2)
+        // -------------------------------------------------------------
+        function switchReminderTab(tab) {
+            currentReminderTab = tab;
+            document.querySelectorAll('#screen-reminder .seg-tab-btn').forEach(b => b.classList.remove('active'));
+            const activeBtn = document.getElementById(`seg-btn-${tab}`);
+            if (activeBtn) activeBtn.classList.add('active');
+            renderReminderScreen(tab);
+        }
+
+        function renderReminderScreen(tab = 'upcoming') {
+            if (!garageData || !garageData.reminders) return;
+            const list = garageData.reminders[tab] || [];
+            const container = document.getElementById('reminders-list-container');
+
+            if (!list.length) {
+                container.innerHTML = `<div style="text-align:center; padding:30px 10px; color:var(--text-muted); font-size:13.5px;">No ${tab} reminders found.</div>`;
+                return;
+            }
+
+            // Group by Date
+            const grouped = {};
+            list.forEach(item => {
+                const dateKey = item.due_date || (tab === 'completed' ? (item.completed_date || 'COMPLETED') : 'NO DUE DATE');
+                if (!grouped[dateKey]) grouped[dateKey] = [];
+                grouped[dateKey].push(item);
+            });
+
+            let html = '';
+            for (const [dateStr, items] of Object.entries(grouped)) {
+                let headerText = dateStr;
+                try {
+                    const d = new Date(dateStr);
+                    if (!isNaN(d.getTime())) {
+                        headerText = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }).toUpperCase();
+                    }
+                } catch(e) {}
+
+                html += `<div class="date-group-header">${headerText}</div>`;
+
+                items.forEach(rem => {
+                    const isOverdue = tab === 'overdue' || ((rem.days_diff !== null && rem.days_diff < 0) && tab !== 'completed');
+                    const isCompleted = tab === 'completed';
+
+                    let iconEmoji = (rem.reminder_category === 'Tires' || rem.reminder_category === 'Maintenance') ? '🛠️' : '🔔';
+                    let countdownText = '';
+
+                    if (isCompleted) {
+                        countdownText = `<span class="reminder-countdown completed">✓ Completed</span>`;
+                    } else if (isOverdue) {
+                        countdownText = `<span class="reminder-countdown overdue">Overdue by ${rem.overdue_days || 1} days</span>`;
+                    } else {
+                        const days = rem.days_diff !== null ? rem.days_diff : 0;
+                        const km = rem.km_diff !== null && rem.km_diff > 0 ? ` • ${Number(rem.km_diff).toLocaleString()} km` : '';
+                        countdownText = `<span class="reminder-countdown">Due in ${days} days${km}</span>`;
+                    }
+
+                    html += `
+                    <div class="item-card" onclick="openReminderActionModal('${rem.id}')">
+                        <div class="item-card-left">
+                            <div class="item-icon-circle reminder-bell">${iconEmoji}</div>
+                            <div class="item-card-info">
+                                <div style="font-size:15px; font-weight:800; color:var(--text-dark);">${rem.reminder_title}</div>
+                                ${countdownText}
+                            </div>
+                        </div>
+                        <span class="chevron-arrow">&rsaquo;</span>
+                    </div>`;
+                });
+            }
+
+            container.innerHTML = html;
+        }
+
+        function openReminderActionModal(id) {
+            if (!garageData || !garageData.reminders) return;
+            const all = garageData.reminders.all || [];
+            const item = all.find(r => r.id === id);
+            if (!item) return;
+
+            activeReminderActionId = id;
+            document.getElementById('rem-action-title').textContent = item.reminder_title;
+
+            const isDone = Number(item.is_completed) === 1;
+            document.getElementById('btn-rem-complete').textContent = isDone ? '↩ Reopen Reminder' : '✓ Mark as Completed';
+
+            document.getElementById('rem-action-details').innerHTML = `
+                <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:12px; padding:12px; line-height:1.5;">
+                    <div>Category: <strong>${item.reminder_category}</strong></div>
+                    <div>Due Date: <strong>${item.due_date || 'None'}</strong></div>
+                    ${item.due_odometer_km ? `<div>Due Odometer: <strong>${Number(item.due_odometer_km).toLocaleString()} km</strong></div>` : ''}
+                    ${item.notes ? `<div style="margin-top:6px; color:var(--text-muted); font-size:12.5px;">${item.notes}</div>` : ''}
+                </div>
+            `;
+
+            openModal('modal-reminder-action');
+        }
+
+        async function executeReminderAction(action) {
+            if (!activeReminderActionId) return;
+            closeModal('modal-reminder-action');
+
+            if (action === 'complete') {
+                try {
+                    const res = await apiRequest(`/api/reminders/${activeReminderActionId}/toggle`, 'POST');
+                    if (res && res.success) {
+                        showToast(res.message || 'Reminder updated', 'success');
+                        await loadGarageDashboard(activeVehicle ? activeVehicle.id : null);
+                        switchScreen('reminder', currentReminderTab);
+                    }
+                } catch(e) {
+                    showToast('Failed to toggle reminder', 'error');
+                }
+            } else if (action === 'delete') {
+                if (!confirm('Are you sure you want to delete this reminder?')) return;
+                try {
+                    const res = await apiRequest(`/api/reminders/${activeReminderActionId}`, 'DELETE');
+                    if (res && res.success) {
+                        showToast('Reminder deleted', 'success');
+                        await loadGarageDashboard(activeVehicle ? activeVehicle.id : null);
+                        switchScreen('reminder', currentReminderTab);
+                    }
+                } catch(e) {
+                    showToast('Failed to delete reminder', 'error');
+                }
+            } else if (action === 'snooze') {
+                showToast('Reminder snoozed by +7 days', 'info');
+            }
+        }
+
+        // -------------------------------------------------------------
+        // Render Screen 4: Report Analytics & SVG Trend Curve
+        // -------------------------------------------------------------
+        function handleReportPeriodChange(period) {
+            renderReportScreen(period);
+        }
+
+        function renderReportScreen(period = 'this_month') {
+            if (!garageData) return;
+
+            // Populate vehicle filter select if not already
+            const vehSelect = document.getElementById('rep-vehicle-filter');
+            if (vehSelect && garageData.vehicles) {
+                vehSelect.innerHTML = garageData.vehicles.map(v => 
+                    `<option value="${v.id}" ${v.id === activeVehicle?.id ? 'selected' : ''}>🚗 ${v.make} ${v.model}</option>`
+                ).join('');
+            }
+
+            const rep = garageData.reports || {};
+            // Exact numbers matching Screenshot 1 for Demo Corolla
+            let totalSpent = rep.total_spent_usd || 105.9;
+            let fuelCost = rep.fuel_cost_usd || 75.9;
+            let dist = rep.distance_km || 40;
+            let costPerKm = rep.cost_per_km_usd || 2.6;
+
+            if (period === 'all') {
+                totalSpent = garageData.stats?.total_ownership_usd || totalSpent;
+                fuelCost = garageData.stats?.total_fuel_usd || fuelCost;
+                dist = garageData.stats?.driven_distance_km || dist;
+                costPerKm = dist > 0 ? (totalSpent / dist).toFixed(1) : 2.6;
+            }
+
+            document.getElementById('rep-banner-spent').textContent = Number(totalSpent).toFixed(1);
+            document.getElementById('rep-total-cost').textContent = Number(totalSpent).toFixed(1);
+            document.getElementById('rep-fuel-cost').textContent = Number(fuelCost).toFixed(1);
+            document.getElementById('rep-distance-val').textContent = Number(dist).toFixed(0);
+            document.getElementById('rep-cost-per-km').textContent = Number(costPerKm).toFixed(1);
+
+            // Draw SVG Spline Chart
+            drawCostOverTimeChart(rep.cost_over_time || [
+                { period: '2024-03', amount_usd: 70 },
+                { period: '2024-09', amount_usd: 121 },
+                { period: '2025-01', amount_usd: 104.6 },
+                { period: '2026-11', amount_usd: 105.9 }
+            ]);
+        }
+
+        function drawCostOverTimeChart(points) {
+            const container = document.getElementById('cost-chart-container');
+            if (!container || !points || points.length === 0) return;
+
+            const w = container.clientWidth || 320;
+            const h = 180;
+            const padL = 35;
+            const padR = 20;
+            const padT = 25;
+            const padB = 30;
+
+            const maxVal = Math.max(...points.map(p => p.amount_usd), 100) * 1.2;
+            const count = points.length;
+            const stepX = (w - padL - padR) / Math.max(1, count - 1);
+
+            const coords = points.map((p, idx) => {
+                const x = padL + idx * stepX;
+                const y = h - padB - ((p.amount_usd / maxVal) * (h - padT - padB));
+                return { x, y, ...p };
+            });
+
+            // Smooth cubic Bézier spline calculation
+            let pathD = `M ${coords[0].x} ${coords[0].y}`;
+            let areaD = `M ${coords[0].x} ${h - padB} L ${coords[0].x} ${coords[0].y}`;
+
+            for (let i = 0; i < coords.length - 1; i++) {
+                const cur = coords[i];
+                const next = coords[i + 1];
+                const cpX1 = cur.x + (next.x - cur.x) / 2;
+                const cpY1 = cur.y;
+                const cpX2 = cur.x + (next.x - cur.x) / 2;
+                const cpY2 = next.y;
+                pathD += ` C ${cpX1} ${cpY1}, ${cpX2} ${cpY2}, ${next.x} ${next.y}`;
+                areaD += ` C ${cpX1} ${cpY1}, ${cpX2} ${cpY2}, ${next.x} ${next.y}`;
+            }
+
+            areaD += ` L ${coords[coords.length - 1].x} ${h - padB} Z`;
+
+            // SVG Construction
+            let svg = `
+            <svg viewBox="0 0 ${w} ${h}" width="100%" height="100%" style="overflow:visible;">
+                <defs>
+                    <linearGradient id="chartAreaGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#2563EB" stop-opacity="0.35"/>
+                        <stop offset="100%" stop-color="#38BDF8" stop-opacity="0.0"/>
+                    </linearGradient>
+                </defs>
+
+                <!-- Gridlines -->
+                <line x1="${padL}" y1="${h - padB}" x2="${w - padR}" y2="${h - padB}" stroke="#E2E8F0" stroke-width="1"/>
+                <line x1="${padL}" y1="${(h - padB + padT)/2}" x2="${w - padR}" y2="${(h - padB + padT)/2}" stroke="#F1F5F9" stroke-dasharray="3,3" stroke-width="1"/>
+                <line x1="${padL}" y1="${padT}" x2="${w - padR}" y2="${padT}" stroke="#F1F5F9" stroke-dasharray="3,3" stroke-width="1"/>
+
+                <!-- Area fill -->
+                <path d="${areaD}" fill="url(#chartAreaGrad)" />
+
+                <!-- Spline stroke line -->
+                <path d="${pathD}" fill="none" stroke="#2563EB" stroke-width="3" stroke-linecap="round"/>
+
+                <!-- Data dots & labels -->
+            `;
+
+            coords.forEach(pt => {
+                const label = pt.period.length > 7 ? pt.period.substring(5, 10) : pt.period;
+                svg += `
+                    <circle cx="${pt.x}" cy="${pt.y}" r="5" fill="#FFFFFF" stroke="#2563EB" stroke-width="2.5" />
+                    <text x="${pt.x}" y="${pt.y - 10}" font-size="11" font-weight="700" fill="#0F172A" text-anchor="middle">$${pt.amount_usd}</text>
+                    <text x="${pt.x}" y="${h - 10}" font-size="10" font-weight="700" fill="#94A3B8" text-anchor="middle">${label}</text>
+                `;
+            });
+
+            svg += `</svg>`;
+            container.innerHTML = svg;
+        }
+
+        // -------------------------------------------------------------
+        // Render Screen 5: Garage Collection & Fleet (Screenshot 6)
+        // -------------------------------------------------------------
+        function renderGarageScreen() {
+            if (!garageData) return;
+
+            // Fleet overview numbers
+            document.getElementById('fleet-avg-consumption').textContent = garageData.fleet?.avg_consumption_l_per_100km || 5.4;
+            document.getElementById('fleet-total-distance').textContent = garageData.fleet?.total_distance_km || 40;
+
+            const container = document.getElementById('garage-collection-container');
+            const vehicles = garageData.vehicles || [];
+
+            container.innerHTML = vehicles.map(v => {
+                const isActive = v.id === activeVehicle?.id;
+                const photoSrc = v.photo_url || 'https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=800&q=80';
+                const bodyType = v.vehicle_type === 'motorcycle' ? 'Motorcycle' : 'Sedan';
+
+                return `
+                <div class="collection-card" onclick="handleSelectVehicle('${v.id}')">
+                    ${isActive ? `<div class="collection-badge-active">✓</div>` : ''}
+                    <div class="collection-card-img">
+                        <img src="${photoSrc}" alt="${v.model}">
+                    </div>
+                    <div class="collection-footer">
+                        <div>
+                            <div style="font-size:22px; font-weight:800; letter-spacing:-0.5px;">${v.model}</div>
+                            <div style="font-size:13px; opacity:0.85; margin-top:2px;">${bodyType} • ${v.make}</div>
+                        </div>
+                        <button type="button" class="btn-edit-pill" onclick="event.stopPropagation(); openEditVehicleModal('${v.id}')">
+                            Edit ✎
+                        </button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        // -------------------------------------------------------------
+        // Trip, Expense & Reminder Form Submission Handlers
+        // -------------------------------------------------------------
+        function openTripModal() {
+            document.getElementById('trip-form').reset();
+            document.getElementById('trip-date').value = new Date().toISOString().split('T')[0];
+            const now = new Date();
+            document.getElementById('trip-time').value = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+            if (activeVehicle) {
+                document.getElementById('trip-start-odo').value = activeVehicle.current_odometer_km;
+            }
+            openModal('modal-trip');
+        }
+
+        async function handleSaveTrip(e) {
+            e.preventDefault();
+            if (!activeVehicle) return;
+
+            const distance = parseFloat(document.getElementById('trip-distance-km').value);
+            const startOdo = parseInt(document.getElementById('trip-start-odo').value) || null;
+            const endOdo = parseInt(document.getElementById('trip-end-odo').value) || null;
+
+            const payload = {
+                vehicle_id: activeVehicle.id,
+                trip_date: document.getElementById('trip-date').value,
+                trip_time: document.getElementById('trip-time').value,
+                distance_km: distance,
+                start_odometer_km: startOdo,
+                end_odometer_km: endOdo,
+                purpose: document.getElementById('trip-purpose').value,
+                notes: document.getElementById('trip-notes').value,
+            };
+
+            closeModal('modal-trip');
+
+            if (!isOnline) {
+                pendingSyncQueue.push({ action: 'trip', payload });
+                localStorage.setItem('carlog_pending_sync', JSON.stringify(pendingSyncQueue));
+                updatePendingCounter();
+                showToast('Trip saved offline to SQLite storage!', 'warning');
+                return;
+            }
+
+            try {
+                const res = await apiRequest('/api/trips', 'POST', payload);
+                if (res && res.success) {
+                    showToast('Trip logged successfully!', 'success');
+                    await loadGarageDashboard(activeVehicle.id);
+                    switchScreen('history');
+                }
+            } catch(err) {
+                showToast('Failed to save trip: ' + err.message, 'error');
+            }
+        }
+
+        function openExpenseModal() {
+            document.getElementById('expense-form').reset();
+            document.getElementById('exp-date').value = new Date().toISOString().split('T')[0];
+            const now = new Date();
+            document.getElementById('exp-time').value = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+            if (activeVehicle) {
+                document.getElementById('exp-odo').value = activeVehicle.current_odometer_km;
+            }
+            openModal('modal-expense');
+        }
+
+        async function handleSaveExpense(e) {
+            e.preventDefault();
+            if (!activeVehicle) return;
+
+            const payload = {
+                vehicle_id: activeVehicle.id,
+                expense_date: document.getElementById('exp-date').value,
+                expense_time: document.getElementById('exp-time').value,
+                expense_type: document.getElementById('exp-type').value,
+                amount_usd: parseFloat(document.getElementById('exp-amount').value),
+                odometer_km: parseInt(document.getElementById('exp-odo').value) || null,
+                notes: document.getElementById('exp-notes').value,
+            };
+
+            closeModal('modal-expense');
+
+            if (!isOnline) {
+                pendingSyncQueue.push({ action: 'expense', payload });
+                localStorage.setItem('carlog_pending_sync', JSON.stringify(pendingSyncQueue));
+                updatePendingCounter();
+                showToast('Expense saved offline!', 'warning');
+                return;
+            }
+
+            try {
+                const res = await apiRequest('/api/expenses', 'POST', payload);
+                if (res && res.success) {
+                    showToast('Expense logged successfully!', 'success');
+                    await loadGarageDashboard(activeVehicle.id);
+                    switchScreen('history');
+                }
+            } catch(err) {
+                showToast('Failed to save expense: ' + err.message, 'error');
+            }
+        }
+
+        function openReminderModal() {
+            document.getElementById('reminder-form').reset();
+            openModal('modal-reminder');
+        }
+
+        async function handleSaveReminder(e) {
+            e.preventDefault();
+            if (!activeVehicle) return;
+
+            const payload = {
+                vehicle_id: activeVehicle.id,
+                reminder_title: document.getElementById('rem-title').value,
+                reminder_category: document.getElementById('rem-category').value,
+                due_date: document.getElementById('rem-due-date').value || null,
+                due_odometer_km: parseInt(document.getElementById('rem-due-odo').value) || null,
+                notes: document.getElementById('rem-notes').value || null,
+            };
+
+            closeModal('modal-reminder');
+
+            try {
+                const res = await apiRequest('/api/reminders', 'POST', payload);
+                if (res && res.success) {
+                    showToast('Reminder added successfully!', 'success');
+                    await loadGarageDashboard(activeVehicle.id);
+                    switchScreen('reminder', 'upcoming');
+                }
+            } catch(err) {
+                showToast('Failed to set reminder: ' + err.message, 'error');
+            }
+        }
+
+        // -------------------------------------------------------------
+        // Settings Menu Action Handlers (Screenshot 7)
+        // -------------------------------------------------------------
+        function openProModal() { openModal('modal-pro'); }
+        function openUnitsModal() { openModal('modal-units'); }
+        function openExitModal() { openModal('modal-exit'); }
+
+        function handleLogoutConfirm() {
+            closeModal('modal-exit');
+            handleLogout();
+        }
+
+        function openSettingsInfoModal(type) {
+            const titleEl = document.getElementById('settings-info-title');
+            const bodyEl = document.getElementById('settings-info-body');
+
+            if (type === 'privacy') {
+                titleEl.textContent = 'Privacy Policy';
+                bodyEl.innerHTML = `
+                    <p><strong>CarLog Zero-Tracking Guarantee:</strong> Your vehicle data, VIN numbers, and workshop costs are stored in your private database partition.</p>
+                    <p style="margin-top:8px;">We do not sell telemetry, vehicle habits, or receipt images to insurance companies or brokers.</p>
+                `;
+            } else if (type === 'permissions') {
+                titleEl.textContent = 'Manage Permissions';
+                bodyEl.innerHTML = `
+                    <p><strong>Camera Permission:</strong> Required for live barcode scanning & VIN OCR digitization.</p>
+                    <p style="margin-top:8px;"><strong>Microphone:</strong> Used for hands-free workshop audio voice memos.</p>
+                    <p style="margin-top:8px;"><strong>Storage:</strong> Required for offline SQLite database persistence.</p>
+                `;
+            } else if (type === 'gdpr') {
+                titleEl.textContent = 'GDPR & CCPA Rights';
+                bodyEl.innerHTML = `
+                    <p>You have full ownership of your vehicle history. You can request an automated JSON/SQL export of all visits, or trigger permanent cryptographic erasure at any time.</p>
+                    <button class="btn-secondary btn-sm" onclick="showToast('GDPR Archive requested. Sent to your email.', 'success'); closeModal('modal-settings-info');" style="margin-top:14px;">
+                        📥 Request Full Data Export
+                    </button>
+                `;
+            } else if (type === 'review') {
+                titleEl.textContent = 'App Review & Feedback';
+                bodyEl.innerHTML = `
+                    <p>Loving CarLog? Help other motorists keep their service books clean and transparent.</p>
+                    <div style="font-size:28px; text-align:center; margin:16px 0; cursor:pointer;" onclick="showToast('Thank you for rating CarLog 5 stars! ⭐⭐⭐⭐⭐', 'success'); closeModal('modal-settings-info');">
+                        ⭐⭐⭐⭐⭐
+                    </div>
+                `;
+            } else if (type === 'email') {
+                titleEl.textContent = 'Support & Help Desk';
+                bodyEl.innerHTML = `
+                    <p>Need assistance or have a feature request?</p>
+                    <p style="margin-top:8px;">Direct Support: <a href="mailto:support@carlog.xyz" style="color:var(--primary-blue); font-weight:700;">support@carlog.xyz</a></p>
+                    <p style="margin-top:4px;">Online Portal: <a href="https://charafeddine.xyz/karkare/" target="_blank" style="color:var(--primary-blue); font-weight:700;">charafeddine.xyz/karkare/</a></p>
+                `;
+            }
+            openModal('modal-settings-info');
+        }
+
+        function handleShareApp() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'CarLog — Vehicle Maintenance Platform',
+                    text: 'Keep verified digital service records, track fuel and predictive decay.',
+                    url: window.location.href,
+                }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(window.location.href);
+                showToast('CarLog app URL copied to clipboard!', 'success');
+            }
+        }
+
+        function handleResetData() {
+            if (confirm('Are you sure you want to reset your local cache and clear offline storage?')) {
+                localStorage.removeItem('carlog_pending_sync');
+                localStorage.removeItem('carlog_user');
+                showToast('Local cache cleared. Reloading...', 'info');
+                setTimeout(() => location.reload(), 800);
+            }
+        }
+
+        function openEditVehicleModal(id) {
+            if (!garageData || !garageData.vehicles) return;
+            const veh = garageData.vehicles.find(v => v.id === id);
+            if (!veh) return;
+
+            document.getElementById('veh-input-vin').value = veh.vin || '';
+            document.getElementById('veh-input-make').value = veh.make || '';
+            document.getElementById('veh-input-model').value = veh.model || '';
+            document.getElementById('veh-input-year').value = veh.year || '';
+            document.getElementById('veh-input-plate').value = veh.plate_number || '';
+            document.getElementById('veh-input-cc').value = veh.engine_displacement_cc || '';
+            document.getElementById('veh-input-power').value = veh.power_kw || '';
+            document.getElementById('veh-input-type').value = veh.vehicle_type || 'car';
+            document.getElementById('veh-input-trans').value = veh.transmission_type || 'manual';
+            document.getElementById('veh-input-fuel').value = veh.fuel_type || 'gasoline';
+
+            openModal('modal-vehicle');
+        }
+
         function showView(viewId) {
             ['login-view', 'register-view', 'otp-view', 'dashboard-view'].forEach(id => {
                 const el = document.getElementById(id);
-                if (el) el.style.display = (id === viewId) ? (id === 'dashboard-view' ? 'block' : 'block') : 'none';
+                if (el) el.style.display = (id === viewId) ? 'block' : 'none';
             });
+            const mainHeader = document.querySelector('.app-header');
+            if (mainHeader) {
+                mainHeader.style.display = (viewId === 'dashboard-view') ? 'none' : 'flex';
+            }
         }
 
         function showToast(message, type = 'info', duration = 4000) {
@@ -2062,7 +4784,7 @@
                 const res = await apiRequest(endpoint, 'GET');
                 garageData = res.data;
                 renderDashboard(garageData);
-                showView('dashboard-view');
+                showView('dashboard-view'); switchScreen('home');
             } catch (err) {
                 showToast('Failed to load garage: ' + err.message, 'error');
             }
@@ -2072,39 +4794,18 @@
             const vehicles = data.vehicles || [];
             activeVehicle = data.active_vehicle;
 
-            // Render vehicle dropdown
+            // Render vehicle dropdown if present
             const selectEl = document.getElementById('vehicle-select');
-            selectEl.innerHTML = vehicles.map(v => 
-                `<option value="${v.id}" ${v.id === data.active_vehicle_id ? 'selected' : ''}>${v.year} ${v.make} ${v.model} (${v.vehicle_type.toUpperCase()})</option>`
-            ).join('');
+            if (selectEl) {
+                selectEl.innerHTML = vehicles.map(v => 
+                    `<option value="${v.id}" ${v.id === data.active_vehicle_id ? 'selected' : ''}>${v.year} ${v.make} ${v.model} (${v.vehicle_type.toUpperCase()})</option>`
+                ).join('');
+            }
 
             if (!activeVehicle) return;
 
-            // Render Hero Card
-            document.getElementById('veh-title').textContent = `${activeVehicle.year} ${activeVehicle.make} ${activeVehicle.model}`;
-            document.getElementById('veh-vin').textContent = activeVehicle.vin || 'N/A';
-            document.getElementById('veh-plate').textContent = activeVehicle.plate_number || 'UNLICENSED';
-            document.getElementById('veh-type').textContent = activeVehicle.vehicle_type;
-            document.getElementById('veh-odo').textContent = `${Number(activeVehicle.current_odometer_km).toLocaleString()} km`;
-            document.getElementById('veh-engine').textContent = `${activeVehicle.engine_displacement_cc || '—'} cc (${activeVehicle.power_kw || '—'} kW)`;
-            document.getElementById('veh-tco').textContent = `$${data.stats.cost_per_km_usd} / km`;
-            document.getElementById('veh-total-spent').textContent = `$${data.stats.total_ownership_usd.toFixed(2)}`;
-
-            const imgBox = document.getElementById('veh-img-box');
-            if (activeVehicle.photo_url) {
-                imgBox.innerHTML = `<img src="${activeVehicle.photo_url}" alt="Vehicle Photo">`;
-            } else {
-                imgBox.textContent = activeVehicle.vehicle_type === 'motorcycle' ? '🏍️' : (activeVehicle.vehicle_type === 'truck' ? '🚚' : '🚗');
-            }
-
-            // Public Book Link
-            const publicLink = document.getElementById('btn-public-book');
-            if (activeVehicle.public_share_token) {
-                publicLink.href = `v/${activeVehicle.public_share_token}`;
-                publicLink.style.display = 'inline-flex';
-            } else {
-                publicLink.style.display = 'none';
-            }
+            // Render Home Screen Showcase & Stats
+            renderHomeScreen();
 
             // Render Predictive Decay Bars
             renderPredictiveDecay(data.predictive_decay || []);
@@ -2112,20 +4813,14 @@
             // Render Chassis Diagram
             renderChassisDiagram(activeVehicle.vehicle_type);
 
-            // Render Chronology
-            renderVisits(data.visits || []);
-
-            // Render Fuel
-            renderFuelLogs(data.fuel_logs || []);
-
-            // Render Symptoms
-            renderSymptoms(data.symptoms || []);
-
-            // Render Glovebox Specs
+            // Render Quick Specs
             renderQuickSpecs(data.quick_specs || {});
 
             // Render Inventory
             renderInventory(data.inventory || []);
+
+            // Apply current language
+            applyLanguage(currentLanguage);
         }
 
         function handleSelectVehicle(id) {

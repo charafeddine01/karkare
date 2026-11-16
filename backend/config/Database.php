@@ -106,6 +106,7 @@ class Database {
                             $pdo = new PDO($dsn, $auth['user'], $auth['pass'], $options);
                             self::$driver = 'mysql';
                             self::autoProvisionMysql($pdo);
+                            self::ensureSchemaMigrations($pdo, 'mysql');
                             self::$instance = $pdo;
                             self::$lastError = "Connected via: {$dsn} (user: {$auth['user']})";
                             return self::$instance;
@@ -144,6 +145,7 @@ class Database {
                         ]);
                         self::$instance->exec('PRAGMA foreign_keys = ON;');
                         self::$driver = 'sqlite';
+                        self::ensureSchemaMigrations(self::$instance, 'sqlite');
                         return self::$instance;
                     } catch (PDOException $e) {
                         // continue to next path
@@ -263,6 +265,177 @@ SQL;
             }
         } catch (\Throwable $e) {
             error_log("autoProvisionMysql note: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Ensures newly added tables (trips, expenses, reminders) exist and seeds demo data
+     */
+    public static function ensureSchemaMigrations(PDO $pdo, string $driver): void {
+        try {
+            if ($driver === 'sqlite') {
+                $pdo->exec("
+                    CREATE TABLE IF NOT EXISTS trip_logs (
+                        id VARCHAR(36) PRIMARY KEY,
+                        vehicle_id VARCHAR(36) NOT NULL,
+                        trip_date DATE NOT NULL,
+                        trip_time TIME NULL,
+                        start_odometer_km INTEGER NULL,
+                        end_odometer_km INTEGER NULL,
+                        distance_km REAL NOT NULL,
+                        purpose VARCHAR(50) NOT NULL DEFAULT 'Commute',
+                        notes TEXT NULL,
+                        is_deleted INTEGER NOT NULL DEFAULT 0,
+                        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                    );
+                    CREATE TABLE IF NOT EXISTS general_expenses (
+                        id VARCHAR(36) PRIMARY KEY,
+                        vehicle_id VARCHAR(36) NOT NULL,
+                        expense_date DATE NOT NULL,
+                        expense_time TIME NULL,
+                        expense_type VARCHAR(50) NOT NULL DEFAULT 'Parking',
+                        amount_usd REAL NOT NULL,
+                        odometer_km INTEGER NULL,
+                        notes TEXT NULL,
+                        receipt_photo_url VARCHAR(500) NULL,
+                        is_deleted INTEGER NOT NULL DEFAULT 0,
+                        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                    );
+                    CREATE TABLE IF NOT EXISTS vehicle_reminders (
+                        id VARCHAR(36) PRIMARY KEY,
+                        vehicle_id VARCHAR(36) NOT NULL,
+                        reminder_title VARCHAR(150) NOT NULL,
+                        reminder_category VARCHAR(50) NOT NULL DEFAULT 'Maintenance',
+                        due_date DATE NULL,
+                        due_odometer_km INTEGER NULL,
+                        is_completed INTEGER NOT NULL DEFAULT 0,
+                        completed_date DATE NULL,
+                        notes TEXT NULL,
+                        is_deleted INTEGER NOT NULL DEFAULT 0,
+                        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                    );
+                ");
+            } else {
+                $pdo->exec("
+                    CREATE TABLE IF NOT EXISTS trip_logs (
+                        id VARCHAR(36) PRIMARY KEY,
+                        vehicle_id VARCHAR(36) NOT NULL,
+                        trip_date DATE NOT NULL,
+                        trip_time TIME NULL,
+                        start_odometer_km INT UNSIGNED NULL,
+                        end_odometer_km INT UNSIGNED NULL,
+                        distance_km DECIMAL(8,2) NOT NULL,
+                        purpose VARCHAR(50) NOT NULL DEFAULT 'Commute',
+                        notes TEXT NULL,
+                        is_deleted TINYINT(1) NOT NULL DEFAULT 0,
+                        created_at TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP(3),
+                        updated_at TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
+                        INDEX idx_trips_veh_date (vehicle_id, trip_date)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+                    CREATE TABLE IF NOT EXISTS general_expenses (
+                        id VARCHAR(36) PRIMARY KEY,
+                        vehicle_id VARCHAR(36) NOT NULL,
+                        expense_date DATE NOT NULL,
+                        expense_time TIME NULL,
+                        expense_type VARCHAR(50) NOT NULL DEFAULT 'Parking',
+                        amount_usd DECIMAL(10,2) NOT NULL,
+                        odometer_km INT UNSIGNED NULL,
+                        notes TEXT NULL,
+                        receipt_photo_url VARCHAR(500) NULL,
+                        is_deleted TINYINT(1) NOT NULL DEFAULT 0,
+                        created_at TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP(3),
+                        updated_at TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
+                        INDEX idx_expenses_veh_date (vehicle_id, expense_date)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+                    CREATE TABLE IF NOT EXISTS vehicle_reminders (
+                        id VARCHAR(36) PRIMARY KEY,
+                        vehicle_id VARCHAR(36) NOT NULL,
+                        reminder_title VARCHAR(150) NOT NULL,
+                        reminder_category VARCHAR(50) NOT NULL DEFAULT 'Maintenance',
+                        due_date DATE NULL,
+                        due_odometer_km INT UNSIGNED NULL,
+                        is_completed TINYINT(1) NOT NULL DEFAULT 0,
+                        completed_date DATE NULL,
+                        notes TEXT NULL,
+                        is_deleted TINYINT(1) NOT NULL DEFAULT 0,
+                        created_at TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP(3),
+                        updated_at TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
+                        INDEX idx_reminders_veh_status (vehicle_id, is_completed, due_date)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+                ");
+            }
+
+            // Discover demo vehicle ID
+            $firstVeh = $pdo->query("SELECT id FROM vehicles LIMIT 1")->fetchColumn();
+            $demoVehId = $firstVeh ?: 'v-corolla-2022-demo';
+
+            // Ensure demo records exist for the primary vehicle
+            $stmt = $pdo->prepare("SELECT COUNT(*) FROM trip_logs WHERE vehicle_id = ?");
+            $stmt->execute([$demoVehId]);
+            if ((int)$stmt->fetchColumn() === 0) {
+                // Trip logs
+                $insTrip = $pdo->prepare("
+                    INSERT INTO trip_logs (id, vehicle_id, trip_date, trip_time, start_odometer_km, end_odometer_km, distance_km, purpose, notes)
+                    VALUES 
+                    (?, ?, '2026-11-15', '22:28:00', 32432, 32450, 18.00, 'Commute', 'Office return trip via ring highway'),
+                    (?, ?, '2026-11-12', '18:15:00', 32410, 32432, 22.00, 'Personal', 'City center groceries & weekend errands')
+                ");
+                $insTrip->execute(['trip-demo-1', $demoVehId, 'trip-demo-2', $demoVehId]);
+            }
+
+            $stmtExp = $pdo->prepare("SELECT COUNT(*) FROM general_expenses WHERE vehicle_id = ?");
+            $stmtExp->execute([$demoVehId]);
+            if ((int)$stmtExp->fetchColumn() === 0) {
+                $insExp = $pdo->prepare("
+                    INSERT INTO general_expenses (id, vehicle_id, expense_date, expense_time, expense_type, amount_usd, odometer_km, notes)
+                    VALUES 
+                    ('exp-demo-1', ?, '2026-11-13', '22:28:00', 'Parking', 12.00, 32432, 'City center underground garage 4 hrs')
+                ");
+                $insExp->execute([$demoVehId]);
+            }
+
+            $stmtFuel = $pdo->prepare("SELECT COUNT(*) FROM fuel_logs WHERE id = 'fuel-demo-3' OR (vehicle_id = ? AND fill_date LIKE '2026-11-14%')");
+            $stmtFuel->execute([$demoVehId]);
+            if ((int)$stmtFuel->fetchColumn() === 0) {
+                $insertOrIgnore = ($driver === 'sqlite') ? 'INSERT OR IGNORE' : 'INSERT IGNORE';
+                $insFuel = $pdo->prepare("
+                    $insertOrIgnore INTO fuel_logs (id, vehicle_id, fill_date, odometer_km, fuel_liters, price_per_liter_usd, total_cost_usd, is_full_tank)
+                    VALUES 
+                    ('fuel-demo-3', ?, '2026-11-14 22:28:00', 32440, 22.00, 1.40, 30.80, 1)
+                ");
+                $insFuel->execute([$demoVehId]);
+            }
+
+            $stmtRem = $pdo->prepare("SELECT COUNT(*) FROM vehicle_reminders WHERE vehicle_id = ?");
+            $stmtRem->execute([$demoVehId]);
+            if ((int)$stmtRem->fetchColumn() === 0) {
+                // Vehicle Reminders matching Screen 2 and Screen 5
+                $insRem = $pdo->prepare("
+                    INSERT INTO vehicle_reminders (id, vehicle_id, reminder_title, reminder_category, due_date, due_odometer_km, is_completed, notes)
+                    VALUES 
+                    (?, ?, 'Tire pressure check', 'Tires', '2026-11-18', NULL, 0, 'Check all 4 tires cold to 2.3 Bar'),
+                    (?, ?, 'Registration renewal', 'Registration', '2026-11-30', NULL, 0, 'Annual vehicle inspection and registration sticker'),
+                    (?, ?, 'Tire Rotation', 'Tires', '2026-12-06', 35450, 0, 'Front to back diagonal rotation'),
+                    (?, ?, 'General Service', 'Maintenance', '2026-12-31', 36450, 0, 'Comprehensive multi-point inspection and fluid top-up'),
+                    (?, ?, 'Brake inspection', 'Inspection', '2026-11-09', NULL, 0, 'Front and rear pad thickness check (minimum 3mm)'),
+                    (?, ?, 'Insurance renewal', 'Insurance', '2026-11-13', NULL, 0, 'Comprehensive auto insurance premium renewal')
+                ");
+                $insRem->execute([
+                    'rem-demo-1', $demoVehId,
+                    'rem-demo-2', $demoVehId,
+                    'rem-demo-3', $demoVehId,
+                    'rem-demo-4', $demoVehId,
+                    'rem-demo-5', $demoVehId,
+                    'rem-demo-6', $demoVehId,
+                ]);
+            }
+        } catch (\Throwable $e) {
+            error_log('ensureSchemaMigrations note: ' . $e->getMessage());
         }
     }
 }

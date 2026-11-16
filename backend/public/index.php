@@ -309,6 +309,19 @@ $router->post('/api/service-visits', [VehicleController::class, 'createServiceVi
 // Fuel Analytics (Protected)
 $router->post('/api/fuel-logs', [VehicleController::class, 'createFuelLog'], [$authMiddleware]);
 
+// Trip Logging (Feature: Trip Log & History)
+$router->post('/api/trips', [VehicleController::class, 'createTripLog'], [$authMiddleware]);
+$router->delete('/api/trips/{id}', [VehicleController::class, 'deleteTripLog'], [$authMiddleware]);
+
+// General Vehicle Expenses (Parking, Tolls, Wash, Fines, Insurance)
+$router->post('/api/expenses', [VehicleController::class, 'createGeneralExpense'], [$authMiddleware]);
+$router->delete('/api/expenses/{id}', [VehicleController::class, 'deleteGeneralExpense'], [$authMiddleware]);
+
+// Reminders (Upcoming, Overdue, Completed)
+$router->post('/api/reminders', [VehicleController::class, 'createReminder'], [$authMiddleware]);
+$router->post('/api/reminders/{id}/toggle', [VehicleController::class, 'toggleReminder'], [$authMiddleware]);
+$router->delete('/api/reminders/{id}', [VehicleController::class, 'deleteReminder'], [$authMiddleware]);
+
 // Diagnostic Symptoms (Protected)
 $router->post('/api/symptoms', [VehicleController::class, 'createSymptom'], [$authMiddleware]);
 $router->post('/api/symptoms/{id}/resolve', [VehicleController::class, 'resolveSymptom'], [$authMiddleware]);

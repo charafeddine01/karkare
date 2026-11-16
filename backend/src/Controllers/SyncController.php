@@ -44,6 +44,9 @@ class SyncController {
             'diagnostic_symptoms' => [],
             'fuel_logs' => [],
             'garage_inventory' => [],
+            'trip_logs' => [],
+            'general_expenses' => [],
+            'vehicle_reminders' => [],
         ];
 
         $this->db->beginTransaction();
@@ -543,6 +546,144 @@ class SyncController {
                 }
             }
 
+            // 10. Trip Logs
+            if (!empty($payload['trip_logs']) && is_array($payload['trip_logs'])) {
+                $upsertTrip = $this->prepareUpsert(
+                    "INSERT INTO trip_logs (
+                        id, vehicle_id, trip_date, trip_time, start_odometer_km,
+                        end_odometer_km, distance_km, purpose, notes, is_deleted, updated_at
+                    ) VALUES (
+                        :id, :vehicle_id, :trip_date, :trip_time, :start_odometer_km,
+                        :end_odometer_km, :distance_km, :purpose, :notes, :is_deleted, CURRENT_TIMESTAMP(3)
+                    ) ON DUPLICATE KEY UPDATE
+                        trip_date = VALUES(trip_date),
+                        trip_time = VALUES(trip_time),
+                        start_odometer_km = VALUES(start_odometer_km),
+                        end_odometer_km = VALUES(end_odometer_km),
+                        distance_km = VALUES(distance_km),
+                        purpose = VALUES(purpose),
+                        notes = VALUES(notes),
+                        is_deleted = VALUES(is_deleted),
+                        updated_at = CURRENT_TIMESTAMP(3)",
+                    "INSERT OR REPLACE INTO trip_logs (
+                        id, vehicle_id, trip_date, trip_time, start_odometer_km,
+                        end_odometer_km, distance_km, purpose, notes, is_deleted, updated_at
+                    ) VALUES (
+                        :id, :vehicle_id, :trip_date, :trip_time, :start_odometer_km,
+                        :end_odometer_km, :distance_km, :purpose, :notes, :is_deleted, CURRENT_TIMESTAMP
+                    )"
+                );
+
+                foreach ($payload['trip_logs'] as $t) {
+                    $isDeleted = ($t['is_deleted'] ?? 0) || (($t['sync_status'] ?? '') === 'pending_delete') ? 1 : 0;
+                    $upsertTrip->execute([
+                        ':id' => $t['id'],
+                        ':vehicle_id' => $t['vehicle_id'],
+                        ':trip_date' => $t['trip_date'],
+                        ':trip_time' => $t['trip_time'] ?? null,
+                        ':start_odometer_km' => !empty($t['start_odometer_km']) ? (int)$t['start_odometer_km'] : null,
+                        ':end_odometer_km' => !empty($t['end_odometer_km']) ? (int)$t['end_odometer_km'] : null,
+                        ':distance_km' => (float)$t['distance_km'],
+                        ':purpose' => $t['purpose'] ?? 'Commute',
+                        ':notes' => $t['notes'] ?? null,
+                        ':is_deleted' => $isDeleted,
+                    ]);
+                    $syncedIds['trip_logs'][] = $t['id'];
+                }
+            }
+
+            // 11. General Expenses
+            if (!empty($payload['general_expenses']) && is_array($payload['general_expenses'])) {
+                $upsertExp = $this->prepareUpsert(
+                    "INSERT INTO general_expenses (
+                        id, vehicle_id, expense_date, expense_time, expense_type,
+                        amount_usd, odometer_km, notes, receipt_photo_url, is_deleted, updated_at
+                    ) VALUES (
+                        :id, :vehicle_id, :expense_date, :expense_time, :expense_type,
+                        :amount_usd, :odometer_km, :notes, :receipt_photo_url, :is_deleted, CURRENT_TIMESTAMP(3)
+                    ) ON DUPLICATE KEY UPDATE
+                        expense_date = VALUES(expense_date),
+                        expense_time = VALUES(expense_time),
+                        expense_type = VALUES(expense_type),
+                        amount_usd = VALUES(amount_usd),
+                        odometer_km = VALUES(odometer_km),
+                        notes = VALUES(notes),
+                        receipt_photo_url = VALUES(receipt_photo_url),
+                        is_deleted = VALUES(is_deleted),
+                        updated_at = CURRENT_TIMESTAMP(3)",
+                    "INSERT OR REPLACE INTO general_expenses (
+                        id, vehicle_id, expense_date, expense_time, expense_type,
+                        amount_usd, odometer_km, notes, receipt_photo_url, is_deleted, updated_at
+                    ) VALUES (
+                        :id, :vehicle_id, :expense_date, :expense_time, :expense_type,
+                        :amount_usd, :odometer_km, :notes, :receipt_photo_url, :is_deleted, CURRENT_TIMESTAMP
+                    )"
+                );
+
+                foreach ($payload['general_expenses'] as $e) {
+                    $isDeleted = ($e['is_deleted'] ?? 0) || (($e['sync_status'] ?? '') === 'pending_delete') ? 1 : 0;
+                    $upsertExp->execute([
+                        ':id' => $e['id'],
+                        ':vehicle_id' => $e['vehicle_id'],
+                        ':expense_date' => $e['expense_date'],
+                        ':expense_time' => $e['expense_time'] ?? null,
+                        ':expense_type' => $e['expense_type'] ?? 'Parking',
+                        ':amount_usd' => (float)$e['amount_usd'],
+                        ':odometer_km' => !empty($e['odometer_km']) ? (int)$e['odometer_km'] : null,
+                        ':notes' => $e['notes'] ?? null,
+                        ':receipt_photo_url' => $e['receipt_photo_url'] ?? null,
+                        ':is_deleted' => $isDeleted,
+                    ]);
+                    $syncedIds['general_expenses'][] = $e['id'];
+                }
+            }
+
+            // 12. Vehicle Reminders
+            if (!empty($payload['vehicle_reminders']) && is_array($payload['vehicle_reminders'])) {
+                $upsertRem = $this->prepareUpsert(
+                    "INSERT INTO vehicle_reminders (
+                        id, vehicle_id, reminder_title, reminder_category, due_date,
+                        due_odometer_km, is_completed, completed_date, notes, is_deleted, updated_at
+                    ) VALUES (
+                        :id, :vehicle_id, :reminder_title, :reminder_category, :due_date,
+                        :due_odometer_km, :is_completed, :completed_date, :notes, :is_deleted, CURRENT_TIMESTAMP(3)
+                    ) ON DUPLICATE KEY UPDATE
+                        reminder_title = VALUES(reminder_title),
+                        reminder_category = VALUES(reminder_category),
+                        due_date = VALUES(due_date),
+                        due_odometer_km = VALUES(due_odometer_km),
+                        is_completed = VALUES(is_completed),
+                        completed_date = VALUES(completed_date),
+                        notes = VALUES(notes),
+                        is_deleted = VALUES(is_deleted),
+                        updated_at = CURRENT_TIMESTAMP(3)",
+                    "INSERT OR REPLACE INTO vehicle_reminders (
+                        id, vehicle_id, reminder_title, reminder_category, due_date,
+                        due_odometer_km, is_completed, completed_date, notes, is_deleted, updated_at
+                    ) VALUES (
+                        :id, :vehicle_id, :reminder_title, :reminder_category, :due_date,
+                        :due_odometer_km, :is_completed, :completed_date, :notes, :is_deleted, CURRENT_TIMESTAMP
+                    )"
+                );
+
+                foreach ($payload['vehicle_reminders'] as $r) {
+                    $isDeleted = ($r['is_deleted'] ?? 0) || (($r['sync_status'] ?? '') === 'pending_delete') ? 1 : 0;
+                    $upsertRem->execute([
+                        ':id' => $r['id'],
+                        ':vehicle_id' => $r['vehicle_id'],
+                        ':reminder_title' => $r['reminder_title'],
+                        ':reminder_category' => $r['reminder_category'] ?? 'Maintenance',
+                        ':due_date' => $r['due_date'] ?? null,
+                        ':due_odometer_km' => !empty($r['due_odometer_km']) ? (int)$r['due_odometer_km'] : null,
+                        ':is_completed' => (int)($r['is_completed'] ?? 0),
+                        ':completed_date' => $r['completed_date'] ?? null,
+                        ':notes' => $r['notes'] ?? null,
+                        ':is_deleted' => $isDeleted,
+                    ]);
+                    $syncedIds['vehicle_reminders'][] = $r['id'];
+                }
+            }
+
             $this->db->commit();
 
             Response::success([
@@ -644,6 +785,33 @@ class SyncController {
             $stmt->execute($params);
             $inventory = $stmt->fetchAll();
 
+            // 10. Trip Logs
+            $stmt = $this->db->prepare(
+                "SELECT tl.* FROM trip_logs tl 
+                 INNER JOIN vehicles v ON tl.vehicle_id = v.id 
+                 WHERE v.user_id = :user_id {$whereClause} ORDER BY tl.updated_at ASC"
+            );
+            $stmt->execute($params);
+            $tripLogs = $stmt->fetchAll();
+
+            // 11. General Expenses
+            $stmt = $this->db->prepare(
+                "SELECT ge.* FROM general_expenses ge 
+                 INNER JOIN vehicles v ON ge.vehicle_id = v.id 
+                 WHERE v.user_id = :user_id {$whereClause} ORDER BY ge.updated_at ASC"
+            );
+            $stmt->execute($params);
+            $expenses = $stmt->fetchAll();
+
+            // 12. Vehicle Reminders
+            $stmt = $this->db->prepare(
+                "SELECT vr.* FROM vehicle_reminders vr 
+                 INNER JOIN vehicles v ON vr.vehicle_id = v.id 
+                 WHERE v.user_id = :user_id {$whereClause} ORDER BY vr.updated_at ASC"
+            );
+            $stmt->execute($params);
+            $reminders = $stmt->fetchAll();
+
             Response::success([
                 'delta' => [
                     'vehicles' => $vehicles,
@@ -655,6 +823,9 @@ class SyncController {
                     'diagnostic_symptoms' => $symptoms,
                     'fuel_logs' => $fuelLogs,
                     'garage_inventory' => $inventory,
+                    'trip_logs' => $tripLogs,
+                    'general_expenses' => $expenses,
+                    'vehicle_reminders' => $reminders,
                 ],
                 'server_timestamp' => date('Y-m-d H:i:s.v'),
             ], 'Pull sync completed successfully.');

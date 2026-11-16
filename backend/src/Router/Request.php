@@ -122,6 +122,10 @@ class Request {
         return $this->body;
     }
 
+    public function setBody(array $body): void {
+        $this->body = $body;
+    }
+
     public function get(string $key, mixed $default = null): mixed {
         return $this->body[$key] ?? $this->queryParams[$key] ?? $default;
     }

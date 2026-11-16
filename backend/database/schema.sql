@@ -274,7 +274,64 @@ CREATE TABLE obd_codes_catalog (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- -----------------------------------------------------------------------------
--- 13. MariaDB Trigger: trg_learn_part_number (Tier 3 Learning Trigger)
+-- 13. Trip Logs (KM & Purpose Tracking)
+-- -----------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS trip_logs (
+    id VARCHAR(36) PRIMARY KEY,
+    vehicle_id VARCHAR(36) NOT NULL,
+    trip_date DATE NOT NULL,
+    trip_time TIME NULL,
+    start_odometer_km INT UNSIGNED NULL,
+    end_odometer_km INT UNSIGNED NULL,
+    distance_km DECIMAL(8,2) NOT NULL,
+    purpose VARCHAR(50) NOT NULL DEFAULT 'Commute',
+    notes TEXT NULL,
+    is_deleted TINYINT(1) NOT NULL DEFAULT 0,
+    created_at TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP(3),
+    updated_at TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
+    INDEX idx_trips_veh_date (vehicle_id, trip_date)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- -----------------------------------------------------------------------------
+-- 14. General Vehicle Expenses (Parking, Tolls, Wash, Fines, Insurance)
+-- -----------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS general_expenses (
+    id VARCHAR(36) PRIMARY KEY,
+    vehicle_id VARCHAR(36) NOT NULL,
+    expense_date DATE NOT NULL,
+    expense_time TIME NULL,
+    expense_type VARCHAR(50) NOT NULL DEFAULT 'Parking',
+    amount_usd DECIMAL(10,2) NOT NULL,
+    odometer_km INT UNSIGNED NULL,
+    notes TEXT NULL,
+    receipt_photo_url VARCHAR(500) NULL,
+    is_deleted TINYINT(1) NOT NULL DEFAULT 0,
+    created_at TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP(3),
+    updated_at TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
+    INDEX idx_expenses_veh_date (vehicle_id, expense_date)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- -----------------------------------------------------------------------------
+-- 15. Vehicle Reminders (Upcoming, Overdue, Completed with Dual Triggers)
+-- -----------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS vehicle_reminders (
+    id VARCHAR(36) PRIMARY KEY,
+    vehicle_id VARCHAR(36) NOT NULL,
+    reminder_title VARCHAR(150) NOT NULL,
+    reminder_category VARCHAR(50) NOT NULL DEFAULT 'Maintenance',
+    due_date DATE NULL,
+    due_odometer_km INT UNSIGNED NULL,
+    is_completed TINYINT(1) NOT NULL DEFAULT 0,
+    completed_date DATE NULL,
+    notes TEXT NULL,
+    is_deleted TINYINT(1) NOT NULL DEFAULT 0,
+    created_at TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP(3),
+    updated_at TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
+    INDEX idx_reminders_veh_status (vehicle_id, is_completed, due_date)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- -----------------------------------------------------------------------------
+-- 16. MariaDB Trigger: trg_learn_part_number (Tier 3 Learning Trigger)
 -- -----------------------------------------------------------------------------
 DELIMITER $$
 CREATE TRIGGER trg_learn_part_number
