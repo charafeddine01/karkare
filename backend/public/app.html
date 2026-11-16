@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <script src="https://accounts.google.com/gsi/client" async defer onload="initGoogleSignIn()"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -367,6 +368,29 @@
         .btn-sm {
             padding: 7px 12px;
             font-size: 12px;
+        }
+
+        .btn-xs {
+            padding: 3px 8px;
+            font-size: 11px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        @keyframes ocrScanLaser {
+            0% { top: 5%; opacity: 0.3; }
+            50% { top: 90%; opacity: 1; }
+            100% { top: 5%; opacity: 0.3; }
+        }
+        .ocr-laser-line {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #38BDF8, transparent);
+            box-shadow: 0 0 10px #38BDF8;
+            animation: ocrScanLaser 2.2s infinite ease-in-out;
         }
 
         .auth-switch {
@@ -1258,8 +1282,9 @@
                         <span>VIN (17 Characters) — 3-Step Decoder</span>
                         <span id="wmi-match-pill" style="display:none; color:var(--success-green); font-size:11px;">✓ WMI Match</span>
                     </div>
-                    <div class="input-wrapper" style="gap:8px;">
+                    <div class="input-wrapper" style="gap:6px;">
                         <input type="text" id="veh-input-vin" class="form-input no-icon" placeholder="e.g. 2T1BURHE7NC123456" maxlength="17" oninput="handleVinInput(this.value)">
+                        <button type="button" class="btn-secondary btn-sm" onclick="openOcrScanner('veh-input-vin', 'vin')" title="Scan VIN with Camera" style="white-space:nowrap; display:inline-flex; align-items:center; gap:4px;">📷 Scan</button>
                         <button type="button" class="btn-secondary btn-sm" onclick="decodeVinOnline()" style="white-space:nowrap;">Decode (NHTSA)</button>
                     </div>
                     <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">
@@ -1333,7 +1358,10 @@
                         <input type="number" id="veh-input-acq-odo" class="form-input no-icon" placeholder="0" min="0" value="0">
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="veh-input-curr-odo">Current Odo (km)</label>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                            <label class="form-label" for="veh-input-curr-odo" style="margin:0;">Current Odo (km)</label>
+                            <button type="button" class="btn-secondary btn-xs" onclick="openOcrScanner('veh-input-curr-odo', 'odometer')" style="display:inline-flex; align-items:center; gap:4px;">📷 Scan</button>
+                        </div>
                         <input type="number" id="veh-input-curr-odo" class="form-input no-icon" placeholder="32450" min="0" required>
                     </div>
                 </div>
@@ -1360,7 +1388,10 @@
                         <input type="date" id="sv-date" class="form-input no-icon" required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="sv-odo">Odometer (km)</label>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                            <label class="form-label" for="sv-odo" style="margin:0;">Odometer (km)</label>
+                            <button type="button" class="btn-secondary btn-xs" onclick="openOcrScanner('sv-odo', 'odometer')" style="display:inline-flex; align-items:center; gap:4px;">📷 Scan</button>
+                        </div>
                         <input type="number" id="sv-odo" class="form-input no-icon" placeholder="35000" min="0" required>
                     </div>
                 </div>
@@ -1415,7 +1446,10 @@
                         <input type="date" id="fuel-date" class="form-input no-icon" required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="fuel-odo">Odometer (km)</label>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                            <label class="form-label" for="fuel-odo" style="margin:0;">Odometer (km)</label>
+                            <button type="button" class="btn-secondary btn-xs" onclick="openOcrScanner('fuel-odo', 'odometer')" style="display:inline-flex; align-items:center; gap:4px;">📷 Scan</button>
+                        </div>
                         <input type="number" id="fuel-odo" class="form-input no-icon" placeholder="33000" min="0" required>
                     </div>
                 </div>
@@ -1467,7 +1501,10 @@
                         <input type="date" id="sym-date" class="form-input no-icon" required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="sym-odo">Odometer (km)</label>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                            <label class="form-label" for="sym-odo" style="margin:0;">Odometer (km)</label>
+                            <button type="button" class="btn-secondary btn-xs" onclick="openOcrScanner('sym-odo', 'odometer')" style="display:inline-flex; align-items:center; gap:4px;">📷 Scan</button>
+                        </div>
                         <input type="number" id="sym-odo" class="form-input no-icon" placeholder="33000">
                     </div>
                 </div>
@@ -1546,7 +1583,10 @@
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label class="form-label" for="inv-part-num">Part Number</label>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                            <label class="form-label" for="inv-part-num" style="margin:0;">Part Number</label>
+                            <button type="button" class="btn-secondary btn-xs" onclick="openOcrScanner('inv-part-num', 'part_number')" style="display:inline-flex; align-items:center; gap:4px;">📷 Scan</button>
+                        </div>
                         <input type="text" id="inv-part-num" class="form-input no-icon" placeholder="W 68/3">
                     </div>
                     <div class="form-group">
@@ -1677,6 +1717,69 @@
             <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
                 <button class="btn-secondary btn-sm" onclick="closeModal('modal-resale')">Close</button>
                 <button class="btn-primary btn-sm" onclick="window.print()">🖨️ Print / Save as PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- MODAL 9: ON-DEVICE CAMERA OCR SCANNER (Feature E) -->
+    <!-- ========================================================= -->
+    <div id="modal-camera-scanner" class="modal-backdrop">
+        <div class="modal-box" style="max-width: 520px; padding: 20px;">
+            <div class="modal-header">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <span style="font-size:22px;">📷</span>
+                    <div>
+                        <h3 id="ocr-scanner-title" style="margin:0; font-size:16px;">Scan with Camera</h3>
+                        <div id="ocr-scanner-subtitle" style="font-size:11px; color:var(--text-muted);">Point camera at the number or text to scan</div>
+                    </div>
+                </div>
+                <button type="button" class="btn-close-modal" onclick="closeOcrScanner()">✕</button>
+            </div>
+
+            <!-- Viewfinder Area -->
+            <div style="position:relative; width:100%; height:280px; background:#000; border-radius:12px; overflow:hidden; display:flex; align-items:center; justify-content:center; margin-bottom:12px; border:1px solid var(--border-dark);">
+                <video id="ocr-video" autoplay playsinline muted style="width:100%; height:100%; object-fit:cover;"></video>
+                <canvas id="ocr-canvas" style="display:none;"></canvas>
+
+                <!-- Reticle / Target Box -->
+                <div id="ocr-reticle" style="position:absolute; width:85%; height:45%; border:2px dashed var(--primary-cyan); border-radius:8px; box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.45); pointer-events:none; display:flex; align-items:center; justify-content:center;">
+                    <div style="position:absolute; top:-22px; background:var(--primary-cyan); color:#000; font-size:10px; font-weight:800; padding:2px 8px; border-radius:4px; text-transform:uppercase; letter-spacing:0.5px;" id="ocr-reticle-label">
+                        Align Text Here
+                    </div>
+                    <!-- Animated Scanning Laser Line -->
+                    <div class="ocr-laser-line"></div>
+                </div>
+
+                <!-- Processing Spinner Overlay -->
+                <div id="ocr-loading-overlay" style="display:none; position:absolute; inset:0; background:rgba(11,15,25,0.85); backdrop-filter:blur(4px); flex-direction:column; align-items:center; justify-content:center; z-index:10;">
+                    <div class="spinner" style="width:36px; height:36px; border-width:3px; margin-bottom:12px;"></div>
+                    <div id="ocr-status-text" style="color:var(--primary-cyan); font-weight:700; font-size:13px; font-family:'JetBrains Mono', monospace;">Reading text...</div>
+                </div>
+            </div>
+
+            <!-- OCR Result Box (when text is detected) -->
+            <div id="ocr-result-box" style="display:none; background:var(--surface-dark); border:1px solid var(--primary-cyan); border-radius:8px; padding:10px 14px; margin-bottom:12px;">
+                <div style="font-size:11px; color:var(--text-muted); margin-bottom:4px;">Detected Text / Number:</div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <input type="text" id="ocr-result-input" class="form-input no-icon" style="font-family:'JetBrains Mono', monospace; font-weight:700; font-size:15px; color:var(--primary-cyan);">
+                    <button type="button" class="btn-primary btn-sm" onclick="applyOcrResult()" style="white-space:nowrap;">✓ Use This</button>
+                </div>
+            </div>
+
+            <!-- Controls Row -->
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+                <div style="display:flex; gap:6px;">
+                    <button type="button" class="btn-secondary btn-sm" onclick="switchOcrCamera()" title="Switch Camera" style="padding:8px 12px;">🔄 Flip</button>
+                    <label class="btn-secondary btn-sm" style="margin:0; cursor:pointer; padding:8px 12px; display:inline-flex; align-items:center; gap:4px;" title="Upload or capture photo">
+                        📁 Photo
+                        <input type="file" id="ocr-file-input" accept="image/*" capture="environment" style="display:none;" onchange="handleOcrFileUpload(event)">
+                    </label>
+                </div>
+
+                <button type="button" id="btn-snap-ocr" class="btn-primary btn-sm" onclick="captureAndOcr()" style="padding:9px 18px; font-weight:700; display:flex; align-items:center; gap:6px;">
+                    📸 Read Number
+                </button>
             </div>
         </div>
     </div>
@@ -2383,7 +2486,10 @@
 
                 <div class="form-row">
                     <div class="form-group" style="margin-bottom:10px;">
-                        <label class="form-label">Part Number (3-Tier Auto-Suggest)</label>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                            <label class="form-label" style="margin:0;">Part Number (3-Tier Auto-Suggest)</label>
+                            <button type="button" class="btn-secondary btn-xs" onclick="openOcrScannerForRow('${rowId}', 'part_number')" style="padding:1px 6px; font-size:10px; display:inline-flex; align-items:center; gap:2px;">📷 Scan</button>
+                        </div>
                         <input type="text" class="form-input no-icon task-partnum-input" placeholder="e.g. W 68/3" value="${taskData.partNumber || ''}">
                         <div class="part-suggestions-pill" style="font-size:11px; margin-top:4px;"></div>
                     </div>
@@ -2888,6 +2994,259 @@
         function closeModal(id) {
             const m = document.getElementById(id);
             if (m) m.style.display = 'none';
+        }
+
+        // -------------------------------------------------------------
+        // On-Device Camera OCR Scanner Engine (Feature E)
+        // -------------------------------------------------------------
+        let ocrTargetElement = null;
+        let ocrScanMode = 'text'; // 'vin', 'odometer', 'part_number'
+        let ocrStream = null;
+        let ocrFacingMode = 'environment';
+
+        async function openOcrScanner(targetIdOrElement, mode = 'text') {
+            ocrTargetElement = typeof targetIdOrElement === 'string'
+                ? document.getElementById(targetIdOrElement)
+                : targetIdOrElement;
+            ocrScanMode = mode;
+
+            const title = document.getElementById('ocr-scanner-title');
+            const subtitle = document.getElementById('ocr-scanner-subtitle');
+            const reticleLabel = document.getElementById('ocr-reticle-label');
+            const resultBox = document.getElementById('ocr-result-box');
+
+            if (resultBox) resultBox.style.display = 'none';
+
+            if (mode === 'vin') {
+                title.innerText = '📷 Scan VIN (17 Chars)';
+                subtitle.innerText = 'Align the 17-digit VIN code on the chassis plate or door jamb';
+                reticleLabel.innerText = 'Align VIN Code';
+            } else if (mode === 'odometer') {
+                title.innerText = '📷 Scan Odometer (km)';
+                subtitle.innerText = 'Align the digital or analog odometer reading on the cluster';
+                reticleLabel.innerText = 'Align Odometer Numbers';
+            } else if (mode === 'part_number') {
+                title.innerText = '📷 Scan Part Number';
+                subtitle.innerText = 'Align the part number stamped on the box or component';
+                reticleLabel.innerText = 'Align Part Code';
+            } else {
+                title.innerText = '📷 Camera Text Scanner';
+                subtitle.innerText = 'Point camera at text or numbers to scan';
+                reticleLabel.innerText = 'Align Text';
+            }
+
+            openModal('modal-camera-scanner');
+            await startOcrCamera();
+        }
+
+        function openOcrScannerForRow(rowId, mode = 'part_number') {
+            const row = document.getElementById(rowId);
+            if (!row) return;
+            const input = row.querySelector('.task-partnum-input');
+            if (input) {
+                openOcrScanner(input, mode);
+            }
+        }
+
+        async function startOcrCamera() {
+            const video = document.getElementById('ocr-video');
+            const loadingOverlay = document.getElementById('ocr-loading-overlay');
+            const statusText = document.getElementById('ocr-status-text');
+
+            stopOcrStream();
+
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                showToast('Camera stream unavailable. Click "📁 Photo" to upload or take a picture.', 'warning', 5000);
+                return;
+            }
+
+            try {
+                if (loadingOverlay) {
+                    loadingOverlay.style.display = 'flex';
+                    statusText.innerText = 'Starting camera...';
+                }
+
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        facingMode: { ideal: ocrFacingMode },
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    },
+                    audio: false
+                });
+
+                ocrStream = stream;
+                video.srcObject = stream;
+                await video.play();
+
+                if (loadingOverlay) loadingOverlay.style.display = 'none';
+            } catch (err) {
+                console.warn('Camera stream error:', err);
+                if (loadingOverlay) loadingOverlay.style.display = 'none';
+                showToast('Camera blocked or unavailable. Click "📁 Photo" to take or choose a picture.', 'warning', 6000);
+            }
+        }
+
+        function stopOcrStream() {
+            if (ocrStream) {
+                ocrStream.getTracks().forEach(track => track.stop());
+                ocrStream = null;
+            }
+            const video = document.getElementById('ocr-video');
+            if (video) video.srcObject = null;
+        }
+
+        function closeOcrScanner() {
+            stopOcrStream();
+            closeModal('modal-camera-scanner');
+            ocrTargetElement = null;
+        }
+
+        async function switchOcrCamera() {
+            ocrFacingMode = (ocrFacingMode === 'environment') ? 'user' : 'environment';
+            await startOcrCamera();
+        }
+
+        async function handleOcrFileUpload(e) {
+            const file = e.target.files && e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = async (event) => {
+                const img = new Image();
+                img.onload = async () => {
+                    await runOcrOnImage(img);
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function captureAndOcr() {
+            const video = document.getElementById('ocr-video');
+            const canvas = document.getElementById('ocr-canvas');
+
+            if (!video || !video.videoWidth) {
+                document.getElementById('ocr-file-input').click();
+                return;
+            }
+
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            await runOcrOnImage(canvas);
+        }
+
+        async function runOcrOnImage(imageSource) {
+            const loadingOverlay = document.getElementById('ocr-loading-overlay');
+            const statusText = document.getElementById('ocr-status-text');
+            const resultBox = document.getElementById('ocr-result-box');
+            const resultInput = document.getElementById('ocr-result-input');
+
+            if (loadingOverlay) loadingOverlay.style.display = 'flex';
+            if (statusText) statusText.innerText = 'Recognizing text...';
+
+            try {
+                if (typeof Tesseract === 'undefined') {
+                    throw new Error('Tesseract OCR library not ready yet. Please check your internet connection.');
+                }
+
+                const worker = await Tesseract.createWorker('eng');
+                const ret = await worker.recognize(imageSource);
+                await worker.terminate();
+
+                const rawText = ret.data.text || '';
+                const cleaned = processOcrText(rawText, ocrScanMode);
+
+                if (loadingOverlay) loadingOverlay.style.display = 'none';
+
+                if (cleaned) {
+                    if (resultBox && resultInput) {
+                        resultBox.style.display = 'block';
+                        resultInput.value = cleaned;
+                    }
+                    showToast(`Detected: ${cleaned}`, 'success');
+                } else {
+                    showToast('No clear reading detected. Try holding camera closer or clearer.', 'warning', 5000);
+                    if (rawText.trim()) {
+                        if (resultBox && resultInput) {
+                            resultBox.style.display = 'block';
+                            resultInput.value = rawText.trim().split('\n')[0].substring(0, 30);
+                        }
+                    }
+                }
+            } catch (err) {
+                console.error('OCR Error:', err);
+                if (loadingOverlay) loadingOverlay.style.display = 'none';
+                showToast('OCR Error: ' + err.message, 'error');
+            }
+        }
+
+        function processOcrText(raw, mode) {
+            if (!raw) return '';
+            const lines = raw.split(/[\r\n]+/).map(l => l.trim()).filter(Boolean);
+            const fullNormalized = raw.replace(/\s+/g, ' ').trim();
+
+            if (mode === 'vin') {
+                const candidates = fullNormalized.match(/[A-HJ-NPR-Z0-9]{17}/gi) 
+                    || fullNormalized.match(/[A-Z0-9]{17}/gi);
+                if (candidates && candidates.length > 0) {
+                    return candidates[0].toUpperCase();
+                }
+                const token = fullNormalized.replace(/[^A-Za-z0-9]/g, '');
+                if (token.length >= 17) {
+                    return token.substring(0, 17).toUpperCase();
+                }
+                return '';
+            }
+
+            if (mode === 'odometer') {
+                const numbers = fullNormalized.match(/\b\d{2,7}\b/g);
+                if (numbers && numbers.length > 0) {
+                    const valid = numbers.map(n => parseInt(n, 10)).filter(n => n >= 10 && n <= 2000000);
+                    if (valid.length > 0) {
+                        return valid[0].toString();
+                    }
+                }
+                return '';
+            }
+
+            if (mode === 'part_number') {
+                for (const line of lines) {
+                    const trimmed = line.replace(/[^A-Za-z0-9\-\/\.\s]/g, '').trim();
+                    if (trimmed.length >= 3 && trimmed.length <= 25 && /\d/.test(trimmed)) {
+                        return trimmed.toUpperCase();
+                    }
+                }
+                return lines[0] ? lines[0].replace(/[^A-Za-z0-9\-\/\.]/g, '').toUpperCase() : '';
+            }
+
+            return lines[0] || '';
+        }
+
+        function applyOcrResult() {
+            const resultInput = document.getElementById('ocr-result-input');
+            const val = resultInput ? resultInput.value.trim() : '';
+
+            if (!val) {
+                showToast('No text to apply', 'warning');
+                return;
+            }
+
+            if (ocrTargetElement) {
+                ocrTargetElement.value = val;
+                ocrTargetElement.dispatchEvent(new Event('input', { bubbles: true }));
+                ocrTargetElement.dispatchEvent(new Event('change', { bubbles: true }));
+
+                if (ocrTargetElement.id === 'veh-input-vin' && typeof handleVinInput === 'function') {
+                    handleVinInput(val);
+                }
+            }
+
+            showToast(`✓ Auto-filled: ${val}`, 'success');
+            closeOcrScanner();
         }
 
         function openAddVehicleModal() {
