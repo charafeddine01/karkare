@@ -27,6 +27,39 @@ class VehicleController {
     }
 
     /**
+     * Resolves and verifies a valid vehicle ID for the user
+     * Prevents foreign key constraint violations across child tables
+     */
+    private function getValidVehicleId(string $userId, ?string $candidateId): string {
+        if (!empty($candidateId)) {
+            $stmt = $this->db->prepare("SELECT id FROM vehicles WHERE id = ? AND user_id = ? AND is_deleted = 0");
+            $stmt->execute([$candidateId, $userId]);
+            $veh = $stmt->fetch();
+            if ($veh) {
+                return (string)$veh['id'];
+            }
+        }
+
+        // Fallback to latest active vehicle for this user
+        $stmt = $this->db->prepare("SELECT id FROM vehicles WHERE user_id = ? AND is_deleted = 0 ORDER BY updated_at DESC LIMIT 1");
+        $stmt->execute([$userId]);
+        $veh = $stmt->fetch();
+        if ($veh) {
+            return (string)$veh['id'];
+        }
+
+        // If user has no active vehicle, seed the initial vehicle and return its ID
+        $this->seedInitialUserVehicle($userId);
+        $stmt->execute([$userId]);
+        $veh = $stmt->fetch();
+        if ($veh) {
+            return (string)$veh['id'];
+        }
+
+        throw new RuntimeException("No vehicle available for user {$userId}");
+    }
+
+    /**
      * Get entire garage dashboard payload for user
      */
     public function getGarage(Request $request): void {
@@ -513,6 +546,68 @@ class VehicleController {
     }
 
     /**
+     * Soft-delete vehicle
+     */
+    public function deleteVehicle(Request $request): void {
+        $userId = $request->getUserId();
+        $id = $request->getParam('id');
+
+        if (empty($id)) {
+            Response::error('Vehicle ID required', 'VALIDATION_ERROR', 400);
+            return;
+        }
+
+        try {
+            // Verify vehicle exists and belongs to user
+            $stmt = $this->db->prepare("SELECT id FROM vehicles WHERE id = ? AND user_id = ? AND is_deleted = 0");
+            $stmt->execute([$id, $userId]);
+            if (!$stmt->fetch()) {
+                Response::error('Vehicle not found or already deleted', 'NOT_FOUND', 404);
+                return;
+            }
+
+            // Soft-delete vehicle
+            $stmtDel = $this->db->prepare("UPDATE vehicles SET is_deleted = 1, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND user_id = ?");
+            $stmtDel->execute([$id, $userId]);
+
+            Response::success(['id' => $id], 'Vehicle deleted successfully.');
+        } catch (Throwable $e) {
+            Response::error('Failed to delete vehicle: ' . $e->getMessage(), 'DATABASE_ERROR', 500);
+        }
+    }
+
+    /**
+     * Update vehicle photo URL directly
+     */
+    public function updateVehiclePhoto(Request $request): void {
+        $userId = $request->getUserId();
+        $id = $request->getParam('id');
+        $b = $request->getBody();
+
+        if (empty($b['photo_url'])) {
+            Response::error('photo_url is required', 'VALIDATION_ERROR', 400);
+            return;
+        }
+
+        try {
+            // Verify vehicle exists and belongs to user
+            $stmt = $this->db->prepare("SELECT id FROM vehicles WHERE id = ? AND user_id = ? AND is_deleted = 0");
+            $stmt->execute([$id, $userId]);
+            if (!$stmt->fetch()) {
+                Response::error('Vehicle not found or unauthorized', 'NOT_FOUND', 404);
+                return;
+            }
+
+            $stmtUpdate = $this->db->prepare("UPDATE vehicles SET photo_url = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND user_id = ?");
+            $stmtUpdate->execute([trim((string)$b['photo_url']), $id, $userId]);
+
+            Response::success(['id' => $id, 'photo_url' => $b['photo_url']], 'Vehicle photo updated.');
+        } catch (Throwable $e) {
+            Response::error('Failed to update photo: ' . $e->getMessage(), 'DATABASE_ERROR', 500);
+        }
+    }
+
+    /**
      * Save / Update Glovebox Quick Specs
      */
     public function saveQuickSpecs(Request $request): void {
@@ -585,19 +680,19 @@ class VehicleController {
         $userId = $request->getUserId();
         $b = $request->getBody();
 
-        if (empty($b['vehicle_id']) || empty($b['service_date']) || !isset($b['odometer_km'])) {
-            Response::error('Vehicle ID, Service Date, and Odometer are required', 'VALIDATION_ERROR', 400);
+        if (empty($b['service_date']) || !isset($b['odometer_km'])) {
+            Response::error('Service Date and Odometer are required', 'VALIDATION_ERROR', 400);
             return;
         }
 
-        $visitId = !empty($b['id']) ? (string)$b['id'] : $this->generateUuid();
-        $vehicleId = (string)$b['vehicle_id'];
-        $odometerKm = (int)$b['odometer_km'];
-        $tasks = $b['tasks'] ?? [];
-
-        $this->db->beginTransaction();
-
         try {
+            $vehicleId = $this->getValidVehicleId($userId, $b['vehicle_id'] ?? null);
+            $visitId = !empty($b['id']) ? (string)$b['id'] : $this->generateUuid();
+            $odometerKm = (int)$b['odometer_km'];
+            $tasks = $b['tasks'] ?? [];
+
+            $this->db->beginTransaction();
+
             // Check or create workshop contact if shop_name provided
             $contactId = $b['contact_id'] ?? null;
             if (empty($contactId) && !empty($b['shop_name'])) {
@@ -701,20 +796,20 @@ class VehicleController {
         $userId = $request->getUserId();
         $b = $request->getBody();
 
-        if (empty($b['vehicle_id']) || empty($b['fill_date']) || !isset($b['odometer_km']) || empty($b['fuel_liters'])) {
-            Response::error('Vehicle ID, Date, Odometer, and Liters are required', 'VALIDATION_ERROR', 400);
+        if (empty($b['fill_date']) || !isset($b['odometer_km']) || empty($b['fuel_liters'])) {
+            Response::error('Date, Odometer, and Liters are required', 'VALIDATION_ERROR', 400);
             return;
         }
 
-        $id = !empty($b['id']) ? (string)$b['id'] : $this->generateUuid();
-        $vehicleId = (string)$b['vehicle_id'];
-        $odometerKm = (int)$b['odometer_km'];
-        $liters = (float)$b['fuel_liters'];
-        $totalCost = (float)($b['total_cost_usd'] ?? 0);
-        $pricePerLiter = (float)($b['price_per_liter_usd'] ?? ($totalCost > 0 && $liters > 0 ? $totalCost / $liters : 1.25));
-        $isFull = (int)($b['is_full_tank'] ?? 1);
-
         try {
+            $vehicleId = $this->getValidVehicleId($userId, $b['vehicle_id'] ?? null);
+            $id = !empty($b['id']) ? (string)$b['id'] : $this->generateUuid();
+            $odometerKm = (int)$b['odometer_km'];
+            $liters = (float)$b['fuel_liters'];
+            $totalCost = (float)($b['total_cost_usd'] ?? 0);
+            $pricePerLiter = (float)($b['price_per_liter_usd'] ?? ($totalCost > 0 && $liters > 0 ? $totalCost / $liters : 1.25));
+            $isFull = (int)($b['is_full_tank'] ?? 1);
+
             // Find previous fuel log to calculate L/100km
             $stmtPrev = $this->db->prepare(
                 "SELECT odometer_km FROM fuel_logs WHERE vehicle_id = ? AND odometer_km < ? AND is_deleted = 0 ORDER BY odometer_km DESC LIMIT 1"
@@ -770,14 +865,15 @@ class VehicleController {
         $userId = $request->getUserId();
         $b = $request->getBody();
 
-        if (empty($b['vehicle_id']) || empty($b['symptom_description'])) {
-            Response::error('Vehicle ID and Description are required', 'VALIDATION_ERROR', 400);
+        if (empty($b['symptom_description'])) {
+            Response::error('Symptom description is required', 'VALIDATION_ERROR', 400);
             return;
         }
 
-        $id = !empty($b['id']) ? (string)$b['id'] : $this->generateUuid();
-
         try {
+            $vehicleId = $this->getValidVehicleId($userId, $b['vehicle_id'] ?? null);
+            $id = !empty($b['id']) ? (string)$b['id'] : $this->generateUuid();
+
             $stmt = $this->db->prepare(
                 "INSERT INTO diagnostic_symptoms (
                     id, vehicle_id, logged_date, odometer_km, obd_code,
@@ -787,7 +883,7 @@ class VehicleController {
 
             $stmt->execute([
                 $id,
-                $b['vehicle_id'],
+                $vehicleId,
                 $b['logged_date'] ?? date('Y-m-d'),
                 (int)($b['odometer_km'] ?? 0),
                 !empty($b['obd_code']) ? strtoupper(trim((string)$b['obd_code'])) : null,
@@ -965,30 +1061,25 @@ class VehicleController {
         $userId = $request->getUserId();
         $b = $request->getBody();
 
-        if (empty($b['vehicle_id']) || !isset($b['distance_km'])) {
-            Response::error('Vehicle ID and Distance (km) are required', 'VALIDATION_ERROR', 400);
+        if (!isset($b['distance_km'])) {
+            Response::error('Distance (km) is required', 'VALIDATION_ERROR', 400);
             return;
         }
 
-        $id = !empty($b['id']) ? (string)$b['id'] : $this->generateUuid();
-        $vehId = (string)$b['vehicle_id'];
-        $tripDate = !empty($b['trip_date']) ? (string)$b['trip_date'] : date('Y-m-d');
-        $tripTime = !empty($b['trip_time']) ? (string)$b['trip_time'] : date('H:i:s');
-        $distanceKm = (float)$b['distance_km'];
-        $purpose = !empty($b['purpose']) ? (string)$b['purpose'] : 'Commute';
-        $startOdo = !empty($b['start_odometer_km']) ? (int)$b['start_odometer_km'] : null;
-        $endOdo = !empty($b['end_odometer_km']) ? (int)$b['end_odometer_km'] : null;
-        $notes = !empty($b['notes']) ? (string)$b['notes'] : null;
-
         try {
-            // Verify vehicle ownership
-            $stmtV = $this->db->prepare("SELECT id, current_odometer_km FROM vehicles WHERE id = ? AND user_id = ? AND is_deleted = 0");
-            $stmtV->execute([$vehId, $userId]);
+            $vehId = $this->getValidVehicleId($userId, $b['vehicle_id'] ?? null);
+            $id = !empty($b['id']) ? (string)$b['id'] : $this->generateUuid();
+            $tripDate = !empty($b['trip_date']) ? (string)$b['trip_date'] : date('Y-m-d');
+            $tripTime = !empty($b['trip_time']) ? (string)$b['trip_time'] : date('H:i:s');
+            $distanceKm = (float)$b['distance_km'];
+            $purpose = !empty($b['purpose']) ? (string)$b['purpose'] : 'Commute';
+            $startOdo = !empty($b['start_odometer_km']) ? (int)$b['start_odometer_km'] : null;
+            $endOdo = !empty($b['end_odometer_km']) ? (int)$b['end_odometer_km'] : null;
+            $notes = !empty($b['notes']) ? (string)$b['notes'] : null;
+
+            $stmtV = $this->db->prepare("SELECT id, current_odometer_km FROM vehicles WHERE id = ?");
+            $stmtV->execute([$vehId]);
             $veh = $stmtV->fetch();
-            if (!$veh) {
-                Response::error('Vehicle not found or unauthorized', 'NOT_FOUND', 404);
-                return;
-            }
 
             $stmt = $this->db->prepare(
                 "INSERT INTO trip_logs (id, vehicle_id, trip_date, trip_time, start_odometer_km, end_odometer_km, distance_km, purpose, notes, is_deleted)
@@ -1039,28 +1130,21 @@ class VehicleController {
         $userId = $request->getUserId();
         $b = $request->getBody();
 
-        if (empty($b['vehicle_id']) || !isset($b['amount_usd'])) {
-            Response::error('Vehicle ID and Amount (USD) are required', 'VALIDATION_ERROR', 400);
+        if (!isset($b['amount_usd'])) {
+            Response::error('Amount (USD) is required', 'VALIDATION_ERROR', 400);
             return;
         }
 
-        $id = !empty($b['id']) ? (string)$b['id'] : $this->generateUuid();
-        $vehId = (string)$b['vehicle_id'];
-        $expDate = !empty($b['expense_date']) ? (string)$b['expense_date'] : date('Y-m-d');
-        $expTime = !empty($b['expense_time']) ? (string)$b['expense_time'] : date('H:i:s');
-        $expType = !empty($b['expense_type']) ? (string)$b['expense_type'] : 'Parking';
-        $amountUsd = (float)$b['amount_usd'];
-        $odometer = !empty($b['odometer_km']) ? (int)$b['odometer_km'] : null;
-        $notes = !empty($b['notes']) ? (string)$b['notes'] : null;
-        $receiptPhoto = !empty($b['receipt_photo_url']) ? (string)$b['receipt_photo_url'] : null;
-
         try {
-            $stmtV = $this->db->prepare("SELECT id FROM vehicles WHERE id = ? AND user_id = ? AND is_deleted = 0");
-            $stmtV->execute([$vehId, $userId]);
-            if (!$stmtV->fetch()) {
-                Response::error('Vehicle not found or unauthorized', 'NOT_FOUND', 404);
-                return;
-            }
+            $vehId = $this->getValidVehicleId($userId, $b['vehicle_id'] ?? null);
+            $id = !empty($b['id']) ? (string)$b['id'] : $this->generateUuid();
+            $expDate = !empty($b['expense_date']) ? (string)$b['expense_date'] : date('Y-m-d');
+            $expTime = !empty($b['expense_time']) ? (string)$b['expense_time'] : date('H:i:s');
+            $expType = !empty($b['expense_type']) ? (string)$b['expense_type'] : 'Parking';
+            $amountUsd = (float)$b['amount_usd'];
+            $odometer = !empty($b['odometer_km']) ? (int)$b['odometer_km'] : null;
+            $notes = !empty($b['notes']) ? (string)$b['notes'] : null;
+            $receiptPhoto = !empty($b['receipt_photo_url']) ? (string)$b['receipt_photo_url'] : null;
 
             $stmt = $this->db->prepare(
                 "INSERT INTO general_expenses (id, vehicle_id, expense_date, expense_time, expense_type, amount_usd, odometer_km, notes, receipt_photo_url, is_deleted)
@@ -1105,26 +1189,19 @@ class VehicleController {
         $userId = $request->getUserId();
         $b = $request->getBody();
 
-        if (empty($b['vehicle_id']) || empty($b['reminder_title'])) {
-            Response::error('Vehicle ID and Reminder Title are required', 'VALIDATION_ERROR', 400);
+        if (empty($b['reminder_title'])) {
+            Response::error('Reminder Title is required', 'VALIDATION_ERROR', 400);
             return;
         }
 
-        $id = !empty($b['id']) ? (string)$b['id'] : $this->generateUuid();
-        $vehId = (string)$b['vehicle_id'];
-        $title = trim((string)$b['reminder_title']);
-        $category = !empty($b['reminder_category']) ? (string)$b['reminder_category'] : 'Maintenance';
-        $dueDate = !empty($b['due_date']) ? (string)$b['due_date'] : null;
-        $dueKm = !empty($b['due_odometer_km']) ? (int)$b['due_odometer_km'] : null;
-        $notes = !empty($b['notes']) ? (string)$b['notes'] : null;
-
         try {
-            $stmtV = $this->db->prepare("SELECT id FROM vehicles WHERE id = ? AND user_id = ? AND is_deleted = 0");
-            $stmtV->execute([$vehId, $userId]);
-            if (!$stmtV->fetch()) {
-                Response::error('Vehicle not found or unauthorized', 'NOT_FOUND', 404);
-                return;
-            }
+            $vehId = $this->getValidVehicleId($userId, $b['vehicle_id'] ?? null);
+            $id = !empty($b['id']) ? (string)$b['id'] : $this->generateUuid();
+            $title = trim((string)$b['reminder_title']);
+            $category = !empty($b['reminder_category']) ? (string)$b['reminder_category'] : 'Maintenance';
+            $dueDate = !empty($b['due_date']) ? (string)$b['due_date'] : null;
+            $dueKm = !empty($b['due_odometer_km']) ? (int)$b['due_odometer_km'] : null;
+            $notes = !empty($b['notes']) ? (string)$b['notes'] : null;
 
             $stmt = $this->db->prepare(
                 "INSERT INTO vehicle_reminders (id, vehicle_id, reminder_title, reminder_category, due_date, due_odometer_km, is_completed, notes, is_deleted)

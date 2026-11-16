@@ -426,21 +426,25 @@ class SyncController {
                 );
 
                 foreach ($payload['diagnostic_symptoms'] as $s) {
-                    $isDeleted = ($s['is_deleted'] ?? 0) || (($s['sync_status'] ?? '') === 'pending_delete') ? 1 : 0;
-                    $upsertSymptom->execute([
-                        ':id' => $s['id'],
-                        ':vehicle_id' => $s['vehicle_id'],
-                        ':resolved_by_log_id' => $s['resolved_by_log_id'] ?? null,
-                        ':logged_date' => $s['logged_date'],
-                        ':odometer_km' => (int)$s['odometer_km'],
-                        ':obd_code' => $s['obd_code'] ?? null,
-                        ':engine_state' => $s['engine_state'] ?? 'other',
-                        ':symptom_description' => $s['symptom_description'],
-                        ':audio_clip_url' => $s['audio_clip_url'] ?? null,
-                        ':is_resolved' => (int)($s['is_resolved'] ?? 0),
-                        ':is_deleted' => $isDeleted,
-                    ]);
-                    $syncedIds['diagnostic_symptoms'][] = $s['id'];
+                    try {
+                        $isDeleted = ($s['is_deleted'] ?? 0) || (($s['sync_status'] ?? '') === 'pending_delete') ? 1 : 0;
+                        $upsertSymptom->execute([
+                            ':id' => $s['id'],
+                            ':vehicle_id' => $s['vehicle_id'],
+                            ':resolved_by_log_id' => $s['resolved_by_log_id'] ?? null,
+                            ':logged_date' => $s['logged_date'],
+                            ':odometer_km' => (int)$s['odometer_km'],
+                            ':obd_code' => $s['obd_code'] ?? null,
+                            ':engine_state' => $s['engine_state'] ?? 'other',
+                            ':symptom_description' => $s['symptom_description'],
+                            ':audio_clip_url' => $s['audio_clip_url'] ?? null,
+                            ':is_resolved' => (int)($s['is_resolved'] ?? 0),
+                            ':is_deleted' => $isDeleted,
+                        ]);
+                        $syncedIds['diagnostic_symptoms'][] = $s['id'];
+                    } catch (Throwable $e) {
+                        error_log("Sync push symptom skipped: " . $e->getMessage());
+                    }
                 }
             }
 

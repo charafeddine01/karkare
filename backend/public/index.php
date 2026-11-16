@@ -300,6 +300,9 @@ $router->get('/api/obd/lookup', [PartCatalogController::class, 'searchObd']);
 $router->get('/api/garage', [VehicleController::class, 'getGarage'], [$authMiddleware]);
 $router->post('/api/vehicles', [VehicleController::class, 'createVehicle'], [$authMiddleware]);
 $router->post('/api/vehicles/{id}', [VehicleController::class, 'updateVehicle'], [$authMiddleware]);
+$router->post('/api/vehicles/{id}/photo', [VehicleController::class, 'updateVehiclePhoto'], [$authMiddleware]);
+$router->delete('/api/vehicles/{id}', [VehicleController::class, 'deleteVehicle'], [$authMiddleware]);
+$router->post('/api/vehicles/{id}/delete', [VehicleController::class, 'deleteVehicle'], [$authMiddleware]);
 $router->post('/api/vehicles/{id}/specs', [VehicleController::class, 'saveQuickSpecs'], [$authMiddleware]);
 $router->post('/api/vehicles/{id}/share-token', [VehicleController::class, 'generateShareToken'], [$authMiddleware]);
 

@@ -836,13 +836,14 @@
         }
 
         .modal-box {
-            background: var(--surface-dark);
-            border: 1px solid var(--border-dark);
+            background: var(--surface-card, var(--surface-dark));
+            color: var(--text-dark, var(--text-main));
+            border: 1px solid var(--border-subtle, var(--border-dark));
             border-radius: var(--radius-lg);
             max-width: 680px;
             width: 100%;
             padding: 30px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             max-height: 90vh;
             overflow-y: auto;
             position: relative;
@@ -855,7 +856,11 @@
             justify-content: space-between;
             margin-bottom: 20px;
             padding-bottom: 12px;
-            border-bottom: 1px solid var(--border-dark);
+            border-bottom: 1px solid var(--border-subtle, var(--border-dark));
+        }
+
+        .modal-header h3 {
+            color: var(--text-dark, var(--text-main));
         }
 
         .modal-header h3 {
@@ -953,18 +958,27 @@
         @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
     
         /* ============================================================= */
-        /* COMPETITOR APP UI SYSTEM & PALETTE (LIGHT SLEEK AESTHETIC)    */
+        /* 3 DISTINCT UI THEMES & COMPETITOR PALETTE (Task 2)            */
+        /* 1) Light Crisp (Default)                                      */
+        /* 2) Dark Cyber (Midnight)                                      */
+        /* 3) Sleek Slate (High-Contrast Obsidian)                       */
         /* ============================================================= */
-        :root {
+        :root, html[data-theme="light"], body[data-theme="light"] {
+            --bg-dark: #F1F5F9;
+            --surface-dark: #FFFFFF;
+            --surface-card: #FFFFFF;
+            --surface-hover: #F8FAFC;
+            --text-main: #0F172A;
+            --text-dark: #0F172A;
+            --text-muted: #64748B;
+            --border-dark: #E2E8F0;
+            --border-active: #2563EB;
+            --border-light: rgba(0, 0, 0, 0.08);
+            --border-subtle: #E2E8F0;
             --bg-app: #F1F5F9;
             --surface-white: #FFFFFF;
             --surface-subtle: #F8FAFC;
             --surface-dark-accent: #1E2738;
-            --text-dark: #0F172A;
-            --text-muted: #64748B;
-            --text-light: #F8FAFC;
-            --border-light: rgba(0, 0, 0, 0.08);
-            --border-subtle: #E2E8F0;
             --primary-blue: #2563EB;
             --primary-cyan: #38BDF8;
             --primary-gradient: linear-gradient(135deg, #2563EB 0%, #38BDF8 100%);
@@ -984,11 +998,95 @@
             --radius-full: 9999px;
             --shadow-card: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.02);
             --shadow-float: 0 10px 25px -3px rgba(37, 99, 235, 0.35);
+            --topbar-bg: #FFFFFF;
+            --floating-nav-bg: #FFFFFF;
+            --modal-bg: #FFFFFF;
+        }
+
+        html[data-theme="dark"], body[data-theme="dark"] {
+            --bg-dark: #0B0F19;
+            --surface-dark: #151E2E;
+            --surface-card: #151E2E;
+            --surface-hover: #1E293B;
+            --text-main: #F8FAFC;
+            --text-dark: #F8FAFC;
+            --text-muted: #94A3B8;
+            --border-dark: #243048;
+            --border-active: #38BDF8;
+            --border-light: rgba(255, 255, 255, 0.08);
+            --border-subtle: #243048;
+            --bg-app: #0B0F19;
+            --surface-white: #151E2E;
+            --surface-subtle: #1E293B;
+            --surface-dark-accent: #0A101D;
+            --primary-blue: #38BDF8;
+            --primary-cyan: #06B6D4;
+            --primary-gradient: linear-gradient(135deg, #0284C7 0%, #38BDF8 100%);
+            --banner-gradient: linear-gradient(135deg, #0369A1 0%, #0284C7 50%, #38BDF8 100%);
+            --pro-gradient: linear-gradient(135deg, #1E3A8A 0%, #2563EB 100%);
+            --accent-glow: rgba(56, 189, 248, 0.3);
+            --danger-bg: #450A0A;
+            --danger-border: #7F1D1D;
+            --danger-text: #FCA5A5;
+            --shadow-card: 0 4px 20px -2px rgba(0, 0, 0, 0.4);
+            --shadow-float: 0 10px 25px -3px rgba(56, 189, 248, 0.35);
+            --topbar-bg: #0F172A;
+            --floating-nav-bg: #0F172A;
+            --modal-bg: #151E2E;
+        }
+
+        html[data-theme="slate"], body[data-theme="slate"] {
+            --bg-dark: #18181B;
+            --surface-dark: #27272A;
+            --surface-card: #27272A;
+            --surface-hover: #3F3F46;
+            --text-main: #FAFAFA;
+            --text-dark: #FAFAFA;
+            --text-muted: #A1A1AA;
+            --border-dark: #3F3F46;
+            --border-active: #10B981;
+            --border-light: rgba(255, 255, 255, 0.12);
+            --border-subtle: #3F3F46;
+            --bg-app: #18181B;
+            --surface-white: #27272A;
+            --surface-subtle: #3F3F46;
+            --surface-dark-accent: #111113;
+            --primary-blue: #10B981;
+            --primary-cyan: #34D399;
+            --primary-gradient: linear-gradient(135deg, #059669 0%, #10B981 100%);
+            --banner-gradient: linear-gradient(135deg, #047857 0%, #059669 50%, #10B981 100%);
+            --pro-gradient: linear-gradient(135deg, #065F46 0%, #059669 100%);
+            --accent-glow: rgba(16, 185, 129, 0.3);
+            --danger-bg: #3F1D1D;
+            --danger-border: #7F1D1D;
+            --danger-text: #FCA5A5;
+            --shadow-card: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
+            --shadow-float: 0 10px 25px -3px rgba(16, 185, 129, 0.35);
+            --topbar-bg: #18181B;
+            --floating-nav-bg: #18181B;
+            --modal-bg: #27272A;
+        }
+
+        /* Modal Background Interaction Lock (Task 3) */
+        body.has-modal-open {
+            overflow: hidden !important;
+            touch-action: none !important;
+        }
+
+        body.has-modal-open #competitor-app-container {
+            pointer-events: none !important;
+            user-select: none !important;
+        }
+
+        .modal-backdrop, .bottom-sheet-backdrop {
+            pointer-events: auto !important;
+            z-index: 9999 !important;
         }
 
         body {
             background-color: var(--bg-app);
             color: var(--text-dark);
+            transition: background-color 0.25s ease, color 0.25s ease;
         }
 
         .app-topbar {
@@ -996,7 +1094,7 @@
             align-items: center;
             justify-content: space-between;
             padding: 14px 20px;
-            background: var(--surface-white);
+            background: var(--topbar-bg, var(--surface-white));
             border-bottom: 1px solid var(--border-light);
             position: sticky;
             top: 0;
@@ -1004,7 +1102,7 @@
         }
 
         .topbar-btn {
-            background: #F1F5F9;
+            background: var(--surface-subtle);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-md);
             width: 42px;
@@ -1019,7 +1117,7 @@
         }
 
         .topbar-btn:hover {
-            background: #E2E8F0;
+            background: var(--border-subtle);
             transform: scale(1.05);
         }
 
@@ -1052,8 +1150,8 @@
             width: 100%;
             max-width: 520px;
             height: 72px;
-            background: #FFFFFF;
-            border-top: 1px solid rgba(0, 0, 0, 0.07);
+            background: var(--floating-nav-bg, #FFFFFF);
+            border-top: 1px solid var(--border-subtle);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -1062,6 +1160,7 @@
             padding: 0 10px;
             border-top-left-radius: 24px;
             border-top-right-radius: 24px;
+            transition: background 0.25s ease;
         }
 
         .nav-item {
@@ -1118,13 +1217,13 @@
             border-radius: 50%;
             background: var(--primary-gradient);
             color: #FFFFFF;
-            border: 4px solid #FFFFFF;
+            border: 4px solid var(--floating-nav-bg, #FFFFFF);
             box-shadow: var(--shadow-float);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.25s ease;
         }
 
         .btn-floating-plus:hover {
@@ -1144,22 +1243,24 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(15, 23, 42, 0.5);
-            backdrop-filter: blur(4px);
-            z-index: 2000;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(6px);
+            z-index: 9999;
             align-items: flex-end;
             justify-content: center;
             animation: fadeIn 0.2s ease;
         }
 
         .bottom-sheet-content {
-            background: #FFFFFF;
+            background: var(--surface-white);
+            color: var(--text-dark);
             width: 100%;
             max-width: 520px;
             border-top-left-radius: 24px;
             border-top-right-radius: 24px;
             padding: 16px 20px 32px 20px;
-            box-shadow: 0 -10px 40px rgba(0,0,0,0.2);
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.3);
+            border-top: 1px solid var(--border-subtle);
             animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
@@ -2016,8 +2117,13 @@
 
                     <!-- Vehicle Showcase Hero Card (Screenshot 5) -->
                     <div class="showcase-hero-card">
-                        <div id="home-body-type-badge" class="body-type-badge">Sedan Executive Drive</div>
-                        <div class="showcase-car-render" id="home-car-render">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                            <div id="home-body-type-badge" class="body-type-badge" style="margin-bottom:0;">Sedan Executive Drive</div>
+                            <button type="button" class="btn-secondary btn-xs" onclick="openVehiclePhotoModal()" style="border-radius:var(--radius-full); padding:4px 10px; font-weight:700; display:inline-flex; align-items:center; gap:4px; font-size:11px; color:var(--primary-blue);">
+                                📷 Change Photo
+                            </button>
+                        </div>
+                        <div class="showcase-car-render" id="home-car-render" onclick="openVehiclePhotoModal()" style="cursor:pointer;" title="Click to change vehicle photo">
                             <img id="home-car-img" src="https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=800&q=80" alt="Car Render">
                         </div>
                         <div style="font-size:12px; color:var(--text-muted); font-family:'JetBrains Mono', monospace; margin-bottom:12px;">
@@ -2326,7 +2432,7 @@
                         <div style="font-size:12px; font-weight:600; opacity:0.9; margin-top:4px;" data-i18n="limitlessBenefits">Limitless Benefits, Ultimate Ad-Free</div>
                     </div>
 
-                    <!-- Group 1: Garage, Language, Units -->
+                    <!-- Group 1: Garage, Theme, Language, Units -->
                     <div class="settings-group-card">
                         <div class="settings-row" onclick="switchScreen('garage')">
                             <div class="settings-row-left">
@@ -2334,6 +2440,16 @@
                                 <span data-i18n="myGarage">My garage</span>
                             </div>
                             <span class="chevron-arrow">&rsaquo;</span>
+                        </div>
+                        <div class="settings-row" onclick="openThemeModal()">
+                            <div class="settings-row-left">
+                                <span class="icon">🎨</span>
+                                <span data-i18n="theme">Theme</span>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <span id="current-theme-label" style="font-size:13px; font-weight:700; color:var(--primary-blue);">Light Crisp</span>
+                                <span class="chevron-arrow">&rsaquo;</span>
+                            </div>
                         </div>
                         <div class="settings-row" onclick="openLanguageModal()">
                             <div class="settings-row-left">
@@ -2479,12 +2595,14 @@
                         <span>VIN (17 Characters) — 3-Step Decoder</span>
                         <span id="wmi-match-pill" style="display:none; color:var(--success-green); font-size:11px;">✓ WMI Match</span>
                     </div>
-                    <div class="input-wrapper" style="gap:6px;">
-                        <input type="text" id="veh-input-vin" class="form-input no-icon" placeholder="e.g. 2T1BURHE7NC123456" maxlength="17" oninput="handleVinInput(this.value)">
-                        <button type="button" class="btn-secondary btn-sm" onclick="openOcrScanner('veh-input-vin', 'vin')" title="Scan VIN with Camera" style="white-space:nowrap; display:inline-flex; align-items:center; gap:4px;">📷 Scan</button>
-                        <button type="button" class="btn-secondary btn-sm" onclick="decodeVinOnline()" style="white-space:nowrap;">Decode (NHTSA)</button>
+                    <!-- Full-width VIN for 17 characters (Task 5) -->
+                    <input type="text" id="veh-input-vin" class="form-input no-icon" placeholder="e.g. 2T1BURHE7NC123456" maxlength="17" oninput="handleVinInput(this.value)" style="width:100%; font-family:'JetBrains Mono', monospace; font-size:15px; letter-spacing:1px; text-transform:uppercase;">
+                    <!-- 2 action buttons on a separate line below the VIN -->
+                    <div style="display:flex; gap:8px; margin-top:8px;">
+                        <button type="button" class="btn-secondary btn-sm" onclick="openOcrScanner('veh-input-vin', 'vin')" title="Scan VIN with Camera" style="flex:1; justify-content:center; display:inline-flex; align-items:center; gap:6px; font-weight:700;">📷 Scan</button>
+                        <button type="button" class="btn-secondary btn-sm" onclick="decodeVinOnline()" style="flex:1; justify-content:center; font-weight:700;">Decode (NHTSA)</button>
                     </div>
-                    <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">
+                    <div style="font-size:11px; color:var(--text-muted); margin-top:6px;">
                         Step 1: Offline WMI manufacturer identification • Step 2: Live NHTSA vPIC + Imperial-to-Metric Auto-Conversion
                     </div>
                 </div>
@@ -2563,7 +2681,10 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn-primary" style="margin-top:10px;">Save Vehicle to Garage</button>
+                <div style="display:flex; gap:10px; margin-top:14px;">
+                    <button type="submit" id="btn-save-veh-form" class="btn-primary" style="flex:2; justify-content:center;">Save Vehicle</button>
+                    <button type="button" id="btn-delete-veh-form" class="btn-secondary" onclick="handleDeleteCurrentVehicleFromForm()" style="flex:1; justify-content:center; color:var(--danger-red); border-color:#FECDD3; display:none;">🗑️ Delete</button>
+                </div>
             </form>
         </div>
     </div>
@@ -2608,8 +2729,21 @@
                 <div style="margin: 20px 0 10px;">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
                         <h4 style="font-size:15px; font-weight:800;">Maintenance Tasks Attached to Visit</h4>
-                        <button type="button" class="btn-secondary btn-sm" onclick="addTaskRowToBundle()">+ Add Task</button>
+                        <button type="button" class="btn-secondary btn-sm" onclick="addTaskRowToBundle()">+ Add Blank Task</button>
                     </div>
+
+                    <!-- Searchable Tasks Finder Bar (Task 8) -->
+                    <div style="background:var(--surface-subtle); border:1px solid var(--border-subtle); border-radius:var(--radius-md); padding:10px 12px; margin-bottom:14px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                            <span style="font-size:12.5px; font-weight:700; color:var(--text-dark);">⚡ Fast Task Search & Quick-Add:</span>
+                            <span style="font-size:11px; color:var(--text-muted);">Live filter 36+ service templates</span>
+                        </div>
+                        <div style="position:relative;">
+                            <input type="text" id="service-global-task-search" class="form-input no-icon" placeholder="Type to search (e.g. Engine Oil, Brake, Spark Plugs, Coolant)..." oninput="handleGlobalTaskSearch(this.value)" style="font-size:13px; padding-left:12px;">
+                            <div id="service-global-task-results" style="display:none; position:absolute; top:100%; left:0; right:0; background:var(--modal-bg, var(--surface-card)); border:1px solid var(--border-subtle); border-radius:var(--radius-md); box-shadow:0 10px 25px rgba(0,0,0,0.25); max-height:220px; overflow-y:auto; z-index:100; margin-top:4px;"></div>
+                        </div>
+                    </div>
+
                     <div id="bundle-tasks-container">
                         <!-- Dynamic task rows injected here -->
                     </div>
@@ -2692,6 +2826,10 @@
             </div>
 
             <form id="symptom-form" onsubmit="handleSaveSymptom(event)">
+                <div class="form-group" style="margin-bottom:12px;">
+                    <label class="form-label" for="sym-vehicle">Vehicle</label>
+                    <select id="sym-vehicle" class="form-select no-icon"></select>
+                </div>
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label" for="sym-date">Logged Date</label>
@@ -3277,19 +3415,128 @@
     </div>
 
     <!-- ========================================================= -->
-    <!-- MODAL: EXIT APP CONFIRMATION (Screenshot 5)               -->
+    <!-- MODAL: THEME SELECTION BOTTOM SHEET (Task 2)              -->
+    <!-- ========================================================= -->
+    <div id="modal-theme" class="bottom-sheet-backdrop" onclick="closeModal('modal-theme')">
+        <div class="bottom-sheet-content" onclick="event.stopPropagation()">
+            <div class="sheet-handle"></div>
+            <div class="sheet-header">
+                <h4 data-i18n="theme">Theme</h4>
+                <button class="sheet-close" onclick="closeModal('modal-theme')">✕</button>
+            </div>
+            <div style="border:1px solid var(--border-subtle); border-radius:18px; overflow:hidden;">
+                <div class="radio-option-item selected" id="theme-opt-light" onclick="selectAppTheme('light')">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <span style="font-size:22px;">☀️</span>
+                        <div>
+                            <div style="font-weight:700; color:var(--text-dark);">Light Crisp (Default)</div>
+                            <div style="font-size:11.5px; color:var(--text-muted);">Clean white surfaces & soft slate background</div>
+                        </div>
+                    </div>
+                    <div class="radio-circle"><span class="radio-circle-dot"></span></div>
+                </div>
+                <div class="radio-option-item" id="theme-opt-dark" onclick="selectAppTheme('dark')">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <span style="font-size:22px;">🌙</span>
+                        <div>
+                            <div style="font-weight:700; color:var(--text-dark);">Dark Cyber (Midnight)</div>
+                            <div style="font-size:11.5px; color:var(--text-muted);">Deep space navy & electric blue accents</div>
+                        </div>
+                    </div>
+                    <div class="radio-circle"><span class="radio-circle-dot"></span></div>
+                </div>
+                <div class="radio-option-item" id="theme-opt-slate" onclick="selectAppTheme('slate')">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <span style="font-size:22px;">🖤</span>
+                        <div>
+                            <div style="font-weight:700; color:var(--text-dark);">Sleek Slate (Obsidian)</div>
+                            <div style="font-size:11.5px; color:var(--text-muted);">High-contrast titanium zinc & emerald accents</div>
+                        </div>
+                    </div>
+                    <div class="radio-circle"><span class="radio-circle-dot"></span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- MODAL: VEHICLE PHOTO EDIT & UPLOAD (Task 7)               -->
+    <!-- ========================================================= -->
+    <div id="modal-vehicle-photo" class="modal-backdrop">
+        <div class="modal-box" style="max-width:440px;">
+            <div class="modal-header">
+                <h3>📷 Edit Vehicle Photo</h3>
+                <button class="btn-close-modal" onclick="closeModal('modal-vehicle-photo')">✕</button>
+            </div>
+            
+            <div style="text-align:center; margin-bottom:20px;">
+                <div style="width:100%; height:160px; border-radius:var(--radius-lg); overflow:hidden; background:var(--surface-subtle); display:flex; align-items:center; justify-content:center; border:2px dashed var(--border-subtle); margin-bottom:12px;">
+                    <img id="veh-photo-preview-img" src="" alt="Vehicle Photo Preview" style="max-width:100%; max-height:100%; object-fit:contain;">
+                </div>
+                
+                <!-- Native Camera / File Input -->
+                <input type="file" id="veh-photo-file-input" accept="image/*" style="display:none;" onchange="handleVehiclePhotoFileSelected(this)">
+                <button type="button" class="btn-primary" onclick="document.getElementById('veh-photo-file-input').click()" style="justify-content:center; width:100%; margin-bottom:8px;">
+                    📷 Take Photo / Upload from Device
+                </button>
+            </div>
+
+            <div class="form-group" style="margin-bottom:16px;">
+                <label class="form-label" for="veh-photo-url-input">Or Paste Image URL</label>
+                <div style="display:flex; gap:8px;">
+                    <input type="url" id="veh-photo-url-input" class="form-input no-icon" placeholder="https://images.unsplash.com/...">
+                    <button type="button" class="btn-secondary" onclick="applyVehiclePhotoUrlInput()" style="white-space:nowrap; font-weight:700;">Apply</button>
+                </div>
+            </div>
+
+            <!-- Quick Photo Presets -->
+            <div style="margin-top:12px;">
+                <label class="form-label">Or Choose High-Res Garage Preset</label>
+                <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:8px;">
+                    <button type="button" class="btn-secondary btn-xs" onclick="selectPhotoPreset('sedan')" style="font-weight:700; padding:6px 2px;">Sedan</button>
+                    <button type="button" class="btn-secondary btn-xs" onclick="selectPhotoPreset('suv')" style="font-weight:700; padding:6px 2px;">SUV</button>
+                    <button type="button" class="btn-secondary btn-xs" onclick="selectPhotoPreset('sport')" style="font-weight:700; padding:6px 2px;">Sports</button>
+                    <button type="button" class="btn-secondary btn-xs" onclick="selectPhotoPreset('moto')" style="font-weight:700; padding:6px 2px;">Moto</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- MODAL: VEHICLE DELETE CONFIRMATION (Task 6)               -->
+    <!-- ========================================================= -->
+    <div id="modal-delete-vehicle" class="modal-backdrop">
+        <div class="modal-box" style="max-width:360px; text-align:center; border-radius:24px; padding:28px 24px;">
+            <div style="font-size:42px; margin-bottom:8px;">⚠️</div>
+            <h3 style="font-size:20px; font-weight:800; color:var(--text-dark); margin-bottom:8px;">Delete Vehicle?</h3>
+            <p id="delete-vehicle-desc" style="font-size:13.5px; color:var(--text-muted); margin-bottom:24px; line-height:1.4;">
+                Are you sure you want to delete this vehicle? All service logs, fuel records, and reminders will be removed.
+            </p>
+            <div style="display:flex; gap:12px;">
+                <button type="button" class="btn-secondary" onclick="closeModal('modal-delete-vehicle')" style="flex:1; justify-content:center; border-radius:9999px; height:46px; font-weight:700;">
+                    Cancel
+                </button>
+                <button type="button" class="btn-primary" id="btn-confirm-delete-veh" onclick="executeDeleteVehicle()" style="flex:1; justify-content:center; border-radius:9999px; background:var(--danger-red); border:none; color:#FFFFFF; font-weight:700; height:46px; box-shadow:0 4px 14px rgba(239,68,68,0.35);">
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- MODAL: EXIT APP CONFIRMATION (Screenshot 5 / Task 4)      -->
     <!-- ========================================================= -->
     <div id="modal-exit" class="modal-backdrop">
         <div class="modal-box" style="max-width:340px; text-align:center; border-radius:24px; padding:28px 24px;">
-            <h3 style="font-size:20px; font-weight:800; color:#0F172A; margin-bottom:8px;" data-i18n="exitApp">Exit app</h3>
-            <p style="font-size:13.5px; color:#64748B; margin-bottom:24px; line-height:1.4;" data-i18n="exitConfirm">
+            <h3 style="font-size:20px; font-weight:800; color:var(--text-dark); margin-bottom:8px;" data-i18n="exitApp">Exit app</h3>
+            <p style="font-size:13.5px; color:var(--text-muted); margin-bottom:24px; line-height:1.4;" data-i18n="exitConfirm">
                 You're about to exit the app. Are you sure?
             </p>
             <div style="display:flex; gap:12px;">
-                <button type="button" class="btn-secondary" onclick="closeModal('modal-exit')" style="flex:1; justify-content:center; border-radius:9999px; background:#E2E8F0; border:none; color:#0F172A; font-weight:700; height:46px;" data-i18n="no">
+                <button type="button" class="btn-secondary" onclick="closeModal('modal-exit')" style="flex:1; justify-content:center; border-radius:9999px; background:var(--surface-subtle); border:1px solid var(--border-subtle); color:var(--text-dark); font-weight:700; height:46px;" data-i18n="no">
                     No
                 </button>
-                <button type="button" class="btn-primary" onclick="handleLogoutConfirm()" style="flex:1; justify-content:center; border-radius:9999px; background:#E11D48; border:none; color:#FFFFFF; font-weight:700; height:46px; box-shadow:0 4px 14px rgba(225,29,72,0.35);" data-i18n="yes">
+                <button type="button" class="btn-primary" onclick="handleExitAppConfirm()" style="flex:1; justify-content:center; border-radius:9999px; background:#E11D48; border:none; color:#FFFFFF; font-weight:700; height:46px; box-shadow:0 4px 14px rgba(225,29,72,0.35);" data-i18n="yes">
                     Yes
                 </button>
             </div>
@@ -3410,8 +3657,220 @@
         // Core View Switching & Auth
         // -------------------------------------------------------------
         // =============================================================
-        // COMPETITOR UI ARCHITECTURE & MULTILINGUAL SYSTEM
+        // COMPETITOR UI ARCHITECTURE, THEMES & MULTILINGUAL SYSTEM
         // =============================================================
+        // -------------------------------------------------------------
+        // Theme System (Task 2)
+        // -------------------------------------------------------------
+        let currentTheme = localStorage.getItem('karkare_theme') || 'light';
+
+        function selectAppTheme(theme) {
+            setTheme(theme);
+            closeModal('modal-theme');
+            showToast(`Theme updated to ${theme.toUpperCase()}`, 'success');
+        }
+
+        function setTheme(theme) {
+            currentTheme = theme;
+            localStorage.setItem('karkare_theme', theme);
+            document.documentElement.setAttribute('data-theme', theme);
+            document.body.setAttribute('data-theme', theme);
+
+            const labelMap = {
+                'light': 'Light Crisp (Default)',
+                'dark': 'Dark Cyber (Midnight)',
+                'slate': 'Sleek Slate (Obsidian)'
+            };
+            const labelEl = document.getElementById('current-theme-label');
+            if (labelEl) labelEl.textContent = labelMap[theme] || 'Light Crisp';
+
+            ['light', 'dark', 'slate'].forEach(t => {
+                const opt = document.getElementById(`theme-opt-${t}`);
+                if (opt) {
+                    if (t === theme) {
+                        opt.classList.add('selected');
+                    } else {
+                        opt.classList.remove('selected');
+                    }
+                }
+            });
+        }
+
+        function openThemeModal() {
+            setTheme(currentTheme);
+            openModal('modal-theme');
+        }
+
+        // Apply theme immediately
+        setTheme(currentTheme);
+
+        // -------------------------------------------------------------
+        // Vehicle Delete & Confirmation (Task 6)
+        // -------------------------------------------------------------
+        let vehicleToDeleteId = null;
+
+        function promptDeleteVehicle(id, vehicleName) {
+            vehicleToDeleteId = id;
+            const desc = document.getElementById('delete-vehicle-desc');
+            if (desc) {
+                desc.textContent = `Are you sure you want to delete ${vehicleName || 'this vehicle'}? All service logs, fuel records, and reminders will be removed.`;
+            }
+            openModal('modal-delete-vehicle');
+        }
+
+        async function executeDeleteVehicle() {
+            if (!vehicleToDeleteId) return;
+            try {
+                await apiRequest(`api/vehicles/${vehicleToDeleteId}/delete`, 'POST');
+                closeModal('modal-delete-vehicle');
+                showToast('Vehicle deleted successfully.', 'success');
+                vehicleToDeleteId = null;
+                await loadGarageDashboard();
+            } catch (err) {
+                showToast(err.message, 'error');
+            }
+        }
+
+        // -------------------------------------------------------------
+        // Vehicle Photo Edit & Presets (Task 7)
+        // -------------------------------------------------------------
+        let photoTargetVehicleId = null;
+
+        function openVehiclePhotoModal(vehId = null) {
+            photoTargetVehicleId = vehId || (activeVehicle ? activeVehicle.id : null);
+            if (!photoTargetVehicleId) {
+                showToast('Please select or add a vehicle first', 'warning');
+                return;
+            }
+            const targetVeh = garageData?.vehicles?.find(v => v.id === photoTargetVehicleId) || activeVehicle;
+            const currentUrl = targetVeh?.photo_url || '';
+            document.getElementById('veh-photo-url-input').value = currentUrl;
+            const preview = document.getElementById('veh-photo-preview-img');
+            if (preview) {
+                preview.src = currentUrl || 'https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=800&q=80';
+            }
+            openModal('modal-vehicle-photo');
+        }
+
+        async function handleVehiclePhotoFileSelected(input) {
+            if (!input.files || !input.files[0] || !photoTargetVehicleId) return;
+            const file = input.files[0];
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('vehicle_id', photoTargetVehicleId);
+            formData.append('type', 'photo');
+
+            try {
+                showToast('Uploading photo...', 'info');
+                const token = getAuthToken();
+                const res = await fetch('api/upload', {
+                    method: 'POST',
+                    headers: token ? { 'Authorization': `Bearer ${token}` } : {},
+                    body: formData,
+                });
+                const data = await res.json();
+                if (!data.success) throw new Error(data.error?.message || 'Upload failed');
+                
+                const photoUrl = data.data.url;
+                await saveVehiclePhotoUrl(photoUrl);
+            } catch (err) {
+                showToast('Photo upload failed: ' + err.message, 'error');
+            }
+        }
+
+        async function applyVehiclePhotoUrlInput() {
+            const url = document.getElementById('veh-photo-url-input').value.trim();
+            if (!url) {
+                showToast('Please enter an image URL', 'warning');
+                return;
+            }
+            await saveVehiclePhotoUrl(url);
+        }
+
+        const PHOTO_PRESETS = {
+            sedan: 'https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=800&q=80',
+            suv: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=800&q=80',
+            sport: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&q=80',
+            moto: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=800&q=80'
+        };
+
+        async function selectPhotoPreset(key) {
+            const url = PHOTO_PRESETS[key];
+            if (url) {
+                document.getElementById('veh-photo-url-input').value = url;
+                const preview = document.getElementById('veh-photo-preview-img');
+                if (preview) preview.src = url;
+                await saveVehiclePhotoUrl(url);
+            }
+        }
+
+        async function saveVehiclePhotoUrl(url) {
+            if (!photoTargetVehicleId || !url) return;
+            try {
+                await apiRequest(`api/vehicles/${photoTargetVehicleId}/photo`, 'POST', { photo_url: url });
+                closeModal('modal-vehicle-photo');
+                showToast('Vehicle photo updated successfully!', 'success');
+                await loadGarageDashboard(photoTargetVehicleId);
+            } catch (err) {
+                showToast('Failed to update photo: ' + err.message, 'error');
+            }
+        }
+
+        // -------------------------------------------------------------
+        // Back Button App Trap & Confirmation (Task 4)
+        // -------------------------------------------------------------
+        function handleExitAppConfirm() {
+            closeModal('modal-exit');
+            window.removeEventListener('popstate', handlePopState);
+            if (window.history.length > 2) {
+                window.history.go(-2);
+            } else {
+                window.close();
+                document.body.innerHTML = `
+                    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; background:#0B0F19; color:#F8FAFC; font-family:'Plus Jakarta Sans', sans-serif; text-align:center; padding:24px;">
+                        <div style="font-size:52px; margin-bottom:16px;">🚗💨</div>
+                        <h2 style="font-size:24px; font-weight:800; margin-bottom:8px;">You have exited CarLog</h2>
+                        <p style="font-size:14px; color:#94A3B8; max-width:320px; margin-bottom:24px;">Thank you for using CarLog Garage. You can safely close this browser window.</p>
+                        <button onclick="location.reload()" style="background:#2563EB; color:#FFF; border:none; padding:12px 28px; border-radius:9999px; font-weight:700; cursor:pointer;">Return to App</button>
+                    </div>
+                `;
+            }
+        }
+
+        function handlePopState(e) {
+            // 1. If any modal or bottom sheet is open, close it first and prevent exit
+            const openModals = Array.from(document.querySelectorAll('.modal-backdrop, .bottom-sheet-backdrop')).filter(m => {
+                return window.getComputedStyle(m).display !== 'none';
+            });
+
+            if (openModals.length > 0) {
+                openModals.forEach(m => {
+                    m.style.display = 'none';
+                });
+                modalStackCount = 0;
+                document.body.classList.remove('has-modal-open');
+                document.body.style.overflow = '';
+                history.pushState({ page: 'karkare' }, '');
+                return;
+            }
+
+            // 2. If on sub-screen other than home, switch back to home screen
+            if (currentScreen !== 'home') {
+                switchScreen('home');
+                history.pushState({ page: 'karkare' }, '');
+                return;
+            }
+
+            // 3. On home screen: Prevent direct exit and prompt with exit confirmation modal
+            history.pushState({ page: 'karkare' }, '');
+            openModal('modal-exit');
+        }
+
+        window.addEventListener('load', () => {
+            history.pushState({ page: 'karkare' }, '');
+        });
+        window.addEventListener('popstate', handlePopState);
+
         let currentScreen = 'home';
         let currentLanguage = localStorage.getItem('karkare_lang') || 'en';
         let currentHistoryCategory = 'all';
@@ -3420,6 +3879,7 @@
 
         const TRANSLATIONS = {
             en: {
+                theme: "Theme",
                 home: "HOME",
                 history: "HISTORY",
                 reminder: "REMINDER",
@@ -3470,6 +3930,7 @@
                 tipLifespan: "Regular maintenance extends your vehicle's lifespan by up to 25%."
             },
             ru: {
+                theme: "Тема",
                 home: "ГЛАВНАЯ",
                 history: "ИСТОРИЯ",
                 reminder: "НАПОМИНАНИЯ",
@@ -3520,6 +3981,7 @@
                 tipLifespan: "Регулярное обслуживание продлевает жизнь автомобиля до 25%."
             },
             es: {
+                theme: "Tema",
                 home: "INICIO",
                 history: "HISTORIAL",
                 reminder: "RECORDATORIO",
@@ -3570,6 +4032,7 @@
                 tipLifespan: "El mantenimiento regular extiende la vida útil de su vehículo hasta un 25%."
             },
             de: {
+                theme: "Design",
                 home: "START",
                 history: "VERLAUF",
                 reminder: "ERINNERUNG",
@@ -3620,6 +4083,7 @@
                 tipLifespan: "Regelmäßige Wartung verlängert die Lebensdauer um bis zu 25%."
             },
             fr: {
+                theme: "Thème",
                 home: "ACCUEIL",
                 history: "HISTORIQUE",
                 reminder: "RAPPEL",
@@ -3670,6 +4134,7 @@
                 tipLifespan: "Un entretien régulier prolonge la durée de vie du véhicule jusqu'à 25%."
             },
             pt: {
+                theme: "Tema",
                 home: "INÍCIO",
                 history: "HISTÓRICO",
                 reminder: "LEMBRETE",
@@ -3720,6 +4185,7 @@
                 tipLifespan: "A manutenção regular prolonga a vida útil do veículo em até 25%."
             },
             ar: {
+                theme: "المظهر",
                 home: "الرئيسية",
                 history: "السجل",
                 reminder: "التذكيرات",
@@ -3876,13 +4342,11 @@
         }
 
         function openQuickActionSheet() {
-            const sheet = document.getElementById('quick-action-sheet');
-            if (sheet) sheet.style.display = 'flex';
+            openModal('quick-action-sheet');
         }
 
         function closeQuickActionSheet(e) {
-            const sheet = document.getElementById('quick-action-sheet');
-            if (sheet) sheet.style.display = 'none';
+            closeModal('quick-action-sheet');
         }
 
         // -------------------------------------------------------------
@@ -4320,7 +4784,7 @@
                 return `
                 <div class="collection-card" onclick="handleSelectVehicle('${v.id}')">
                     ${isActive ? `<div class="collection-badge-active">✓</div>` : ''}
-                    <div class="collection-card-img">
+                    <div class="collection-card-img" onclick="event.stopPropagation(); openVehiclePhotoModal('${v.id}')" title="Click to change photo" style="cursor:pointer;">
                         <img src="${photoSrc}" alt="${v.model}">
                     </div>
                     <div class="collection-footer">
@@ -4328,9 +4792,17 @@
                             <div style="font-size:22px; font-weight:800; letter-spacing:-0.5px;">${v.model}</div>
                             <div style="font-size:13px; opacity:0.85; margin-top:2px;">${bodyType} • ${v.make}</div>
                         </div>
-                        <button type="button" class="btn-edit-pill" onclick="event.stopPropagation(); openEditVehicleModal('${v.id}')">
-                            Edit ✎
-                        </button>
+                        <div style="display:flex; gap:6px; align-items:center;">
+                            <button type="button" class="btn-edit-pill" onclick="event.stopPropagation(); openVehiclePhotoModal('${v.id}')" title="Change Vehicle Photo">
+                                📷 Photo
+                            </button>
+                            <button type="button" class="btn-edit-pill" onclick="event.stopPropagation(); openEditVehicleModal('${v.id}')" title="Edit Vehicle Details">
+                                Edit ✎
+                            </button>
+                            <button type="button" class="btn-edit-pill" onclick="event.stopPropagation(); promptDeleteVehicle('${v.id}', '${v.year} ${v.make} ${v.model}')" style="background:#EF4444; color:#FFFFFF;" title="Delete Vehicle">
+                                🗑️
+                            </button>
+                        </div>
                     </div>
                 </div>`;
             }).join('');
@@ -4548,10 +5020,16 @@
             }
         }
 
+        let editingVehicleId = null;
+
         function openEditVehicleModal(id) {
             if (!garageData || !garageData.vehicles) return;
             const veh = garageData.vehicles.find(v => v.id === id);
             if (!veh) return;
+
+            editingVehicleId = id;
+            const titleEl = document.getElementById('modal-vehicle-title');
+            if (titleEl) titleEl.textContent = `Edit ${veh.year} ${veh.make} ${veh.model}`;
 
             document.getElementById('veh-input-vin').value = veh.vin || '';
             document.getElementById('veh-input-make').value = veh.make || '';
@@ -4563,8 +5041,29 @@
             document.getElementById('veh-input-type').value = veh.vehicle_type || 'car';
             document.getElementById('veh-input-trans').value = veh.transmission_type || 'manual';
             document.getElementById('veh-input-fuel').value = veh.fuel_type || 'gasoline';
+            document.getElementById('veh-input-curr-odo').value = veh.current_odometer_km || 0;
+
+            const delBtn = document.getElementById('btn-delete-veh-form');
+            if (delBtn) delBtn.style.display = 'inline-flex';
 
             openModal('modal-vehicle');
+        }
+
+        function openAddVehicleModal() {
+            editingVehicleId = null;
+            const titleEl = document.getElementById('modal-vehicle-title');
+            if (titleEl) titleEl.textContent = 'Add Vehicle / Motorcycle';
+            document.getElementById('vehicle-form').reset();
+            const delBtn = document.getElementById('btn-delete-veh-form');
+            if (delBtn) delBtn.style.display = 'none';
+            openModal('modal-vehicle');
+        }
+
+        function handleDeleteCurrentVehicleFromForm() {
+            if (!editingVehicleId) return;
+            const veh = garageData?.vehicles?.find(v => v.id === editingVehicleId);
+            closeModal('modal-vehicle');
+            promptDeleteVehicle(editingVehicleId, veh ? `${veh.year} ${veh.make} ${veh.model}` : 'this vehicle');
         }
 
         function showView(viewId) {
@@ -5171,7 +5670,7 @@
         }
 
         // -------------------------------------------------------------
-        // Multi-Task Service Bundle Logger Logic
+        // Multi-Task Service Bundle Logger Logic (Searchable - Task 8)
         // -------------------------------------------------------------
         function addTaskRowToBundle(taskData = {}) {
             const container = document.getElementById('bundle-tasks-container');
@@ -5185,10 +5684,14 @@
                 <button type="button" class="btn-remove-task" onclick="document.getElementById('${rowId}').remove(); updateBundleTotal();">✕</button>
                 <div class="form-row">
                     <div class="form-group" style="margin-bottom:10px;">
-                        <label class="form-label">Task Category & Name</label>
-                        <select class="form-select no-icon task-template-select" onchange="handleTaskTemplateSelect('${rowId}', this.value)">
-                            <option value="">Select Categorized Task...</option>
-                            ${tasksList.map(t => `<option value="${t.id}" data-name="${t.task_name}">${t.category.toUpperCase()}: ${t.task_name}</option>`).join('')}
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                            <label class="form-label" style="margin:0;">Task Category & Name</label>
+                            <span style="font-size:11px; color:var(--text-muted);">Searchable</span>
+                        </div>
+                        <input type="text" class="form-input no-icon task-search-filter" placeholder="🔍 Type to filter tasks..." oninput="filterTaskRowOptions('${rowId}', this.value)" style="padding:6px 10px; font-size:12px; margin-bottom:6px;">
+                        <select class="form-select no-icon task-template-select" id="select-${rowId}" onchange="handleTaskTemplateSelect('${rowId}', this.value)">
+                            <option value="">Select Categorized Task (${tasksList.length} total)...</option>
+                            ${tasksList.map(t => `<option value="${t.id}" data-name="${t.task_name}">[${t.category.toUpperCase()}] ${t.task_name}</option>`).join('')}
                         </select>
                     </div>
                     <div class="form-group" style="margin-bottom:10px;">
@@ -5227,6 +5730,75 @@
                 </div>
             `;
             container.appendChild(row);
+
+            if (taskData.taskId) {
+                const sel = row.querySelector('.task-template-select');
+                if (sel) {
+                    sel.value = taskData.taskId;
+                    handleTaskTemplateSelect(rowId, taskData.taskId);
+                }
+            }
+        }
+
+        function filterTaskRowOptions(rowId, query) {
+            const sel = document.getElementById(`select-${rowId}`) || document.querySelector(`#${rowId} .task-template-select`);
+            if (!sel || !garageData || !garageData.tasks) return;
+            const q = (query || '').toLowerCase().trim();
+            const tasks = garageData.tasks;
+            const filtered = q ? tasks.filter(t => 
+                (t.task_name && t.task_name.toLowerCase().includes(q)) || 
+                (t.category && t.category.toLowerCase().includes(q))
+            ) : tasks;
+
+            sel.innerHTML = `<option value="">Select Categorized Task (${filtered.length} found)...</option>` +
+                filtered.map(t => `<option value="${t.id}" data-name="${t.task_name}">[${t.category.toUpperCase()}] ${t.task_name}</option>`).join('');
+
+            if (filtered.length === 1 && q.length >= 2) {
+                sel.value = filtered[0].id;
+                handleTaskTemplateSelect(rowId, filtered[0].id);
+            }
+        }
+
+        function handleGlobalTaskSearch(query) {
+            const resBox = document.getElementById('service-global-task-results');
+            if (!resBox) return;
+            const q = (query || '').toLowerCase().trim();
+            if (!q || !garageData || !garageData.tasks) {
+                resBox.style.display = 'none';
+                return;
+            }
+
+            const matches = garageData.tasks.filter(t => 
+                (t.task_name && t.task_name.toLowerCase().includes(q)) || 
+                (t.category && t.category.toLowerCase().includes(q))
+            );
+
+            if (matches.length === 0) {
+                resBox.innerHTML = '<div style="padding:12px; font-size:12px; color:var(--text-muted); text-align:center;">No matching service tasks found</div>';
+                resBox.style.display = 'block';
+                return;
+            }
+
+            resBox.innerHTML = matches.slice(0, 8).map(t => `
+                <div onclick="addSpecificTaskToBundle('${t.id}')" style="padding:10px 14px; border-bottom:1px solid var(--border-subtle); display:flex; justify-content:space-between; align-items:center; cursor:pointer;" onmouseover="this.style.background='var(--surface-hover)'" onmouseout="this.style.background='transparent'">
+                    <div>
+                        <div style="font-size:13px; font-weight:700; color:var(--text-dark);">${t.task_name}</div>
+                        <div style="font-size:11px; color:var(--text-muted); text-transform:uppercase;">${t.category} • Every ${t.default_interval_km ? Number(t.default_interval_km).toLocaleString() + ' km' : 'Scheduled'}</div>
+                    </div>
+                    <span style="font-size:12px; font-weight:700; color:var(--primary-blue); background:rgba(37,99,235,0.08); padding:4px 8px; border-radius:6px;">+ Attach</span>
+                </div>
+            `).join('');
+            resBox.style.display = 'block';
+        }
+
+        function addSpecificTaskToBundle(taskId) {
+            const resBox = document.getElementById('service-global-task-results');
+            if (resBox) resBox.style.display = 'none';
+            const searchInput = document.getElementById('service-global-task-search');
+            if (searchInput) searchInput.value = '';
+
+            addTaskRowToBundle({ taskId });
+            showToast('Service task added to visit!', 'success');
         }
 
         function convertTaskFluid(rowId) {
@@ -5303,10 +5875,17 @@
             };
 
             try {
-                const res = await apiRequest('api/vehicles', 'POST', payload);
-                closeModal('modal-vehicle');
-                showToast('Vehicle added to garage!', 'success');
-                await loadGarageDashboard(res.data.id);
+                if (editingVehicleId) {
+                    await apiRequest(`api/vehicles/${editingVehicleId}`, 'POST', payload);
+                    closeModal('modal-vehicle');
+                    showToast('Vehicle updated successfully!', 'success');
+                    await loadGarageDashboard(editingVehicleId);
+                } else {
+                    const res = await apiRequest('api/vehicles', 'POST', payload);
+                    closeModal('modal-vehicle');
+                    showToast('Vehicle added to garage!', 'success');
+                    await loadGarageDashboard(res.data.id);
+                }
             } catch (err) {
                 showToast(err.message, 'error');
             }
@@ -5390,12 +5969,17 @@
 
         async function handleSaveSymptom(e) {
             e.preventDefault();
-            if (!activeVehicle) return;
+            const vehSelect = document.getElementById('sym-vehicle');
+            const targetVehId = (vehSelect && vehSelect.value) ? vehSelect.value : (activeVehicle ? activeVehicle.id : null);
+            if (!targetVehId) {
+                showToast('Please select or register a vehicle first.', 'warning');
+                return;
+            }
 
             const payload = {
-                vehicle_id: activeVehicle.id,
+                vehicle_id: targetVehId,
                 logged_date: document.getElementById('sym-date').value,
-                odometer_km: parseInt(document.getElementById('sym-odo').value) || activeVehicle.current_odometer_km,
+                odometer_km: parseInt(document.getElementById('sym-odo').value) || (activeVehicle ? activeVehicle.current_odometer_km : 0),
                 obd_code: document.getElementById('sym-obd').value,
                 severity: document.getElementById('sym-severity').value,
                 engine_state: document.getElementById('sym-state').value,
@@ -5406,7 +5990,7 @@
                 await apiRequest('api/symptoms', 'POST', payload);
                 closeModal('modal-symptom');
                 showToast('Diagnostic symptom logged!', 'success');
-                await loadGarageDashboard(activeVehicle.id);
+                await loadGarageDashboard(targetVehId);
             } catch (err) {
                 showToast(err.message, 'error');
             }
@@ -5697,16 +6281,30 @@
         }
 
         // -------------------------------------------------------------
-        // Modal Controls & Utilities
+        // Modal Controls & Background Page Disabling (Task 3)
         // -------------------------------------------------------------
+        let modalStackCount = 0;
+
         function openModal(id) {
             const m = document.getElementById(id);
-            if (m) m.style.display = 'flex';
+            if (m) {
+                m.style.display = 'flex';
+                modalStackCount++;
+                document.body.classList.add('has-modal-open');
+                document.body.style.overflow = 'hidden';
+            }
         }
 
         function closeModal(id) {
             const m = document.getElementById(id);
-            if (m) m.style.display = 'none';
+            if (m) {
+                m.style.display = 'none';
+                modalStackCount = Math.max(0, modalStackCount - 1);
+                if (modalStackCount === 0) {
+                    document.body.classList.remove('has-modal-open');
+                    document.body.style.overflow = '';
+                }
+            }
         }
 
         // -------------------------------------------------------------
@@ -6166,6 +6764,15 @@
             document.getElementById('symptom-form').reset();
             document.getElementById('sym-date').value = new Date().toISOString().split('T')[0];
             document.getElementById('sym-odo').value = activeVehicle ? activeVehicle.current_odometer_km : 0;
+            
+            // Populate vehicle selector
+            const vSelect = document.getElementById('sym-vehicle');
+            if (vSelect && garageData && garageData.vehicles) {
+                vSelect.innerHTML = garageData.vehicles.map(v => 
+                    `<option value="${v.id}" ${activeVehicle && v.id === activeVehicle.id ? 'selected' : ''}>${v.year} ${v.make} ${v.model} (${v.vehicle_type.toUpperCase()})</option>`
+                ).join('');
+            }
+
             openModal('modal-symptom');
         }
 
