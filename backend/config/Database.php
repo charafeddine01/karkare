@@ -36,6 +36,7 @@ class Database {
                 // Check .my.cnf in parent directories
                 $searchDir = __DIR__;
                 $foundCnf = null;
+                $cnfKeys = [];
                 for ($i = 0; $i < 6; $i++) {
                     $searchDir = dirname($searchDir);
                     $cnfPath = $searchDir . '/.my.cnf';
@@ -43,6 +44,7 @@ class Database {
                         $parsed = @parse_ini_file($cnfPath, true);
                         if ($parsed) {
                             $foundCnf = $cnfPath;
+                            $cnfKeys = $parsed;
                             $section = $parsed['client'] ?? ($parsed['mysql'] ?? reset($parsed));
                             if (!empty($section['socket'])) {
                                 $candidateDsns[] = sprintf('mysql:unix_socket=%s;dbname=%s;charset=%s', $section['socket'], $config['dbname'], $config['charset']);
@@ -94,7 +96,17 @@ class Database {
                         $mysqlError = "DSN [{$dsn}] error: " . $e->getMessage();
                     }
                 }
-                self::$lastError = $mysqlError . ($foundCnf ? " (found cnf at {$foundCnf})" : " (no cnf found)");
+                $safeCnf = [];
+                foreach ($cnfKeys as $k => $v) {
+                    if (is_array($v)) {
+                        foreach ($v as $subK => $subV) {
+                            if ($subK !== 'password') $safeCnf[$k][$subK] = $subV;
+                        }
+                    } elseif ($k !== 'password') {
+                        $safeCnf[$k] = $v;
+                    }
+                }
+                self::$lastError = $mysqlError . ($foundCnf ? " (cnf info: " . json_encode($safeCnf) . ")" : " (no cnf found)");
             }
 
             // 2. Fallback to self-contained SQLite database
