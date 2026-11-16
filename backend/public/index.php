@@ -355,10 +355,7 @@ $router->get('/api/verify/{token}', function (Request $req) {
 
         // Fetch logs
         $stmtLogs = $db->prepare(
-            "SELECT ml.id, ml.visit_id, ml.task_id, ml.part_brand, ml.part_number, ml.fluid_liters,
-                    ml.position_tag, ml.warranty_months, ml.cost_parts_usd, ml.cost_labor_usd,
-                    COALESCE(mtt.task_name, ml.custom_task_name, 'Maintenance Service') AS task_name,
-                    mtt.category
+            "SELECT ml.*, mtt.task_name, mtt.category as task_category
              FROM maintenance_logs ml
              LEFT JOIN maintenance_tasks_template mtt ON ml.task_id = mtt.id
              WHERE ml.vehicle_id = ? AND ml.is_deleted = 0
