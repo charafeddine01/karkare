@@ -288,6 +288,8 @@ $router->get('/api/sync/pull', [SyncController::class, 'pull'], [$authMiddleware
 
 // Media Upload (Protected)
 $router->post('/api/upload', [UploadController::class, 'upload'], [$authMiddleware]);
+// Media Streaming (Public image/audio rendering)
+$router->get('/api/media/{userId}/{vehicleId}/{filename}', [UploadController::class, 'streamMedia']);
 
 // High-Accuracy Cloud Neural OCR Scanner (Feature E)
 $router->post('/api/ocr/scan', [OcrController::class, 'scan']);

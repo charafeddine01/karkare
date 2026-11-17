@@ -124,13 +124,50 @@ class UploadController {
         }
 
         $relativePath = "/uploads/{$userId}/{$vehicleId}/{$filename}";
-        $fullUrl = rtrim($appConfig['base_url'], '/') . $relativePath;
+        $mediaUrl = rtrim($appConfig['base_url'], '/') . "/api/media/{$userId}/{$vehicleId}/{$filename}";
 
         Response::success([
             'file_name' => $filename,
             'relative_path' => $relativePath,
-            'url' => $fullUrl,
+            'url' => $mediaUrl,
             'size_bytes' => file_exists($destination) ? filesize($destination) : $fileSize,
         ], 'File uploaded successfully.', 201);
+    }
+
+    /**
+     * Stream uploaded media files with proper MIME and caching headers
+     */
+    public function streamMedia(Request $request): void {
+        $userId = preg_replace('/[^a-zA-Z0-9_\-]/', '', (string)$request->getParam('userId'));
+        $vehicleId = preg_replace('/[^a-zA-Z0-9_\-]/', '', (string)$request->getParam('vehicleId'));
+        $filename = basename((string)$request->getParam('filename'));
+
+        $storageConfig = Config::get()['storage'];
+        $file = rtrim($storageConfig['uploads_dir'], '/') . "/{$userId}/{$vehicleId}/{$filename}";
+
+        if (!file_exists($file) || !is_file($file)) {
+            http_response_code(404);
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'error' => 'Media file not found']);
+            return;
+        }
+
+        $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+        $mimes = [
+            'webp' => 'image/webp',
+            'jpg'  => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'png'  => 'image/png',
+            'gif'  => 'image/gif',
+            'm4a'  => 'audio/mp4',
+            'mp4'  => 'video/mp4',
+            'pdf'  => 'application/pdf',
+        ];
+
+        header('Content-Type: ' . ($mimes[$ext] ?? 'application/octet-stream'));
+        header('Cache-Control: public, max-age=31536000');
+        header('Content-Length: ' . (string)filesize($file));
+        readfile($file);
+        exit;
     }
 }
