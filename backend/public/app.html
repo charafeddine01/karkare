@@ -2113,7 +2113,11 @@
                     <!-- Subheader: Welcome Back & Garage Pill -->
                     <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px;">
                         <div>
-                            <div style="font-size:13px; font-weight:600; color:var(--text-muted);" data-i18n="welcomeBack">Welcome back</div>
+                            <div style="font-size:13px; font-weight:600; color:var(--text-muted); display:flex; align-items:center; gap:6px;">
+                                <span data-i18n="welcomeBack">Welcome back</span>
+                                <span style="opacity:0.4;">•</span>
+                                <span id="dash-user-chip" style="color:var(--primary-blue); font-weight:700;">Demo Driver</span>
+                            </div>
                             <h2 id="home-car-name" style="font-size:24px; font-weight:800; color:var(--text-dark); margin-top:2px;">Demo Car</h2>
                         </div>
                         <button class="btn-secondary btn-sm" onclick="switchScreen('garage')" style="border-radius:var(--radius-full); padding:6px 16px; font-weight:700; color:var(--primary-blue); background:#EFF6FF; border-color:#BFDBFE;" data-i18n="garage">
@@ -2436,6 +2440,22 @@
                         <div style="font-size:36px; margin-bottom:4px;">👑 🏎️</div>
                         <div style="font-size:19px; font-weight:900; letter-spacing:0.5px;" data-i18n="upgradePro">UPGRADE to PRO NOW</div>
                         <div style="font-size:12px; font-weight:600; opacity:0.9; margin-top:4px;" data-i18n="limitlessBenefits">Limitless Benefits, Ultimate Ad-Free</div>
+                    </div>
+
+                    <!-- Active Account Display Card -->
+                    <div style="background:var(--surface-card); border:1px solid var(--border-light); border-radius:var(--radius-md); padding:12px 16px; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between;">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <div style="width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg, var(--primary-cyan), var(--primary-blue)); color:#FFF; display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:800;">
+                                👤
+                            </div>
+                            <div>
+                                <div id="settings-user-name" style="font-size:14px; font-weight:700; color:var(--text-main);">Demo Driver</div>
+                                <div id="settings-user-email" style="font-size:11.5px; color:var(--text-muted);">demo@carlog.xyz</div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-secondary btn-xs" onclick="handleLogout()" style="border-radius:var(--radius-full); padding:4px 10px; font-weight:700; color:var(--danger-crimson); border-color:var(--danger-crimson); background:transparent;">
+                            Sign Out
+                        </button>
                     </div>
 
                     <!-- Group 1: Garage, Theme, Language, Units -->
@@ -5184,11 +5204,21 @@
             const chip = document.getElementById('user-chip');
             const nameDisplay = document.getElementById('user-name-display');
             if (user && (user.full_name || user.email)) {
-                chip.style.display = 'flex';
-                nameDisplay.textContent = user.email ? `${user.full_name || 'User'} (${user.email})` : (user.full_name || 'User');
+                if (chip) chip.style.display = 'flex';
+                if (nameDisplay) nameDisplay.textContent = user.email ? `${user.full_name || 'User'} (${user.email})` : (user.full_name || 'User');
             } else {
-                chip.style.display = 'none';
+                if (chip) chip.style.display = 'none';
             }
+
+            // Sync account info to Home subheader & Settings screen
+            const dashUser = document.getElementById('dash-user-chip');
+            if (dashUser) {
+                dashUser.textContent = user ? (user.full_name || user.email || 'User') : '';
+            }
+            const sName = document.getElementById('settings-user-name');
+            const sEmail = document.getElementById('settings-user-email');
+            if (sName) sName.textContent = user ? (user.full_name || 'User') : 'Guest';
+            if (sEmail) sEmail.textContent = user ? (user.email || 'No email attached') : 'Not signed in';
         }
 
         function handleLogout() {
