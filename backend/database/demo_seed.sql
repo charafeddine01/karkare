@@ -6,7 +6,7 @@ VALUES (
     'd0000000-0000-0000-0000-000000000001',
     'demo@carlog.xyz',
     '$2y$10$e7W74y/4o9/iH6sC51B6h.M3t9W2.YV7/Bq8uXzKk.fN1UoPz8sQ2',
-    'Abbas Charafeddine',
+    'Demo Driver',
     1
 ) ON DUPLICATE KEY UPDATE full_name = VALUES(full_name);
 

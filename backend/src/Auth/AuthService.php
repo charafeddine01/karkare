@@ -178,7 +178,7 @@ class AuthService {
                 $userId = 'd0000000-0000-0000-0000-000000000001';
                 $hash = password_hash($password, PASSWORD_BCRYPT);
                 $this->db->prepare(
-                    "INSERT INTO users (id, email, password_hash, full_name, is_email_verified) VALUES (?, ?, ?, 'Abbas Charafeddine', 1)"
+                    "INSERT INTO users (id, email, password_hash, full_name, is_email_verified) VALUES (?, ?, ?, 'Demo Driver', 1)"
                 )->execute([$userId, $email, $hash]);
                 $stmt->execute([$email]);
                 $user = $stmt->fetch();

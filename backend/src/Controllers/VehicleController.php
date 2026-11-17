@@ -57,15 +57,17 @@ class VehicleController {
             return (string)$veh['id'];
         }
 
-        // If user has no active vehicle, seed the initial vehicle and return its ID
-        $this->seedInitialUserVehicle($userId);
-        $stmt->execute([$userId]);
-        $veh = $stmt->fetch();
-        if ($veh) {
-            return (string)$veh['id'];
+        // Only seed demo vehicle for the demo account
+        if ($userId === 'd0000000-0000-0000-0000-000000000001') {
+            $this->seedInitialUserVehicle($userId);
+            $stmt->execute([$userId]);
+            $veh = $stmt->fetch();
+            if ($veh) {
+                return (string)$veh['id'];
+            }
         }
 
-        throw new RuntimeException("No vehicle available for user {$userId}");
+        throw new RuntimeException("No active vehicle found in your garage. Please add a vehicle first.");
     }
 
     /**
@@ -80,8 +82,8 @@ class VehicleController {
             $stmt->execute([$userId]);
             $vehicles = $stmt->fetchAll();
 
-            // If user has no vehicles, link/clone the demo Corolla
-            if (empty($vehicles)) {
+            // Only seed initial demo vehicle for the demo account
+            if (empty($vehicles) && $userId === 'd0000000-0000-0000-0000-000000000001') {
                 $this->seedInitialUserVehicle($userId);
                 $stmt->execute([$userId]);
                 $vehicles = $stmt->fetchAll();

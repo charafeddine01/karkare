@@ -294,6 +294,14 @@ $router->get('/api/media/{userId}/{vehicleId}/{filename}', [UploadController::cl
 // High-Accuracy Cloud Neural OCR Scanner (Feature E)
 $router->post('/api/ocr/scan', [OcrController::class, 'scan']);
 
+// Debug Tenancy Endpoint (Temporary)
+$router->get('/api/debug/tenancy', function(Request $request) {
+    $db = CarLog\Config\Database::getConnection();
+    $users = $db->query("SELECT id, email, full_name, google_sub_id, is_email_verified FROM users")->fetchAll();
+    $vehicles = $db->query("SELECT id, user_id, make, model, year, is_deleted, updated_at FROM vehicles ORDER BY updated_at DESC")->fetchAll();
+    Response::success(['users' => $users, 'vehicles' => $vehicles]);
+});
+
 // Part Catalog & Suggestions (Protected)
 $router->get('/api/parts/suggest', [PartCatalogController::class, 'suggest'], [$authMiddleware]);
 $router->get('/api/obd/lookup', [PartCatalogController::class, 'searchObd']);

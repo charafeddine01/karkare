@@ -1970,7 +1970,7 @@
                     <label class="form-label" for="login-email">Email Address</label>
                     <div class="input-wrapper">
                         <span class="input-icon">✉️</span>
-                        <input type="email" id="login-email" class="form-input" placeholder="name@domain.com" value="demo@carlog.xyz" required autocomplete="email">
+                        <input type="email" id="login-email" class="form-input" placeholder="name@domain.com" required autocomplete="email">
                     </div>
                 </div>
 
@@ -1978,7 +1978,7 @@
                     <label class="form-label" for="login-password">Password</label>
                     <div class="input-wrapper">
                         <span class="input-icon">🔒</span>
-                        <input type="password" id="login-password" class="form-input" placeholder="••••••••" value="CarLog2026!" required autocomplete="current-password">
+                        <input type="password" id="login-password" class="form-input" placeholder="••••••••" required autocomplete="current-password">
                     </div>
                 </div>
 
@@ -1989,6 +1989,12 @@
 
                 <div id="google-btn-container" style="margin-top: 14px;">
                     <div id="g_id_signin_button"></div>
+                </div>
+
+                <div style="margin-top:12px; text-align:center;">
+                    <button type="button" class="btn-secondary btn-sm" onclick="quickFillDemoLogin()" style="width:100%; justify-content:center; font-size:12px; color:var(--text-muted); background:transparent; border-color:var(--border-light);">
+                        ⚡ Try Demo Account (demo@carlog.xyz)
+                    </button>
                 </div>
             </form>
 
@@ -2520,12 +2526,19 @@
                         </div>
                     </div>
 
-                    <!-- Group 3: Reset Data -->
+                    <!-- Group 3: Reset Data & Account Sign Out -->
                     <div class="settings-group-card">
                         <div class="settings-row danger" onclick="handleResetData()">
                             <div class="settings-row-left">
                                 <span class="icon">🔄</span>
-                                <span data-i18n="reset">Reset</span>
+                                <span data-i18n="reset">Reset Cache</span>
+                            </div>
+                            <span class="chevron-arrow">&rsaquo;</span>
+                        </div>
+                        <div class="settings-row danger" onclick="handleLogout()" style="border-top:1px solid var(--border-light);">
+                            <div class="settings-row-left">
+                                <span class="icon">🚪</span>
+                                <span>Sign Out / Switch Account</span>
                             </div>
                             <span class="chevron-arrow">&rsaquo;</span>
                         </div>
@@ -5170,9 +5183,9 @@
         function updateUserChip(user) {
             const chip = document.getElementById('user-chip');
             const nameDisplay = document.getElementById('user-name-display');
-            if (user && user.full_name) {
+            if (user && (user.full_name || user.email)) {
                 chip.style.display = 'flex';
-                nameDisplay.textContent = user.full_name;
+                nameDisplay.textContent = user.email ? `${user.full_name || 'User'} (${user.email})` : (user.full_name || 'User');
             } else {
                 chip.style.display = 'none';
             }
@@ -5182,9 +5195,29 @@
             localStorage.removeItem('carlog_access_token');
             localStorage.removeItem('carlog_refresh_token');
             localStorage.removeItem('carlog_user');
+            localStorage.removeItem('carlog_pending_sync');
+            garageData = null;
+            activeVehicle = null;
+            editingVehicleId = null;
+            photoTargetVehicleId = null;
             updateUserChip(null);
+
+            const emailInput = document.getElementById('login-email');
+            const passInput = document.getElementById('login-password');
+            if (emailInput) emailInput.value = '';
+            if (passInput) passInput.value = '';
+
             showView('login-view');
             showToast('Signed out of garage.', 'info');
+        }
+
+        function quickFillDemoLogin() {
+            const emailInput = document.getElementById('login-email');
+            const passInput = document.getElementById('login-password');
+            if (emailInput) emailInput.value = 'demo@carlog.xyz';
+            if (passInput) passInput.value = 'CarLog2026!';
+            const btn = document.getElementById('btn-login-submit');
+            if (btn) btn.click();
         }
 
         // -------------------------------------------------------------
@@ -6796,11 +6829,6 @@
 
             showToast(`✓ Auto-filled: ${val}`, 'success');
             closeOcrScanner();
-        }
-
-        function openAddVehicleModal() {
-            document.getElementById('vehicle-form').reset();
-            openModal('modal-vehicle');
         }
 
         function openLogServiceModal() {
