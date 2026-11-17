@@ -13,6 +13,13 @@ class Response {
         header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
         header('Access-Control-Allow-Headers: Authorization, Content-Type, Accept, X-Requested-With');
         
+        // Strict anti-caching headers for multi-tenant security
+        header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+        header('Pragma: no-cache');
+        header('Expires: 0');
+        header('X-LiteSpeed-Cache-Control: no-cache');
+        header('Vary: Authorization, Accept-Encoding');
+        
         foreach ($headers as $key => $value) {
             header("$key: $value");
         }

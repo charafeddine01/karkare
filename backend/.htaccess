@@ -39,10 +39,19 @@ DirectoryIndex index.php public/index.php index.html
     RewriteRule ^(.*)$ public/index.php [QSA,L]
 </IfModule>
 
-# Security Headers
+# Security Headers & Anti-Caching for Multi-Tenant Data Protection
 <IfModule mod_headers.c>
     Header always set X-Content-Type-Options "nosniff"
     Header always set X-Frame-Options "SAMEORIGIN"
     Header always set X-XSS-Protection "1; mode=block"
     Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+    Header set Pragma "no-cache"
+    Header set Expires 0
+    Header set X-LiteSpeed-Cache-Control "no-cache"
+</IfModule>
+
+<IfModule LiteSpeed>
+    CacheLookup off
+    CacheDisable public /
 </IfModule>

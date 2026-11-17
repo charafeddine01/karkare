@@ -5267,13 +5267,18 @@
             const headers = { 'Content-Type': 'application/json' };
             if (token) headers['Authorization'] = `Bearer ${token}`;
 
-            // Normalize base URL
-            const url = endpoint.startsWith('http') ? endpoint : (endpoint.startsWith('/') ? endpoint.substring(1) : endpoint);
+            // Normalize base URL and add anti-caching timestamp for GET requests
+            let url = endpoint.startsWith('http') ? endpoint : (endpoint.startsWith('/') ? endpoint.substring(1) : endpoint);
+            if (method === 'GET') {
+                const sep = url.includes('?') ? '&' : '?';
+                url = `${url}${sep}_cb=${Date.now()}`;
+            }
 
             try {
                 const response = await fetch(url, {
                     method,
                     headers,
+                    cache: 'no-store',
                     body: body ? JSON.stringify(body) : null
                 });
 

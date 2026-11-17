@@ -65,5 +65,9 @@ if (str_starts_with($uri, '/uploads/')) {
 
 // 5. Web Application Front Controller (Login, Register, Dashboard, /app, /login, or /)
 header('Content-Type: text/html; charset=UTF-8');
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+header('Pragma: no-cache');
+header('Expires: 0');
+header('X-LiteSpeed-Cache-Control: no-cache');
 readfile(__DIR__ . '/public/app.html');
 exit;
