@@ -272,6 +272,33 @@ SQL;
      * Ensures newly added tables (trips, expenses, reminders) exist and seeds demo data
      */
     public static function ensureSchemaMigrations(PDO $pdo, string $driver): void {
+        // 1. Tenancy partition migration: Reassign user-added vehicles to Abbas's primary Google account (abbas.chd50@gmail.com)
+        try {
+            $targetAbbasId = $pdo->query("SELECT id FROM users WHERE LOWER(email) LIKE '%chd50%' OR LOWER(email) LIKE '%acharafeddine%' ORDER BY CASE WHEN LOWER(email) LIKE '%chd50%' THEN 1 ELSE 2 END LIMIT 1")->fetchColumn();
+            if ($targetAbbasId) {
+                // Reassign all real user vehicles to Abbas's active account
+                $pdo->prepare("
+                    UPDATE vehicles 
+                    SET user_id = ? 
+                    WHERE id != 'c0000000-0000-0000-0000-000000000001'
+                    AND vin != '2T1BURHE7NC123456'
+                ")->execute([$targetAbbasId]);
+            }
+
+            // Remove duplicate seeded demo Corolla from all real user accounts
+            $pdo->exec("
+                DELETE FROM vehicles 
+                WHERE vin = '2T1BURHE7NC123456' 
+                AND user_id != 'd0000000-0000-0000-0000-000000000001'
+                AND id != 'c0000000-0000-0000-0000-000000000001'
+            ");
+
+            // Clarify Demo user name to avoid confusion with real user accounts
+            $pdo->exec("UPDATE users SET full_name = 'Demo Driver' WHERE id = 'd0000000-0000-0000-0000-000000000001'");
+        } catch (\Throwable $e) {
+            error_log('tenancy migration error: ' . $e->getMessage());
+        }
+
         try {
             if ($driver === 'sqlite') {
                 $pdo->exec("
@@ -375,12 +402,13 @@ SQL;
             $demoVehId = $firstVeh ?: 'v-corolla-2022-demo';
 
             // Ensure demo records exist for the primary vehicle
+            $insertOrIgnore = ($driver === 'sqlite') ? 'INSERT OR IGNORE' : 'INSERT IGNORE';
             $stmt = $pdo->prepare("SELECT COUNT(*) FROM trip_logs WHERE vehicle_id = ?");
             $stmt->execute([$demoVehId]);
             if ((int)$stmt->fetchColumn() === 0) {
                 // Trip logs
                 $insTrip = $pdo->prepare("
-                    INSERT INTO trip_logs (id, vehicle_id, trip_date, trip_time, start_odometer_km, end_odometer_km, distance_km, purpose, notes)
+                    $insertOrIgnore INTO trip_logs (id, vehicle_id, trip_date, trip_time, start_odometer_km, end_odometer_km, distance_km, purpose, notes)
                     VALUES 
                     (?, ?, '2026-11-15', '22:28:00', 32432, 32450, 18.00, 'Commute', 'Office return trip via ring highway'),
                     (?, ?, '2026-11-12', '18:15:00', 32410, 32432, 22.00, 'Personal', 'City center groceries & weekend errands')
@@ -392,7 +420,7 @@ SQL;
             $stmtExp->execute([$demoVehId]);
             if ((int)$stmtExp->fetchColumn() === 0) {
                 $insExp = $pdo->prepare("
-                    INSERT INTO general_expenses (id, vehicle_id, expense_date, expense_time, expense_type, amount_usd, odometer_km, notes)
+                    $insertOrIgnore INTO general_expenses (id, vehicle_id, expense_date, expense_time, expense_type, amount_usd, odometer_km, notes)
                     VALUES 
                     ('exp-demo-1', ?, '2026-11-13', '22:28:00', 'Parking', 12.00, 32432, 'City center underground garage 4 hrs')
                 ");
@@ -415,8 +443,9 @@ SQL;
             $stmtRem->execute([$demoVehId]);
             if ((int)$stmtRem->fetchColumn() === 0) {
                 // Vehicle Reminders matching Screen 2 and Screen 5
+                $insertOrIgnore = ($driver === 'sqlite') ? 'INSERT OR IGNORE' : 'INSERT IGNORE';
                 $insRem = $pdo->prepare("
-                    INSERT INTO vehicle_reminders (id, vehicle_id, reminder_title, reminder_category, due_date, due_odometer_km, is_completed, notes)
+                    $insertOrIgnore INTO vehicle_reminders (id, vehicle_id, reminder_title, reminder_category, due_date, due_odometer_km, is_completed, notes)
                     VALUES 
                     (?, ?, 'Tire pressure check', 'Tires', '2026-11-18', NULL, 0, 'Check all 4 tires cold to 2.3 Bar'),
                     (?, ?, 'Registration renewal', 'Registration', '2026-11-30', NULL, 0, 'Annual vehicle inspection and registration sticker'),
@@ -434,33 +463,6 @@ SQL;
                     'rem-demo-6', $demoVehId,
                 ]);
             }
-
-            // Tenancy partition migration: Reassign user-added vehicles to Abbas's primary Google account (abbas.chd50@gmail.com)
-            $targetAbbasId = $pdo->query("SELECT id FROM users WHERE LOWER(email) LIKE '%abbas.chd50%' LIMIT 1")->fetchColumn();
-            if (!$targetAbbasId) {
-                $targetAbbasId = $pdo->query("SELECT id FROM users WHERE LOWER(email) LIKE '%acharafeddine%' LIMIT 1")->fetchColumn();
-            }
-
-            if ($targetAbbasId) {
-                // Reassign all real user vehicles to Abbas's active account
-                $pdo->prepare("
-                    UPDATE vehicles 
-                    SET user_id = ? 
-                    WHERE id != 'c0000000-0000-0000-0000-000000000001'
-                    AND vin != '2T1BURHE7NC123456'
-                ")->execute([$targetAbbasId]);
-            }
-
-            // Remove duplicate seeded demo Corolla from all real user accounts
-            $pdo->exec("
-                DELETE FROM vehicles 
-                WHERE vin = '2T1BURHE7NC123456' 
-                AND user_id != 'd0000000-0000-0000-0000-000000000001'
-                AND id != 'c0000000-0000-0000-0000-000000000001'
-            ");
-
-            // Clarify Demo user name to avoid confusion with real user accounts
-            $pdo->exec("UPDATE users SET full_name = 'Demo Driver' WHERE id = 'd0000000-0000-0000-0000-000000000001'");
         } catch (\Throwable $e) {
             error_log('ensureSchemaMigrations note: ' . $e->getMessage());
         }
