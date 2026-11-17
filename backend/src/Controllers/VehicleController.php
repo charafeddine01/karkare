@@ -99,6 +99,12 @@ class VehicleController {
             $visits = [];
             $fuelLogs = [];
             $symptoms = [];
+            $trips = [];
+            $expenses = [];
+            $rawReminders = [];
+            $remindersUpcoming = [];
+            $remindersOverdue = [];
+            $remindersCompleted = [];
             $predictiveDecay = [];
 
             if ($activeVehicleId) {
@@ -272,7 +278,7 @@ class VehicleController {
             }
             $currentOdo = (int)($activeVehicle['current_odometer_km'] ?? 0);
             $acqOdo = (int)($activeVehicle['acquisition_odometer_km'] ?? 0);
-            $drivenDistance = max(1, $currentOdo - $acqOdo);
+            $drivenDistance = $activeVehicle ? max(0, $currentOdo - $acqOdo) : 0;
             $displayDistanceKm = $tripsDistance > 0 ? $tripsDistance : (float)$drivenDistance;
 
             $costPerKm = $displayDistanceKm > 0 ? ($totalSpent / $displayDistanceKm) : 0;

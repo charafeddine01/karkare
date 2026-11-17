@@ -435,25 +435,28 @@ SQL;
                 ]);
             }
 
-            // Tenancy partition migration: Reassign user-added vehicles to user's real account
-            $userAbbas = $pdo->query("SELECT id FROM users WHERE email = 'acharafeddine.cmma@gmail.com' LIMIT 1")->fetchColumn();
-            if ($userAbbas) {
-                // Move custom added vehicles from demo account to user's real account
+            // Tenancy partition migration: Reassign user-added vehicles to user's real account (supporting abbas.chd50@gmail.com and acharafeddine.cmma@gmail.com)
+            $userAbbasGoogle = $pdo->query("SELECT id FROM users WHERE email = 'abbas.chd50@gmail.com' LIMIT 1")->fetchColumn();
+            $userAbbasCmma = $pdo->query("SELECT id FROM users WHERE email = 'acharafeddine.cmma@gmail.com' LIMIT 1")->fetchColumn();
+
+            $primaryAbbasId = $userAbbasGoogle ?: $userAbbasCmma;
+            if ($primaryAbbasId) {
+                $otherSource = ($userAbbasCmma && $userAbbasGoogle && $userAbbasCmma !== $userAbbasGoogle) ? " OR user_id = '{$userAbbasCmma}'" : "";
                 $pdo->prepare("
                     UPDATE vehicles 
                     SET user_id = ? 
-                    WHERE user_id = 'd0000000-0000-0000-0000-000000000001' 
+                    WHERE (user_id = 'd0000000-0000-0000-0000-000000000001'{$otherSource})
                     AND id != 'c0000000-0000-0000-0000-000000000001'
-                ")->execute([$userAbbas]);
-
-                // Remove duplicate seeded demo Corolla from all real user accounts
-                $pdo->exec("
-                    DELETE FROM vehicles 
-                    WHERE vin = '2T1BURHE7NC123456' 
-                    AND user_id != 'd0000000-0000-0000-0000-000000000001'
-                    AND id != 'c0000000-0000-0000-0000-000000000001'
-                ");
+                ")->execute([$primaryAbbasId]);
             }
+
+            // Remove duplicate seeded demo Corolla from all real user accounts
+            $pdo->exec("
+                DELETE FROM vehicles 
+                WHERE vin = '2T1BURHE7NC123456' 
+                AND user_id != 'd0000000-0000-0000-0000-000000000001'
+                AND id != 'c0000000-0000-0000-0000-000000000001'
+            ");
 
             // Clarify Demo user name to avoid confusion with real user accounts
             $pdo->exec("UPDATE users SET full_name = 'Demo Driver' WHERE id = 'd0000000-0000-0000-0000-000000000001'");
