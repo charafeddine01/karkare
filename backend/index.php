@@ -36,25 +36,31 @@ if (str_starts_with($uri, '/api')) {
     exit;
 }
 
-// 4. Static Uploads
+// 4. Static Uploads Streaming
 if (str_starts_with($uri, '/uploads/')) {
     $file = __DIR__ . $uri;
-    if (is_file($file)) {
+    if (file_exists($file) && is_file($file)) {
         $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
         $mimes = [
             'webp' => 'image/webp',
             'jpg'  => 'image/jpeg',
             'jpeg' => 'image/jpeg',
             'png'  => 'image/png',
+            'gif'  => 'image/gif',
             'm4a'  => 'audio/mp4',
             'pdf'  => 'application/pdf',
         ];
         if (isset($mimes[$ext])) {
             header('Content-Type: ' . $mimes[$ext]);
+            header('Cache-Control: public, max-age=31536000');
+            header('Content-Length: ' . (string)filesize($file));
             readfile($file);
             exit;
         }
     }
+    http_response_code(404);
+    echo "Media file not found";
+    exit;
 }
 
 // 5. Web Application Front Controller (Login, Register, Dashboard, /app, /login, or /)

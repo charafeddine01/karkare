@@ -27,9 +27,8 @@ DirectoryIndex index.php public/index.php index.html
     # Route auto-deploy webhook: webhook -> public/webhook.php
     RewriteRule ^webhook(\.php)?$ public/webhook.php [QSA,L]
 
-    # Serve static assets from uploads directory directly if they exist
-    RewriteCond %{REQUEST_FILENAME} -f
-    RewriteRule ^uploads/ - [L]
+    # Stream uploads through index.php to prevent LiteSpeed 403
+    RewriteRule ^uploads/(.*)$ index.php [QSA,L]
 
     # Route all API requests: api/* -> public/index.php
     RewriteRule ^api(/.*)?$ public/index.php [QSA,L]
