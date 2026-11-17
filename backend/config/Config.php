@@ -9,10 +9,16 @@ namespace CarLog\Config;
  */
 class Config {
     public static function get(): array {
+        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443) ? 'https://' : 'http://';
+        $host = $_SERVER['HTTP_HOST'] ?? 'charafeddine.xyz';
+        $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
+        $subDir = str_contains($scriptName, '/karkare') ? '/karkare' : (str_contains($_SERVER['REQUEST_URI'] ?? '', '/karkare') ? '/karkare' : '');
+        $detectedBaseUrl = rtrim($protocol . $host . $subDir, '/');
+
         return [
             'app' => [
                 'name' => 'CarLog',
-                'base_url' => getenv('CARLOG_BASE_URL') ?: 'https://carlog.charafeddine.xyz',
+                'base_url' => getenv('CARLOG_BASE_URL') ?: ($detectedBaseUrl ?: 'https://charafeddine.xyz/karkare'),
                 'environment' => getenv('CARLOG_ENV') ?: 'production',
                 'debug' => (bool)(getenv('CARLOG_DEBUG') ?: false),
                 'timezone' => 'UTC',

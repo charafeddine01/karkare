@@ -31,12 +31,21 @@ class VehicleController {
      * Prevents foreign key constraint violations across child tables
      */
     private function getValidVehicleId(string $userId, ?string $candidateId): string {
-        if (!empty($candidateId)) {
+        if (!empty($candidateId) && $candidateId !== 'undefined' && $candidateId !== 'null') {
             $stmt = $this->db->prepare("SELECT id FROM vehicles WHERE id = ? AND user_id = ? AND is_deleted = 0");
             $stmt->execute([$candidateId, $userId]);
             $veh = $stmt->fetch();
             if ($veh) {
                 return (string)$veh['id'];
+            }
+
+            // Also check if vehicle exists for user even if is_deleted = 1 (restore active status)
+            $stmtDel = $this->db->prepare("SELECT id FROM vehicles WHERE id = ? AND user_id = ?");
+            $stmtDel->execute([$candidateId, $userId]);
+            $vehDel = $stmtDel->fetch();
+            if ($vehDel) {
+                $this->db->prepare("UPDATE vehicles SET is_deleted = 0, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND user_id = ?")->execute([$candidateId, $userId]);
+                return (string)$vehDel['id'];
             }
         }
 
@@ -581,27 +590,26 @@ class VehicleController {
      */
     public function updateVehiclePhoto(Request $request): void {
         $userId = $request->getUserId();
-        $id = $request->getParam('id');
+        $rawId = $request->getParam('id') ?: ($request->get('vehicle_id') ?: null);
         $b = $request->getBody();
 
-        if (empty($b['photo_url'])) {
+        $photoUrl = trim((string)($b['photo_url'] ?? $request->get('photo_url', '')));
+        if (empty($photoUrl)) {
             Response::error('photo_url is required', 'VALIDATION_ERROR', 400);
             return;
         }
 
         try {
-            // Verify vehicle exists and belongs to user
-            $stmt = $this->db->prepare("SELECT id FROM vehicles WHERE id = ? AND user_id = ? AND is_deleted = 0");
-            $stmt->execute([$id, $userId]);
-            if (!$stmt->fetch()) {
-                Response::error('Vehicle not found or unauthorized', 'NOT_FOUND', 404);
-                return;
-            }
+            // Verify and resolve valid vehicle owned by this user
+            $vehicleId = $this->getValidVehicleId($userId, $rawId);
 
-            $stmtUpdate = $this->db->prepare("UPDATE vehicles SET photo_url = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND user_id = ?");
-            $stmtUpdate->execute([trim((string)$b['photo_url']), $id, $userId]);
+            $stmtUpdate = $this->db->prepare("UPDATE vehicles SET photo_url = ?, is_deleted = 0, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND user_id = ?");
+            $stmtUpdate->execute([$photoUrl, $vehicleId, $userId]);
 
-            Response::success(['id' => $id, 'photo_url' => $b['photo_url']], 'Vehicle photo updated.');
+            Response::success([
+                'id' => $vehicleId,
+                'photo_url' => $photoUrl
+            ], 'Vehicle photo updated.');
         } catch (Throwable $e) {
             Response::error('Failed to update photo: ' . $e->getMessage(), 'DATABASE_ERROR', 500);
         }

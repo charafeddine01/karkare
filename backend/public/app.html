@@ -2581,6 +2581,22 @@
             </div>
 
             <form id="vehicle-form" onsubmit="handleSaveVehicle(event)">
+                <!-- Vehicle Photo Banner inside Modal -->
+                <div class="form-group" style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:12px; padding:10px 14px; margin-bottom:14px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <img id="veh-edit-photo-thumb" src="https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=800&q=80" alt="Car Thumbnail" style="width:64px; height:42px; border-radius:8px; object-fit:cover; border:1px solid #CBD5E1; cursor:pointer;" onclick="openVehiclePhotoModal(editingVehicleId)">
+                            <div>
+                                <div style="font-size:12px; font-weight:700; color:var(--text-dark);">Vehicle Photo</div>
+                                <div style="font-size:11px; color:var(--text-muted);">Custom upload, URL, or presets</div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-secondary btn-xs" onclick="openVehiclePhotoModal(editingVehicleId)" style="border-radius:var(--radius-full); padding:5px 12px; font-weight:700; color:var(--primary-blue); display:inline-flex; align-items:center; gap:4px; font-size:11px;">
+                            📷 Change Photo
+                        </button>
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <label class="form-label" for="veh-input-type">Vehicle Type</label>
                     <select id="veh-input-type" class="form-select no-icon" onchange="handleVehicleTypeChange(this.value)">
@@ -3732,19 +3748,24 @@
         }
 
         // -------------------------------------------------------------
+        // -------------------------------------------------------------
         // Vehicle Photo Edit & Presets (Task 7)
         // -------------------------------------------------------------
         let photoTargetVehicleId = null;
 
         function openVehiclePhotoModal(vehId = null) {
-            photoTargetVehicleId = vehId || (activeVehicle ? activeVehicle.id : null);
+            photoTargetVehicleId = vehId || (activeVehicle ? activeVehicle.id : (garageData?.active_vehicle?.id || garageData?.vehicles?.[0]?.id || null));
+            if (!photoTargetVehicleId && garageData?.vehicles?.length > 0) {
+                photoTargetVehicleId = garageData.vehicles[0].id;
+            }
             if (!photoTargetVehicleId) {
                 showToast('Please select or add a vehicle first', 'warning');
                 return;
             }
             const targetVeh = garageData?.vehicles?.find(v => v.id === photoTargetVehicleId) || activeVehicle;
             const currentUrl = targetVeh?.photo_url || '';
-            document.getElementById('veh-photo-url-input').value = currentUrl;
+            const urlInput = document.getElementById('veh-photo-url-input');
+            if (urlInput) urlInput.value = currentUrl;
             const preview = document.getElementById('veh-photo-preview-img');
             if (preview) {
                 preview.src = currentUrl || 'https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=800&q=80';
@@ -3753,11 +3774,14 @@
         }
 
         async function handleVehiclePhotoFileSelected(input) {
-            if (!input.files || !input.files[0] || !photoTargetVehicleId) return;
+            if (!input.files || !input.files[0]) return;
+            if (!photoTargetVehicleId) {
+                photoTargetVehicleId = activeVehicle?.id || garageData?.active_vehicle?.id || garageData?.vehicles?.[0]?.id;
+            }
             const file = input.files[0];
             const formData = new FormData();
             formData.append('file', file);
-            formData.append('vehicle_id', photoTargetVehicleId);
+            if (photoTargetVehicleId) formData.append('vehicle_id', photoTargetVehicleId);
             formData.append('type', 'photo');
 
             try {
@@ -3775,6 +3799,8 @@
                 await saveVehiclePhotoUrl(photoUrl);
             } catch (err) {
                 showToast('Photo upload failed: ' + err.message, 'error');
+            } finally {
+                input.value = '';
             }
         }
 
@@ -3805,12 +3831,35 @@
         }
 
         async function saveVehiclePhotoUrl(url) {
-            if (!photoTargetVehicleId || !url) return;
+            if (!photoTargetVehicleId) {
+                photoTargetVehicleId = activeVehicle?.id || garageData?.active_vehicle?.id || garageData?.vehicles?.[0]?.id;
+            }
+            if (!photoTargetVehicleId || !url) {
+                showToast('Please select a vehicle first', 'warning');
+                return;
+            }
             try {
-                await apiRequest(`api/vehicles/${photoTargetVehicleId}/photo`, 'POST', { photo_url: url });
+                const res = await apiRequest(`api/vehicles/${photoTargetVehicleId}/photo`, 'POST', { 
+                    photo_url: url,
+                    vehicle_id: photoTargetVehicleId
+                });
+                
+                const updatedId = res.data?.id || photoTargetVehicleId;
+                if (activeVehicle && (activeVehicle.id === updatedId || activeVehicle.id === photoTargetVehicleId)) {
+                    activeVehicle.photo_url = url;
+                    const homeImg = document.getElementById('home-car-img');
+                    if (homeImg) homeImg.src = url;
+                }
+                if (garageData && garageData.vehicles) {
+                    const match = garageData.vehicles.find(v => v.id === updatedId || v.id === photoTargetVehicleId);
+                    if (match) match.photo_url = url;
+                }
+                const editThumb = document.getElementById('veh-edit-photo-thumb');
+                if (editThumb) editThumb.src = url;
+
                 closeModal('modal-vehicle-photo');
                 showToast('Vehicle photo updated successfully!', 'success');
-                await loadGarageDashboard(photoTargetVehicleId);
+                await loadGarageDashboard(updatedId);
             } catch (err) {
                 showToast('Failed to update photo: ' + err.message, 'error');
             }
@@ -5046,6 +5095,11 @@
             const delBtn = document.getElementById('btn-delete-veh-form');
             if (delBtn) delBtn.style.display = 'inline-flex';
 
+            const editThumb = document.getElementById('veh-edit-photo-thumb');
+            if (editThumb) {
+                editThumb.src = veh.photo_url || 'https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=800&q=80';
+            }
+
             openModal('modal-vehicle');
         }
 
@@ -5056,6 +5110,12 @@
             document.getElementById('vehicle-form').reset();
             const delBtn = document.getElementById('btn-delete-veh-form');
             if (delBtn) delBtn.style.display = 'none';
+
+            const editThumb = document.getElementById('veh-edit-photo-thumb');
+            if (editThumb) {
+                editThumb.src = 'https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=800&q=80';
+            }
+
             openModal('modal-vehicle');
         }
 
