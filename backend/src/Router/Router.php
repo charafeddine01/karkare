@@ -59,9 +59,10 @@ class Router {
 
         $requestPath = '/' . trim($request->getPath(), '/');
         $requestMethod = $request->getMethod();
+        $effectiveMethod = ($requestMethod === 'HEAD') ? 'GET' : $requestMethod;
 
         foreach ($this->routes as $route) {
-            if ($route['method'] !== $requestMethod) {
+            if ($route['method'] !== $effectiveMethod) {
                 continue;
             }
 
