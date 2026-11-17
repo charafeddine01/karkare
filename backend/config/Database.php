@@ -435,19 +435,20 @@ SQL;
                 ]);
             }
 
-            // Tenancy partition migration: Reassign user-added vehicles to user's real account (supporting abbas.chd50@gmail.com and acharafeddine.cmma@gmail.com)
-            $userAbbasGoogle = $pdo->query("SELECT id FROM users WHERE email = 'abbas.chd50@gmail.com' LIMIT 1")->fetchColumn();
-            $userAbbasCmma = $pdo->query("SELECT id FROM users WHERE email = 'acharafeddine.cmma@gmail.com' LIMIT 1")->fetchColumn();
+            // Tenancy partition migration: Reassign user-added vehicles to Abbas's primary Google account (abbas.chd50@gmail.com)
+            $targetAbbasId = $pdo->query("SELECT id FROM users WHERE LOWER(email) LIKE '%abbas.chd50%' LIMIT 1")->fetchColumn();
+            if (!$targetAbbasId) {
+                $targetAbbasId = $pdo->query("SELECT id FROM users WHERE LOWER(email) LIKE '%acharafeddine%' LIMIT 1")->fetchColumn();
+            }
 
-            $primaryAbbasId = $userAbbasGoogle ?: $userAbbasCmma;
-            if ($primaryAbbasId) {
-                $otherSource = ($userAbbasCmma && $userAbbasGoogle && $userAbbasCmma !== $userAbbasGoogle) ? " OR user_id = '{$userAbbasCmma}'" : "";
+            if ($targetAbbasId) {
+                // Reassign all real user vehicles to Abbas's active account
                 $pdo->prepare("
                     UPDATE vehicles 
                     SET user_id = ? 
-                    WHERE (user_id = 'd0000000-0000-0000-0000-000000000001'{$otherSource})
-                    AND id != 'c0000000-0000-0000-0000-000000000001'
-                ")->execute([$primaryAbbasId]);
+                    WHERE id != 'c0000000-0000-0000-0000-000000000001'
+                    AND vin != '2T1BURHE7NC123456'
+                ")->execute([$targetAbbasId]);
             }
 
             // Remove duplicate seeded demo Corolla from all real user accounts
